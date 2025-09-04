@@ -1,25 +1,15 @@
-import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Users, Calendar, Radio, Crown } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+// The useAuth and useEffect imports are no longer needed for this page
+// import { useAuth } from "@/context/AuthContext";
+// import { useNavigate } from "react-router-dom";
+// import { useEffect } from "react";
 
 const Welcome = () => {
-  const { isAuthenticated, isLoading } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // If the user is already logged in, redirect them to the dashboard.
-    if (!isLoading && isAuthenticated) {
-      navigate("/dashboard");
-    }
-  }, [isAuthenticated, isLoading, navigate]);
-
-  // While checking the auth state, show a blank screen to avoid a flash of the welcome page.
-  if (isLoading || isAuthenticated) {
-    return <div className="min-h-screen bg-background"></div>;
-  }
+  // We no longer check for authentication here, so the page will always render.
   
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
