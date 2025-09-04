@@ -6,11 +6,11 @@ import { ArrowRight, Users, Calendar, Radio, Crown } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 const Welcome = () => {
-  const { isAuthenticated, isLoading } = useAuth(); // Get auth state
+  const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Key Change: If the user is already logged in, redirect them to the home page.
+    // If the user is already logged in, redirect them to the dashboard.
     if (!isLoading && isAuthenticated) {
       navigate("/dashboard");
     }
@@ -38,7 +38,7 @@ const Welcome = () => {
         >
           <div className="flex flex-col items-center space-y-4">
             <img 
-              src="/lovable-uploads/7b18fcc3-0ead-40dd-b631-a1b81336c2dc.png" 
+              src="/logo.png" 
               alt="International Ministers Forum" 
               className="w-48 h-48 md:w-56 md:h-56 object-contain"
             />

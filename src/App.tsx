@@ -29,7 +29,9 @@ const App = () => (
     <AuthProvider>
       <Router>
         <Routes>
+          {/* Change: The root route is now the Welcome page */}
           <Route path="/" element={<Welcome />} />
+          {/* We will now use the Index page as the "main" home for authenticated users */}
           <Route path="/home" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin/login" element={<AdminAuth />} />
@@ -39,7 +41,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/giving" element={<Giving />} />
           <Route path="/prayer-requests" element={<PrayerRequests />} />
-          <Route path="/beliefs" element={<Beliefs />} /> {/* Add the route */}
+          <Route path="/beliefs" element={<Beliefs />} />
           <Route path="/about" element={<About />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/admin" element={<Admin />} />
