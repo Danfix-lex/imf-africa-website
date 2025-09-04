@@ -1,45 +1,74 @@
 // src/pages/LiveStreams.tsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Layout from "@/components/Layout";
 import LiveStream from "@/components/LiveStream";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 
+const useDebounce = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+  return () => {
+    clearTimeout(handler);
+  };
+}, [value, delay]);
+
+  return debouncedValue;
+};
+
 const LiveStreams = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [streams, setStreams] = useState<any[]>([]);
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
-  useEffect(() => {
-    const fetchStreams = async () => {
-      const { data, error } = await supabase
-        .from("media")
-        .select("*, program:programs(*)")
-        .not("video_url", "is", null);
+  const fetchStreams = useCallback(async (search: string) => {
+    let query = supabase
+      .from("media")
+      .select("*, program:programs(*)")
+      .not("video_url", "is", null);
 
-      if (data) {
-        const formattedStreams = data.map((media) => ({
+    if (search) {
+      query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
+    }
+
+    const { data, error } = await query;
+
+    if (data) {
+      const formattedStreams = data.map((media) => {
+        const videoId = media.video_url?.split("v=")[1]?.split("&")[0];
+        const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/0.jpg` : "/placeholder.svg";
+        const streamUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : media.video_url;
+
+        return {
           id: media.id,
-          title: media.program.title,
-          description: media.program.description,
-          thumbnailUrl: `https://img.youtube.com/vi/${media.video_url.split("v=")[1]}/0.jpg`,
-          streamUrl: media.video_url.replace("watch?v=", "embed/"),
-          startTime: media.program.date,
+          title: media.program?.title,
+          description: media.program?.description,
+          thumbnailUrl,
+          streamUrl,
+          startTime: media.program?.date,
           viewerCount: 0,
-          isLive: media.program.is_upcoming,
-        }));
-        setStreams(formattedStreams);
-      }
-    };
-    fetchStreams();
+          isLive: media.program?.is_upcoming,
+        };
+      });
+      setStreams(formattedStreams);
+    }
   }, []);
 
-  // Filter streams based on search query
+  useEffect(() => {
+    fetchStreams(debouncedSearchQuery);
+  }, [debouncedSearchQuery, fetchStreams]);
+
   const filteredStreams = streams.filter(
     (stream) =>
-      stream.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      stream.description.toLowerCase().includes(searchQuery.toLowerCase())
+      stream.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      stream.description?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (

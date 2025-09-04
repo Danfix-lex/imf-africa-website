@@ -17,29 +17,27 @@ const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ className }) => {
     setIsLoading(true);
 
     try {
-      // Client-side rate limiting
+      // Client-side rate limiting is for UX, not security.
+      // Server-side rate limiting is the definitive protection.
       if (isRateLimited('email_subscription', 3, 15 * 60 * 1000)) {
-        toast.error("Too Many Attempts. Please wait 15 minutes before trying again");
+        toast.error("Too many attempts. Please wait 15 minutes before trying again");
         return;
       }
 
-      // Enhanced email validation using utility
       const emailValidation = validateEmail(email);
       if (!emailValidation.isValid) {
         toast.error(emailValidation.error || 'Invalid Email');
         return;
       }
 
-      // Sanitize email input
       const sanitizedEmail = email.trim().toLowerCase();
 
-      // Save email to subscriptions table
       const { error: subscriptionError } = await supabase
         .from('email_subscriptions')
         .insert({ email: sanitizedEmail });
 
       if (subscriptionError) {
-        if (subscriptionError.code === '23505') { // Unique constraint violation
+        if (subscriptionError.code === '23505') {
           toast.info("This email is already subscribed to our newsletter");
           setEmail('');
           return;
@@ -47,14 +45,12 @@ const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ className }) => {
         throw subscriptionError;
       }
 
-      // Send welcome email
       const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
         body: { email: sanitizedEmail }
       });
 
       if (emailError) {
         console.error('Error sending welcome email:', emailError);
-        // Don't throw error for email sending - subscription was successful
       }
 
       toast.success("You've successfully subscribed to our newsletter. Check your email for a welcome message!");

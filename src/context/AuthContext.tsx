@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import type { User, Session, AuthChangeEvent } from '@supabase/supabase-js';
+import type { User, Session } from '@supabase/supabase-js';
 
 type Profile = {
   display_name: string | null;
