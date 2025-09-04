@@ -1,3 +1,5 @@
+// src/components/Navbar.tsx
+
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -26,7 +28,6 @@ const Navbar = () => {
     navigate("/");
   };
 
-  // The home link always points to the welcome page for a consistent entry point
   const homeLink = "/";
 
   return (
@@ -63,7 +64,7 @@ const Navbar = () => {
                     <>
                       <Separator className="my-2" />
                       <Link to="/dashboard" onClick={() => { /* close sheet */ }}>Dashboard</Link>
-                      <Link to="/membership" onClick={() => { /* close sheet */ }}>Membership</Link>
+                      <Link to="/membership" onClick={() => { /* close sheet */ }}>Membership</Link> {/* Add this link */}
                       <Button onClick={handleLogout} variant="ghost" className="w-full justify-start">
                         Logout
                       </Button>
@@ -93,6 +94,7 @@ const Navbar = () => {
           <Link to="/programs">Programs</Link>
           <Link to="/giving">Giving</Link>
           <Link to="/prayer-requests">Prayer Requests</Link>
+          {isAuthenticated && <Link to="/membership">Membership</Link>} {/* Add this link */}
         </div>
 
         {/* User Actions and Theme Toggle */}
@@ -128,6 +130,10 @@ const Navbar = () => {
                 <DropdownMenuItem onClick={() => navigate("/dashboard")}>
                   <LayoutDashboard className="mr-2 h-4 w-4" />
                   <span>Dashboard</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/membership")}> {/* Add this link */}
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Membership</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />

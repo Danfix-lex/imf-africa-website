@@ -1,3 +1,5 @@
+// src/App.tsx
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,9 +16,9 @@ import Leadership from "./pages/Leadership";
 import Dashboard from "./pages/Dashboard";
 import Giving from "./pages/Giving";
 import PrayerRequests from "./pages/PrayerRequests";
-import Beliefs from "./pages/Beliefs"; // Import the new page
+import Beliefs from "./pages/Beliefs";
 import About from "./pages/About";
-import Membership from "./pages/Membership";
+import Membership from "./pages/Membership"; // Import the new Membership page
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
@@ -29,9 +31,7 @@ const App = () => (
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Change: The root route is now the Welcome page */}
           <Route path="/" element={<Welcome />} />
-          {/* We will now use the Index page as the "main" home for authenticated users */}
           <Route path="/home" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin/login" element={<AdminAuth />} />
@@ -43,7 +43,7 @@ const App = () => (
           <Route path="/prayer-requests" element={<PrayerRequests />} />
           <Route path="/beliefs" element={<Beliefs />} />
           <Route path="/about" element={<About />} />
-          <Route path="/membership" element={<Membership />} />
+          <Route path="/membership" element={<Membership />} /> {/* Add the new route for the Membership page */}
           <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
