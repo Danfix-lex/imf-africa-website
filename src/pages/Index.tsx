@@ -1,146 +1,79 @@
-import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+// src/pages/Index.tsx
+
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 import Layout from "@/components/Layout";
 import Hero from "@/components/Hero";
 import ProgramCard from "@/components/ProgramCard";
+import SubscriptionForm from "@/components/SubscriptionForm";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/context/AuthContext";
 
 const Index = () => {
-  const { t } = useTranslation();
-  const [upcomingPrograms, setUpcomingPrograms] = useState<any[]>([]);
   const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
+    // If a user is not authenticated and the auth state has loaded,
+    // redirect them to the welcome page.
     if (!isLoading && !isAuthenticated) {
       navigate("/");
     }
   }, [isAuthenticated, isLoading, navigate]);
 
-  useEffect(() => {
-    const fetchUpcomingPrograms = async () => {
-      const { data } = await supabase
-        .from("programs")
-        .select("*, media(file_url)")
-        .eq("is_upcoming", true)
-        .limit(3);
-
-      if (data) {
-        const formattedPrograms = data.map((program) => ({
-          id: program.id,
-          title: program.title,
-          description: program.description,
-          imageUrl: program.media[0]?.file_url
-            ? `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/media/${program.media[0]?.file_url}`
-            : "/placeholder.svg",
-          date: program.date,
-          time: new Date(program.date).toLocaleTimeString(),
-          location: "Online",
-          speaker: "IMF Africa",
-        }));
-        setUpcomingPrograms(formattedPrograms);
-      }
-    };
-    fetchUpcomingPrograms();
-  }, []);
-
+  // While checking the auth state, show a blank page to avoid a flash of content
   if (isLoading || !isAuthenticated) {
     return <div className="min-h-screen bg-background"></div>;
   }
-
+  
+  // This content will only be rendered if the user is authenticated.
   return (
-    <Layout fullWidth withoutFooter={false}>
-      {/* Hero Section */}
+    <Layout>
       <Hero />
-
-      {/* About Section */}
-      <section className="py-16 md:py-24 bg-background">
-        {/* ... About section content ... */}
-      </section>
-
-      {/* Upcoming Programs Section */}
-      <section className="py-16 md:py-24 bg-secondary/50">
-        <div className="container-custom">
-          <motion.div
-            className="flex flex-col md:flex-row md:items-center justify-between mb-10"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <div>
-              <motion.p
-                className="text-primary font-medium mb-2"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                {t("programs.title")}
-              </motion.p>
-              <motion.h2
-                className="text-3xl md:text-4xl font-bold"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                viewport={{ once: true }}
-              >
-                {t("programs.heading")}
-              </motion.h2>
-            </div>
-            <Link to="/programs" className="mt-4 md:mt-0">
-              <motion.div
-                whileHover={{ scale: 1.05, x: 5 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <Button variant="ghost" className="flex items-center group">
-                  {t("programs.viewAll")}
-                  <motion.div
-                    animate={{ x: 0 }}
-                    whileHover={{ x: 5 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    <ChevronRight size={16} className="ml-1" />
-                  </motion.div>
-                </Button>
-              </motion.div>
-            </Link>
-          </motion.div>
-
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            {upcomingPrograms.map((program, index) => (
-              <motion.div
-                key={program.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.6,
-                  delay: index * 0.1 + 0.4,
-                  type: "spring",
-                  stiffness: 100,
-                }}
-                viewport={{ once: true }}
-              >
-                <ProgramCard {...program} />
-              </motion.div>
-            ))}
-          </motion.div>
+      <section className="py-16 bg-muted">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-8">Upcoming Programs</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <ProgramCard
+              title="Global Leadership Summit"
+              description="An annual forum for ministers and leaders to exchange ideas, share best practices, and collaborate on initiatives that advance the gospel."
+              date="October 20, 2025"
+              imageUrl="https://source.unsplash.com/random/800x600/?leadership"
+              url="/programs"
+            />
+            <ProgramCard
+              title="Ministers' Conference"
+              description="A gathering of ministers for spiritual rejuvenation, practical training, and networking."
+              date="November 15, 2025"
+              imageUrl="https://source.unsplash.com/random/800x600/?conference"
+              url="/programs"
+            />
+            <ProgramCard
+              title="Youth Empowerment Workshop"
+              description="Equipping young ministers with the tools and knowledge to lead and disciple the next generation."
+              date="December 5, 2025"
+              imageUrl="https://source.unsplash.com/random/800x600/?youth"
+              url="/programs"
+            />
+          </div>
+          <Link to="/programs" className="mt-8 inline-block">
+            <Button size="lg">View All Programs</Button>
+          </Link>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-primary text-white relative overflow-hidden">
-        {/* ... CTA section content ... */}
+      <section className="py-16">
+        <div className="container mx-auto text-center max-w-2xl">
+          <h2 className="text-3xl font-bold mb-4">
+            Stay Connected with IMF Africa
+          </h2>
+          <p className="text-muted-foreground mb-8">
+            Subscribe to our newsletter to receive the latest updates, event
+            notifications, and spiritual resources directly in your inbox.
+          </p>
+          <SubscriptionForm />
+        </div>
       </section>
     </Layout>
   );

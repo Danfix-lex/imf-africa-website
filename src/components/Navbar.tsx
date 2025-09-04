@@ -1,165 +1,145 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown } from "lucide-react";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { Button } from "@/components/ui/button";
+import { Button } from "./ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuContent,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
-import ThemeToggle from "./ThemeToggle";
+} from "./ui/dropdown-menu";
+import { LayoutDashboard, LogOut, User, Menu } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { useTranslation } from "react-i18next";
+import ThemeToggle from "./ThemeToggle";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const { user, profile, logout, isAuthenticated } = useAuth();
-  const location = useLocation();
-  const { t } = useTranslation();
+  const { isAuthenticated, profile, logout } = useAuth();
+  const navigate = useNavigate();
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+  };
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    setIsOpen(false);
-  }, [location.pathname]);
-
-  const mainLinks = [
-    { name: "Programs", path: "/programs" },
-    { name: "Live Streams", path: "/live-streams" },
-    { name: "Membership", path: "/membership" },
-    { name: "Prayer Wall", path: "/prayer-requests" },
-    { name: "Giving", path: "/giving" },
-  ];
+  // Determine the correct home link based on authentication status
+  const homeLink = isAuthenticated ? "/dashboard" : "/";
 
   return (
-    <nav className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300", scrolled ? "glass py-2 shadow-md" : "bg-transparent py-4")}>
-      <div className="container-custom flex items-center justify-between">
-        <Link to="/home" className="flex items-center space-x-2">
-          <img src="/logo.png" alt="IMF Africa Logo" className="h-8 w-auto" />
-        </Link>
-
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-8">
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <Link to="/home" className={navigationMenuTriggerStyle()}>Home</Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>About</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[200px] lg:w-[250px]">
-                    <ListItem to="/about" title="About Us">Our mission, vision, and leadership.</ListItem>
-                    <ListItem to="/beliefs" title="Our Beliefs">Our core doctrines and statement of faith.</ListItem>
-                    <ListItem to="/leadership" title="Leadership">Meet our executive board and leaders.</ListItem>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-              {mainLinks.map(link => (
-                <NavigationMenuItem key={link.path}>
-                  <Link to={link.path} className={navigationMenuTriggerStyle()}>{link.name}</Link>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
+    <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
+        {/* Logo and Mobile Menu */}
+        <div className="flex items-center space-x-4">
+          <Link to={homeLink} className="flex items-center space-x-2">
+            <img src="/logo.png" alt="Logo" className="h-8 w-auto" />
+            <span className="hidden font-bold sm:inline-block">IMF Africa</span>
+          </Link>
+          <div className="md:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+                <SheetHeader>
+                  <SheetTitle>Navigation</SheetTitle>
+                </SheetHeader>
+                <Separator className="my-4" />
+                <div className="flex flex-col space-y-4">
+                  <Link to={homeLink} onClick={() => { /* close sheet */ }}>Home</Link>
+                  <Link to="/about" onClick={() => { /* close sheet */ }}>About</Link>
+                  <Link to="/beliefs" onClick={() => { /* close sheet */ }}>Our Beliefs</Link>
+                  <Link to="/leadership" onClick={() => { /* close sheet */ }}>Leadership</Link>
+                  <Link to="/live-streams" onClick={() => { /* close sheet */ }}>Live Streams</Link>
+                  <Link to="/programs" onClick={() => { /* close sheet */ }}>Programs</Link>
+                  <Link to="/giving" onClick={() => { /* close sheet */ }}>Giving</Link>
+                  <Link to="/prayer-requests" onClick={() => { /* close sheet */ }}>Prayer Requests</Link>
+                  {isAuthenticated && (
+                    <>
+                      <Separator className="my-2" />
+                      <Link to="/dashboard" onClick={() => { /* close sheet */ }}>Dashboard</Link>
+                      <Link to="/membership" onClick={() => { /* close sheet */ }}>Membership</Link>
+                      <Button onClick={handleLogout} variant="ghost" className="w-full justify-start">
+                        Logout
+                      </Button>
+                    </>
+                  )}
+                  {!isAuthenticated && (
+                    <>
+                      <Separator className="my-2" />
+                      <Link to="/auth">
+                        <Button className="w-full">Sign In</Button>
+                      </Link>
+                    </>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
 
-        {/* Right side of Navbar */}
-        <div className="hidden md:flex items-center space-x-3">
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex flex-1 items-center justify-center space-x-4">
+          <Link to={homeLink}>Home</Link>
+          <Link to="/about">About</Link>
+          <Link to="/beliefs">Our Beliefs</Link>
+          <Link to="/leadership">Leadership</Link>
+          <Link to="/live-streams">Live Streams</Link>
+          <Link to="/programs">Programs</Link>
+          <Link to="/giving">Giving</Link>
+          <Link to="/prayer-requests">Prayer Requests</Link>
+        </div>
+
+        {/* User Actions and Theme Toggle */}
+        <div className="flex items-center space-x-4">
           <LanguageSwitcher />
           <ThemeToggle />
-          {isAuthenticated ? (
+          {!isAuthenticated ? (
+            <Link to="/auth">
+              <Button>Sign In</Button>
+            </Link>
+          ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-1">
-                  {profile?.display_name || user?.email?.split('@')[0] || 'User'}
-                  <ChevronDown size={16} />
+                <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                  <Avatar className="h-9 w-9">
+                    <AvatarImage src="/avatars/01.png" alt="@shadcn" />
+                    <AvatarFallback>
+                      {profile?.display_name?.charAt(0) || <User className="h-5 w-5" />}
+                    </AvatarFallback>
+                  </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem asChild>
-                  <Link to="/dashboard" className="w-full cursor-pointer">{t("nav.dashboard")}</Link>
-                </DropdownMenuItem>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{profile?.display_name || "User"}</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {profile?.role || "user"}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout} className="cursor-pointer text-red-600">
-                  {t("nav.logout")}
+                <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+                  <LayoutDashboard className="mr-2 h-4 w-4" />
+                  <span>Dashboard</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <Link to="/auth">
-              <Button className="btn-primary">{t("nav.signIn")}</Button>
-            </Link>
           )}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button className="md:hidden text-foreground" onClick={toggleMenu} aria-label="Toggle menu">
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile Navigation */}
-      <div className={cn("md:hidden absolute w-full bg-background/95 backdrop-blur-md shadow-lg transition-all duration-300 ease-in-out overflow-hidden", isOpen ? "max-h-screen py-4" : "max-h-0")}>
-        <div className="container-custom flex flex-col space-y-2">
-          <Link to="/home" className="py-2 px-4 font-medium hover:text-primary rounded-md">Home</Link>
-          <Link to="/about" className="py-2 px-4 font-medium hover:text-primary rounded-md">About Us</Link>
-          <Link to="/beliefs" className="py-2 px-4 font-medium hover:text-primary rounded-md">Our Beliefs</Link>
-          <Link to="/leadership" className="py-2 px-4 font-medium hover:text-primary rounded-md">Leadership</Link>
-          {mainLinks.map(link => (
-             <Link key={link.path} to={link.path} className="py-2 px-4 font-medium hover:text-primary rounded-md">{link.name}</Link>
-          ))}
-          <div className="border-t border-border pt-4 mt-2 flex items-center gap-3 px-4">
-            <LanguageSwitcher />
-            <ThemeToggle />
-          </div>
-          <div className="border-t border-border pt-4 mt-2 px-4">
-            {isAuthenticated ? (
-              <div className="space-y-2">
-                <Link to="/dashboard" className="block py-2 font-medium hover:text-primary">{t("nav.dashboard")}</Link>
-                <button onClick={logout} className="w-full text-left py-2 font-medium text-red-500 hover:text-red-600">{t("nav.logout")}</button>
-              </div>
-            ) : (
-              <Link to="/auth" className="py-2">
-                <Button className="btn-primary w-full">{t("nav.signIn")}</Button>
-              </Link>
-            )}
-          </div>
         </div>
       </div>
     </nav>
   );
 };
-
-const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a"> & { to: string }>(({ className, title, children, to, ...props }, ref) => {
-  return (
-    <li>
-      <Link to={to} ref={ref} className={cn("block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground", className)} {...props}>
-        <div className="text-sm font-medium leading-none">{title}</div>
-        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
-      </Link>
-    </li>
-  );
-});
-ListItem.displayName = "ListItem";
 
 export default Navbar;
