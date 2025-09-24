@@ -11,7 +11,7 @@ dotenv.config();
 
 const app = express();
 // Use Render's PORT or default to 5000
-const PORT = process.env.PORT || 5000;
+const PORT: number = parseInt(process.env.PORT || '5000', 10);
 
 // CORS configuration
 const corsOptions = {
