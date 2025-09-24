@@ -24,3 +24,7 @@ services:
         value: 10000
       - key: CORS_ORIGIN
         value: https://imf-africa-frontend.onrender.com
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false

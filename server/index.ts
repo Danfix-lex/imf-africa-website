@@ -28,20 +28,27 @@ const corsOptions = {
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(morgan('combined'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// MongoDB connection
-// Use Render's MONGODB_URI or default to local
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/imf-africa';
-
-mongoose.connect(MONGODB_URI)
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch((error) => {
+// MongoDB connection with retry logic
+const connectDB = async () => {
+  try {
+    // Use Render's MONGODB_URI or default to local
+    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/imf-africa';
+    
+    console.log('Attempting to connect to MongoDB...');
+    await mongoose.connect(MONGODB_URI);
+    console.log('Connected to MongoDB successfully');
+  } catch (error) {
     console.error('MongoDB connection error:', error);
-  });
+    // Exit process with error code for Render to detect failure
+    process.exit(1);
+  }
+};
+
+// Connect to MongoDB
+connectDB();
 
 // Middleware to verify JWT token
 const authenticateToken = async (req: any, res: express.Response, next: express.NextFunction) => {
@@ -323,8 +330,13 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`IMF Africa Connect API server running on port ${PORT}`);
+});
+
+// Add a simple health check endpoint for Render
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
 export default app;

@@ -202,55 +202,32 @@ For production deployment, you'll need to set these environment variables:
 **Frontend:**
 - `NEXT_PUBLIC_API_URL`: Backend API URL
 
+### Troubleshooting Deployment Issues
+
+If you encounter "Exited with status 2" errors during deployment:
+
+1. **Check Build Logs**: Look for specific error messages in the build logs
+2. **Verify Dependencies**: Ensure all required dependencies are in [package.json](file:///c:/Users/USER/imf-africa-website/package.json)
+3. **Check Environment Variables**: Make sure all required environment variables are set
+4. **Verify Build Commands**: Ensure the build commands in [render.yaml](file:///c:/Users/USER/imf-africa-website/render.yaml) match your [package.json](file:///c:/Users/USER/imf-africa-website/package.json) scripts
+5. **Check File Paths**: Ensure all file paths in your TypeScript configuration are correct
+
+Common fixes:
+- Add missing dependencies to [package.json](file:///c:/Users/USER/imf-africa-website/package.json)
+- Fix TypeScript compilation errors
+- Ensure the [tsconfig.json](file:///c:/Users/USER/imf-africa-website/server/tsconfig.json) is properly configured
+- Verify MongoDB connection string format
+
 ## 📝 Environment Variables
 
 Create a `.env` file in the root directory:
 
-```env
+```
 # Database
 MONGODB_URI=mongodb://localhost:27017/imf-africa
 
 # Server
 PORT=5000
-NODE_ENV=development
-
-# Security
-JWT_SECRET=your_jwt_secret
-CORS_ORIGIN=http://localhost:3000
-
-# Email (optional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your_email@gmail.com
-SMTP_PASS=your_password
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-For support, email africa-connect@imf.org or create an issue on GitHub.
-
-## 🌟 Acknowledgments
-
-- International Monetary Fund for the initiative
-- Material-UI team for the excellent component library
-- Framer Motion for smooth animations
-- Next.js team for the amazing framework
-
----
-
-**Built with ❤️ for Africa's Economic Future**PORT=5000
 NODE_ENV=development
 
 # Security
