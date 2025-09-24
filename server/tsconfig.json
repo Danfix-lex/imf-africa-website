@@ -3,10 +3,10 @@
     "target": "ES2020",
     "module": "CommonJS",
     "moduleResolution": "node",
-    "lib": ["ES2020", "dom"],
+    "lib": ["ES2020"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
@@ -17,8 +17,7 @@
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "types": ["node"]
+    "emitDecoratorMetadata": true
   },
   "include": [
     "**/*.ts"
