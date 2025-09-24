@@ -1,0 +1,26 @@
+services:
+  # Frontend Next.js Application
+  - type: web
+    name: imf-africa-frontend
+    env: node
+    buildCommand: npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        value: https://imf-africa-backend.onrender.com
+
+  # Backend Express API
+  - type: web
+    name: imf-africa-backend
+    env: node
+    buildCommand: npm run server:build
+    startCommand: npm run server:start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CORS_ORIGIN
+        value: https://imf-africa-frontend.onrender.com
