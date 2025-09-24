@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -51,7 +51,7 @@ const connectDB = async () => {
 connectDB();
 
 // Middleware to verify JWT token
-const authenticateToken = async (req: any, res: express.Response, next: express.NextFunction) => {
+const authenticateToken = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -65,7 +65,7 @@ const authenticateToken = async (req: any, res: express.Response, next: express.
     if (!user || !user.isActive) {
       return res.status(401).json({ error: 'Invalid or inactive user' });
     }
-    req.user = user;
+    (req as any).user = user;
     next();
   } catch (error) {
     return res.status(403).json({ error: 'Invalid or expired token' });
