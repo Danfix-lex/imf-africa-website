@@ -104,7 +104,7 @@ export default function LeadershipPage() {
     {
       name: "Amb. Edward Grace",
       role: "Secretary General, International Ministers Forum",
-      image: "/images/leadership/secretary-general.JPG",
+      image: "/images/leadership/secretary-general.png",
       bioSections: [
         {
           title: "Administrative Leadership",
