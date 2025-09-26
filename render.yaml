@@ -9,7 +9,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: NEXT_PUBLIC_API_URL
-        value: https://imf-africa-backend.onrender.com
+        value: https://imf-africa-website-backend.onrender.com
 
   # Backend Express API
   - type: web
@@ -23,7 +23,7 @@ services:
       - key: PORT
         value: 10000
       - key: CORS_ORIGIN
-        value: https://imf-africa-frontend.onrender.com
+        value: https://imf-africa-website-frontend.onrender.com
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
