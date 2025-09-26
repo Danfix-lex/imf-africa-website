@@ -87,21 +87,6 @@ const newsArticles = [
     views: '6.3K',
   },
   {
-    id: 5,
-    title: 'Church Planting Initiative Plants 1,000th Church',
-    excerpt: 'Major church planting milestone supports new congregations, community outreach, and spiritual transformation projects across Africa.',
-    content: 'The IMF Africa\'s Church Planting Initiative has reached a historic milestone with the establishment of its 1,000th church across the African continent...',
-    author: 'Rev. Dr. Elena Rodriguez',
-    authorRole: 'Church Planting Director',
-    publishDate: '2024-01-05',
-    category: 'Church Planting',
-    tags: ['Church Planting', 'Evangelism', 'Community Outreach', 'Missions'],
-    featured: false,
-    imageUrl: '/api/placeholder/600/300',
-    readTime: '8 min read',
-    views: '11.1K',
-  },
-  {
     id: 6,
     title: 'African Women Ministers Network Strengthens Leadership Development',
     excerpt: 'Historic agreement among women ministers across 20 African countries enhances leadership development and mentorship programs.',
@@ -123,7 +108,6 @@ const categoryIcons: { [key: string]: React.ReactElement } = {
   'Digital Ministry': <BusinessIcon />,
   'Church Unity': <GlobalIcon />,
   'Youth Ministry': <PersonIcon />,
-  'Church Planting': <TrendingIcon />,
   'Women Ministry': <PolicyIcon />,
 };
 

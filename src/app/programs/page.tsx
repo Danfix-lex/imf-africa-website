@@ -33,13 +33,6 @@ const ProgramsPage: React.FC = () => {
       status: 'Active',
     },
     {
-      icon: <PublicIcon />,
-      title: 'Church Planting Initiative',
-      description: 'Strategic program to establish new churches in underserved communities across Africa.',
-      category: 'Church Development',
-      status: 'Active',
-    },
-    {
       icon: <GroupIcon />,
       title: 'Community Partnership Program',
       description: 'Collaborative efforts with local organizations to address community needs and development.',

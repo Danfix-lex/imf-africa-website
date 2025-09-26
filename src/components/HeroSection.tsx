@@ -236,12 +236,6 @@ const HeroSection: React.FC = () => {
                       </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
-                      <ChurchIcon sx={{ color: 'primary.main', fontSize: { xs: 20, md: 24 } }} />
-                      <Typography variant="body1" sx={{ fontWeight: 600, color: 'text.primary', fontSize: { xs: '0.9rem', md: '1rem' } }}>
-                        Church Planting
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
                       <HandshakeIcon sx={{ color: 'primary.main', fontSize: { xs: 20, md: 24 } }} />
                       <Typography variant="body1" sx={{ fontWeight: 600, color: 'text.primary', fontSize: { xs: '0.9rem', md: '1rem' } }}>
                         Ministry Partnership

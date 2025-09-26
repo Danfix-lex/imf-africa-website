@@ -57,30 +57,6 @@ const programs = [
     color: '#1976d2',
   },
   {
-    icon: <HandshakeIcon />,
-    title: 'Church Planting Initiative',
-    description: 'Strategic church planting programs to establish new congregations and expand ministry reach across underserved communities.',
-    category: 'Church Development',
-    status: 'Active',
-    budget: '$3M',
-    duration: '2019-2024',
-    countries: ['South Africa', 'Egypt', 'Morocco', 'Tunisia', 'Algeria'],
-    beneficiaries: '500K people',
-    objectives: [
-      'Plant new churches',
-      'Reach unreached communities',
-      'Develop local leadership',
-      'Build sustainable congregations',
-    ],
-    achievements: [
-      '1,200 churches planted',
-      '300 communities reached',
-      '450 local pastors trained',
-      '85% church sustainability rate',
-    ],
-    color: '#7b1fa2',
-  },
-  {
     icon: <BusinessIcon />,
     title: 'Youth Ministry Programs',
     description: 'Empowering young people through discipleship, leadership development, and skills training programs.',
@@ -104,6 +80,7 @@ const programs = [
     ],
     color: '#388e3c',
   },
+
   {
     icon: <TrendingUpIcon />,
     title: 'Women in Ministry',
@@ -184,7 +161,7 @@ const ProgramsSection: React.FC = () => {
   const [selectedProgram, setSelectedProgram] = useState<typeof programs[0] | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const categories = ['All', 'Ministry Training', 'Church Development', 'Youth Development', 'Women Leadership', 'Community Outreach', 'Global Missions'];
+  const categories = ['All', 'Ministry Training', 'Youth Development', 'Women Leadership', 'Community Outreach', 'Global Missions'];
   
   const filteredPrograms = selectedCategory === 'All' 
     ? programs 
