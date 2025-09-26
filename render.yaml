@@ -15,7 +15,7 @@ services:
   - type: web
     name: imf-africa-backend
     env: node
-    buildCommand: npm run server:build
+    buildCommand: npm install && npm install @types/node && npm run server:build
     startCommand: npm run server:start
     envVars:
       - key: NODE_ENV
