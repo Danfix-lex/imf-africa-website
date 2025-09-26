@@ -9,21 +9,26 @@ import TestimonialsSection from '@/components/TestimonialsSection';
 import RemittalsSection from '@/components/RemittalsSection';
 import CallToActionSection from '@/components/CallToActionSection';
 import Footer from '@/components/Footer';
+import InitiativesSection from '@/components/InitiativesSection';
+import { Box } from '@mui/material';
 
 export default function SitePage() {
   return (
-    <>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header />
-      <HeroSection />
-      <StatisticsSection />
-      <AboutSection />
-      <ProgramsSection />
-      <NewsSection />
-      <LeadershipSection />
-      <TestimonialsSection />
-      <RemittalsSection />
-      <CallToActionSection />
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <HeroSection />
+        <StatisticsSection />
+        <AboutSection />
+        <ProgramsSection />
+        <InitiativesSection />
+        <NewsSection />
+        <LeadershipSection />
+        <TestimonialsSection />
+        <RemittalsSection />
+        <CallToActionSection />
+      </Box>
       <Footer />
-    </>
+    </Box>
   );
 }

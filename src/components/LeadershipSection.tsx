@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Container,
@@ -8,20 +8,10 @@ import {
   CardContent,
   Avatar,
   useTheme,
-  IconButton,
-  Modal,
   Chip,
-  Divider,
 } from '@mui/material';
 import {
-  LinkedIn as LinkedInIcon,
-  Twitter as TwitterIcon,
-  Email as EmailIcon,
-  Close as CloseIcon,
-  Phone as PhoneIcon,
   LocationOn as LocationIcon,
-  Business as BusinessIcon,
-  School as SchoolIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 
@@ -115,11 +105,12 @@ const LeadershipSection: React.FC = () => {
 
         <Box sx={{ 
           display: 'grid', 
-          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, 
+          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }, 
           gap: { xs: 3, md: 4 },
-          maxWidth: 1400,
-          mx: 'auto'
-        }}>
+          maxWidth: { xs: '100%', md: 1400 },
+          mx: 'auto',
+          px: { xs: 2, sm: 3, md: 0 }
+}}>
           {leadershipTeam.map((leader, index) => (
             <motion.div
               key={leader.id}
@@ -177,7 +168,8 @@ const LeadershipSection: React.FC = () => {
                     fontWeight: 600, 
                     mb: 1, 
                     color: 'text.primary',
-                    fontSize: { xs: '1.2rem', md: '1.5rem' }
+                    fontSize: { xs: '1.1rem', md: '1.3rem' },
+                    lineHeight: 1.2
                   }}>
                     {leader.name}
                   </Typography>
@@ -188,7 +180,8 @@ const LeadershipSection: React.FC = () => {
                       color: 'primary.main',
                       mb: 1,
                       fontWeight: 500,
-                      fontSize: { xs: '0.9rem', md: '1rem' },
+                      fontSize: { xs: '0.85rem', md: '0.95rem' },
+                      lineHeight: 1.3
                     }}
                   >
                     {leader.position}
@@ -202,6 +195,7 @@ const LeadershipSection: React.FC = () => {
                       bgcolor: 'secondary.main',
                       color: 'white',
                       fontWeight: 500,
+                      fontSize: { xs: '0.65rem', sm: '0.7rem' }
                     }}
                   />
 
@@ -211,7 +205,7 @@ const LeadershipSection: React.FC = () => {
                       color: 'text.secondary',
                       lineHeight: 1.6,
                       mb: 2,
-                      fontSize: { xs: '0.85rem', md: '0.9rem' },
+                      fontSize: { xs: '0.8rem', md: '0.85rem' },
                     }}
                   >
                     {leader.bio}
@@ -223,7 +217,7 @@ const LeadershipSection: React.FC = () => {
                     justifyContent: 'center',
                     gap: 1,
                     color: 'text.secondary',
-                    fontSize: { xs: '0.8rem', md: '0.85rem' }
+                    fontSize: { xs: '0.75rem', md: '0.8rem' }
                   }}>
                     <LocationIcon sx={{ fontSize: 16 }} />
                     <Typography variant="caption">

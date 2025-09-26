@@ -18,6 +18,7 @@ const corsOptions = {
   origin: [
     process.env.CORS_ORIGIN || 'http://localhost:3000', 
     'http://localhost:3001',
+    'http://localhost:3002',
     'https://imf-africa-frontend.onrender.com'
   ],
   credentials: true,

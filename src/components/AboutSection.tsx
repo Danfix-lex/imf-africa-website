@@ -65,7 +65,7 @@ const AboutSection: React.FC = () => {
   const theme = useTheme();
 
   return (
-    <Box sx={{ py: 12, bgcolor: 'background.default' }}>
+    <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: 'background.default' }}>
       <Container maxWidth="xl">
         {/* Main About Section */}
         <motion.div
@@ -74,7 +74,7 @@ const AboutSection: React.FC = () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <Box sx={{ textAlign: 'center', maxWidth: 1000, mx: 'auto', mb: 10 }}>
+          <Box sx={{ textAlign: 'center', maxWidth: 1000, mx: 'auto', mb: { xs: 8, md: 10 } }}>
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
               <Avatar
                 sx={{
@@ -139,11 +139,11 @@ const AboutSection: React.FC = () => {
               sx={{
                 bgcolor: 'primary.main',
                 color: 'white',
-                p: 6,
+                p: { xs: 4, md: 6 },
                 borderRadius: 4,
                 position: 'relative',
                 overflow: 'hidden',
-                mb: 8,
+                mb: { xs: 6, md: 8 },
                 '&::before': {
                   content: '""',
                   position: 'absolute',
@@ -173,7 +173,7 @@ const AboutSection: React.FC = () => {
           </Box>
         </motion.div>
 
-        <Divider sx={{ mb: 10, bgcolor: 'primary.main', height: 2 }} />
+        <Divider sx={{ mb: { xs: 8, md: 10 }, bgcolor: 'primary.main', height: 2 }} />
 
         {/* Core Values Section */}
         <motion.div
@@ -182,7 +182,7 @@ const AboutSection: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          <Box sx={{ textAlign: 'center', mb: 8 }}>
+          <Box sx={{ textAlign: 'center', mb: { xs: 6, md: 8 } }}>
             <Typography
               variant="h3"
               sx={{
@@ -208,7 +208,7 @@ const AboutSection: React.FC = () => {
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: '1fr 1fr 1fr' }, gap: 4 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: '1fr 1fr 1fr' }, gap: { xs: 3, md: 4 } }}>
             {coreValues.map((value, index) => (
               <motion.div
                 key={index}
@@ -248,7 +248,7 @@ const AboutSection: React.FC = () => {
                     },
                   }}
                 >
-                  <CardContent sx={{ p: 4, textAlign: 'center' }}>
+                  <CardContent sx={{ p: { xs: 3, md: 4 }, textAlign: 'center' }}>
                     <Avatar
                       sx={{
                         width: 70,
@@ -299,8 +299,8 @@ const AboutSection: React.FC = () => {
         >
           <Box
             sx={{
-              mt: 12,
-              p: 8,
+              mt: { xs: 8, md: 12 },
+              p: { xs: 4, md: 8 },
               bgcolor: 'secondary.main',
               color: 'white',
               borderRadius: 4,

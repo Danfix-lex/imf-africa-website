@@ -1,0 +1,46 @@
+warning: in the working copy of 'src/app/layout.tsx', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/src/app/layout.tsx b/src/app/layout.tsx[m
+[1mindex a795b57..dcd0915 100644[m
+[1m--- a/src/app/layout.tsx[m
+[1m+++ b/src/app/layout.tsx[m
+[36m@@ -1,7 +1,7 @@[m
+ import type { Metadata } from "next";[m
+ import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';[m
+ import { ThemeProvider } from '@mui/material/styles';[m
+[31m-import { CssBaseline } from '@mui/material';[m
+[32m+[m[32mimport { CssBaseline, Box } from '@mui/material';[m
+ import theme from '@/theme/theme';[m
+ import { AuthProvider } from '@/contexts/AuthContext';[m
+ import '@fontsource/roboto/300.css';[m
+[36m@@ -10,8 +10,6 @@[m [mimport '@fontsource/roboto/500.css';[m
+ import '@fontsource/roboto/700.css';[m
+ import "./globals.css";[m
+ [m
+[31m-[m
+[31m-[m
+ export const metadata: Metadata = {[m
+   title: "IMF Africa | International Ministers Forum Africa",[m
+   description: "International Ministers Forum Africa - Empowering ministers and strengthening churches across the African continent through fellowship, training, and spiritual development programs.",[m
+[36m@@ -31,16 +29,18 @@[m [mexport default function RootLayout({[m
+ }>) {[m
+   return ([m
+     <html lang="en">[m
+[31m-      <body>[m
+[32m+[m[32m      <body style={{ margin: 0, padding: 0, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>[m
+         <AppRouterCacheProvider>[m
+           <ThemeProvider theme={theme}>[m
+             <CssBaseline />[m
+             <AuthProvider>[m
+[31m-              {children}[m
+[32m+[m[32m              <Box component="main" sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>[m
+[32m+[m[32m                {children}[m
+[32m+[m[32m              </Box>[m
+             </AuthProvider>[m
+           </ThemeProvider>[m
+         </AppRouterCacheProvider>[m
+       </body>[m
+     </html>[m
+   );[m
+[31m-}[m
+[32m+[m[32m}[m
+\ No newline at end of file[m

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, Box } from '@mui/material';
 import theme from '@/theme/theme';
 import { AuthProvider } from '@/contexts/AuthContext';
 import '@fontsource/roboto/300.css';
@@ -9,8 +9,6 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import "./globals.css";
-
-
 
 export const metadata: Metadata = {
   title: "IMF Africa | International Ministers Forum Africa",
@@ -31,12 +29,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body style={{ margin: 0, padding: 0, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <AuthProvider>
-              {children}
+              <Box component="main" sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                {children}
+              </Box>
             </AuthProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>

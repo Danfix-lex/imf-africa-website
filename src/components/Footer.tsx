@@ -7,6 +7,7 @@ import {
   TextField,
   Button,
   useTheme,
+  Grid,
 } from '@mui/material';
 import {
   Email as EmailIcon,
@@ -25,7 +26,7 @@ const Footer: React.FC = () => {
       sx={{
         bgcolor: 'primary.main',
         color: 'white',
-        py: 6,
+        py: { xs: 6, md: 8 },
         mt: 'auto',
       }}
     >
@@ -36,16 +37,13 @@ const Footer: React.FC = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: { xs: 'column', md: 'row' },
-              gap: 6,
-              mb: 4,
-            }}
+          <Grid 
+            container 
+            spacing={{ xs: 4, md: 6 }}
+            sx={{ mb: { xs: 4, md: 6 } }}
           >
             {/* Brand Section */}
-            <Box sx={{ flex: 1 }}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                 <AccountBalanceIcon sx={{ fontSize: 32 }} />
                 <Box>
@@ -65,10 +63,10 @@ const Footer: React.FC = () => {
                 across the African continent through fellowship, training,
                 and spiritual development programs.
               </Typography>
-            </Box>
+            </Grid>
 
             {/* Contact Information */}
-            <Box sx={{ flex: 1 }}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
                 Contact Information
               </Typography>
@@ -92,10 +90,10 @@ const Footer: React.FC = () => {
                   </Typography>
                 </Box>
               </Box>
-            </Box>
+            </Grid>
 
             {/* Newsletter Signup */}
-            <Box sx={{ flex: 1 }}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
                 Stay Updated
               </Typography>
@@ -148,14 +146,14 @@ const Footer: React.FC = () => {
                   Subscribe
                 </Button>
               </Box>
-            </Box>
-          </Box>
+            </Grid>
+          </Grid>
 
           {/* Bottom Section */}
           <Box
             sx={{
               borderTop: '1px solid rgba(255, 255, 255, 0.2)',
-              pt: 4,
+              pt: { xs: 4, md: 6 },
               display: 'flex',
               flexDirection: { xs: 'column', md: 'row' },
               justifyContent: 'space-between',
@@ -169,8 +167,9 @@ const Footer: React.FC = () => {
             <Box
               sx={{
                 display: 'flex',
-                gap: 3,
+                gap: { xs: 2, md: 3 },
                 flexWrap: 'wrap',
+                justifyContent: { xs: 'center', md: 'flex-end' },
               }}
             >
               <Typography

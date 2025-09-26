@@ -125,14 +125,15 @@ const HeroSection: React.FC = () => {
           <Box sx={{ 
             display: 'flex', 
             flexDirection: { xs: 'column', lg: 'row' }, 
-            gap: { xs: 4, lg: 6 }, 
+            gap: { xs: 6, lg: 8 }, 
             alignItems: 'center',
-            textAlign: { xs: 'center', lg: 'left' }
+            textAlign: { xs: 'center', lg: 'left' },
+            py: { xs: 6, md: 10 }
           }}>
             {/* Content Section */}
             <Box sx={{ flex: 1, maxWidth: { xs: '100%', lg: '600px' } }}>
               <motion.div variants={itemVariants}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2, justifyContent: { xs: 'center', lg: 'flex-start' } }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3, justifyContent: { xs: 'center', lg: 'flex-start' } }}>
                   <Chip 
                     icon={<StarIcon />}
                     label="Established 1987" 
@@ -159,7 +160,7 @@ const HeroSection: React.FC = () => {
                     fontSize: { xs: '2.5rem', sm: '3.2rem', md: '4rem', lg: '4.5rem' },
                     fontWeight: 800,
                     color: 'text.primary',
-                    mb: 2,
+                    mb: 3,
                     lineHeight: 1.1,
                     letterSpacing: '-0.02em',
                   }}
@@ -192,7 +193,7 @@ const HeroSection: React.FC = () => {
                     fontSize: { xs: '1.2rem', sm: '1.5rem', md: '1.8rem' },
                     fontWeight: 600,
                     color: 'primary.main',
-                    mb: 3,
+                    mb: 4,
                     fontStyle: 'italic',
                     letterSpacing: '0.02em',
                   }}
@@ -206,7 +207,7 @@ const HeroSection: React.FC = () => {
                   variant="h5"
                   sx={{
                     color: 'text.primary',
-                    mb: 3,
+                    mb: 4,
                     lineHeight: 1.7,
                     maxWidth: '700px',
                     fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.4rem' },
@@ -220,11 +221,11 @@ const HeroSection: React.FC = () => {
               </motion.div>
 
               <motion.div variants={itemVariants}>
-                <Box sx={{ mb: 4 }}>
+                <Box sx={{ mb: 5 }}>
                   <Box sx={{ 
                     display: 'grid', 
                     gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, 
-                    gap: 2, 
+                    gap: 2.5, 
                     maxWidth: '700px',
                     mx: { xs: 'auto', lg: 0 }
                   }}>
@@ -372,7 +373,7 @@ const HeroSection: React.FC = () => {
                 <Box sx={{ 
                   display: 'grid', 
                   gridTemplateColumns: { xs: '1fr 1fr', md: '1fr 1fr' }, 
-                  gap: { xs: 2, md: 3 } 
+                  gap: { xs: 2.5, md: 3.5 } 
                 }}>
                   {stats.map((stat, index) => (
                     <Box key={index}>
@@ -409,7 +410,7 @@ const HeroSection: React.FC = () => {
                             },
                           }}
                         >
-                          <CardContent sx={{ textAlign: 'center', p: { xs: 2, md: 4 } }}>
+                          <CardContent sx={{ textAlign: 'center', p: { xs: 2.5, md: 4 } }}>
                             <motion.div
                               whileHover={{ rotate: [0, -5, 5, 0] }}
                               transition={{ duration: 0.5 }}
