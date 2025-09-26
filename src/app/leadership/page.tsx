@@ -161,7 +161,7 @@ export default function LeadershipPage() {
 
       <Grid container spacing={6}>
         {founders.map((founder, index) => (
-          <Grid item xs={12} key={`founder-${index}`}>
+          <Grid size={{ xs: 12 }} key={`founder-${index}`}>
             <MotionBox
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -169,7 +169,7 @@ export default function LeadershipPage() {
             >
               <Paper elevation={4} sx={{ p: 4, borderRadius: 4 }}>
                 <Grid container spacing={4} alignItems="center">
-                  <Grid item xs={12} md={4} display="flex" justifyContent="center">
+                  <Grid size={{ xs: 12, md: 4 }} display="flex" justifyContent="center">
                     <Avatar
                       src={founder.image}
                       alt={founder.name}
@@ -182,7 +182,7 @@ export default function LeadershipPage() {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} md={8}>
+                  <Grid size={{ xs: 12, md: 8 }}>
                     <Typography variant="h3" component="h2" gutterBottom color="secondary">
                       {founder.name}
                     </Typography>
@@ -224,7 +224,7 @@ export default function LeadershipPage() {
 
       <Grid container spacing={6}>
         {currentLeaders.map((leader, index) => (
-          <Grid item xs={12} key={`current-${index}`}>
+          <Grid size={{ xs: 12 }} key={`current-${index}`}>
             <MotionBox
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -232,7 +232,7 @@ export default function LeadershipPage() {
             >
               <Paper elevation={4} sx={{ p: 4, borderRadius: 4 }}>
                 <Grid container spacing={4} alignItems="center">
-                  <Grid item xs={12} md={4} display="flex" justifyContent="center">
+                  <Grid size={{ xs: 12, md: 4 }} display="flex" justifyContent="center">
                     <Avatar
                       src={leader.image}
                       alt={leader.name}
@@ -245,7 +245,7 @@ export default function LeadershipPage() {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={12} md={8}>
+                  <Grid size={{ xs: 12, md: 8 }}>
                     <Typography variant="h3" component="h2" gutterBottom color="secondary">
                       {leader.name}
                     </Typography>
