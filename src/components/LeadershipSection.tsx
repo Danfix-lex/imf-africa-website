@@ -18,39 +18,39 @@ import { motion } from 'framer-motion';
 const leadershipTeam = [
   {
     id: 1,
-    name: 'Dr. Samuel Ojo',
-    position: 'President & Chairman',
+    name: 'Bishop Darrell & Pastor Kathy Gooden',
+    position: 'President, IMF USA',
     department: 'Executive Leadership',
-    bio: 'Dr. Samuel Ojo brings decades of ministry experience and leads IMF Africa\'s strategic initiatives across the continent with a focus on spiritual transformation and church development.',
-    avatar: '/images/leadership/president.jpg',
-    location: 'Lagos, Nigeria',
+    bio: 'Current President of the International Ministers Forum (IMF) USA. They Pastor the Rehoboth Christian Center in Tallapoosa, Georgia. They have been pastors for 43 years and married 53 years. They had IMF incorporated in Georgia.',
+    avatar: '/images/leadership/president.png',
+    location: 'Tallapoosa, Georgia, USA',
   },
   {
     id: 2,
-    name: 'Pastor Grace Adewale',
-    position: 'Vice President',
+    name: 'Pastor Paul Price',
+    position: 'Vice President, IMF USA',
     department: 'Operations & Development',
-    bio: 'Pastor Grace Adewale oversees operational excellence and ministry development programs, ensuring effective implementation of IMF Africa\'s vision across member nations.',
+    bio: 'Made Vice President in 2012. Pastor of Cornerstone Worship Center in Indiana, Pennsylvania.',
     avatar: '/images/leadership/vice-president.jpg',
-    location: 'Accra, Ghana',
+    location: 'Indiana, Pennsylvania, USA',
   },
   {
     id: 3,
-    name: 'Bishop Michael Okonkwo',
-    position: 'Africa/National President',
+    name: 'Rev. Olusegun and Rev Dr Blessing Jibuike',
+    position: 'President, IMF Africa',
     department: 'Regional Coordination',
-    bio: 'Bishop Michael Okonkwo coordinates regional activities and strengthens partnerships with local churches and ministries across African nations.',
-    avatar: '/images/leadership/africa-president.jpg',
-    location: 'Abuja, Nigeria',
+    bio: 'President of IMF Nigeria and the entire IMF family in Nigeria and Africa. Recently inaugurated the IMF Lagos State chapter under the leadership of Rev Oladapo Taiwo.',
+    avatar: '/images/leadership/africa-president.png',
+    location: 'Lagos, Nigeria',
   },
   {
     id: 4,
-    name: 'Rev. Dr. Sarah Johnson',
-    position: 'Secretary General',
+    name: 'Amb. Edward Grace',
+    position: 'Secretary General, IMF Africa',
     department: 'Administration & Finance',
-    bio: 'Rev. Dr. Sarah Johnson manages the administrative and financial operations of IMF Africa, ensuring transparency and efficient resource allocation for ministry programs.',
-    avatar: '/images/leadership/secretary-general.jpg',
-    location: 'Nairobi, Kenya',
+    bio: 'Serves as the Secretary General of IMF Africa, overseeing the administrative functions and coordination of the IMF Africa chapter.',
+    avatar: '/images/leadership/secretary-general.JPG',
+    location: 'Africa Region',
   },
 ];
 
@@ -87,7 +87,7 @@ const LeadershipSection: React.FC = () => {
                 fontSize: { xs: '2rem', md: '3rem' },
               }}
             >
-              Ministry Leadership Team
+              IMF Leadership Team
             </Typography>
             <Typography
               variant="h6"
@@ -98,7 +98,7 @@ const LeadershipSection: React.FC = () => {
                 lineHeight: 1.6,
               }}
             >
-              Meet the experienced spiritual leaders driving ministry transformation across Africa
+              Meet the experienced spiritual leaders guiding the International Ministers Forum globally and regionally
             </Typography>
           </Box>
         </motion.div>

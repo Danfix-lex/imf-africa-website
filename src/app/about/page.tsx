@@ -167,21 +167,16 @@ const AboutPage: React.FC = () => {
                       Our Story
                     </Typography>
                     <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
-                      Founded in 2010, the International Ministers Forum Africa began as a small gathering of pastors 
-                      committed to strengthening the church across the African continent. What started as monthly 
-                      fellowship meetings has grown into a comprehensive network of training centers, resource 
-                      development initiatives, and church planting movements.
+                      The International Ministers Forum (IMF) has been in existence since August 18, 1950. Originally started as a women's ministerial group, Louise Copeland was the first president of the forum, serving from 1960 until 1998. She was pastor of Faith Tabernacle in Poplar Bluff, Missouri.
                     </Typography>
                     <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
-                      Today, we operate in 54 African nations, having equipped over 15,000 ministers with advanced 
-                      theological education and practical ministry skills. Our work has resulted in the establishment 
-                      of more than 3,200 new churches and the transformation of over 750,000 lives through various 
-                      outreach programs.
+                      Men were allowed to join around 1975 when they asked the group because of their integrity. The name was then changed to International Ministers Forum. Mary Smith was her vice president and trained under her. Sis. Copeland became known as "Preacher".
+                    </Typography>
+                    <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
+                      IMF was incorporated in 1987 in Missouri the year before Sis. Copeland died in 1988. Sis. Doris Swartz was the secretary treasurer and trained under "preacher". She later moved back to Ohio to pastor the United Christian Center in Dayton for over 40 years. Sis. Doris became the second president until her death in 2012 and passed the leadership to Bishop Darrell & Kathy Gooden.
                     </Typography>
                     <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary' }}>
-                      Our vision is to see vibrant, biblically grounded churches in every community across Africa, 
-                      led by well-trained, Spirit-filled leaders who are equipped to address both the spiritual and 
-                      practical needs of their congregations.
+                      Our vision is to see vibrant, biblically grounded churches in every community across Africa, led by well-trained, Spirit-filled leaders who are equipped to address both the spiritual and practical needs of their congregations. IMF is committed to the gospel of Christ. Thus we must consider our action and decision in whatever we do. The scripture in 2 Peter 1:10 advises us to make our calling and election sure, and to walk worthy of our vocation. Integrity, accountability and responsibility are what IMF represents which are keys to successful ministry.
                     </Typography>
                     <Button variant="contained" size="large">
                       Learn More About Our Mission

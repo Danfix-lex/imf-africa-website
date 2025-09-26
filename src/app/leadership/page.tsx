@@ -9,47 +9,39 @@ export default function LeadershipPage() {
   const founders = [
     {
       name: "Rev. Mary Louise Copeland",
-      role: "Founder, International Ministers Forum",
+      role: "First President, International Ministers Forum",
       image: "/images/leadership/mary-copeland.jpg",
       bioSections: [
         {
-          title: "Early Life & Personal Data",
-          content: "Born February 18, 1909, in Huffman, Mississippi County, Arkansas, USA. Died November 17, 1988, in Poplar Bluff, Butler County, Missouri at age 79."
+          title: "Early Life & Ministry Beginnings",
+          content: "Born February 18, 1909, in Huffman, Mississippi County, Arkansas, USA. Died November 17, 1988, in Poplar Bluff, Butler County, Missouri at age 79. Originally started as a women's ministerial group with Sis. Louise Copeland as the first president, serving from 1960 until 1998."
         },
         {
-          title: "Family & Spiritual Formation",
-          content: "Her father was a Southern Baptist minister and her mother influenced her toward Pentecostalism. Her upbringing straddled Baptist and Pentecostal influences in the Southern US."
+          title: "Ministry & Leadership",
+          content: "She was the pastor of Faith Tabernacle in Poplar Bluff, Missouri. Men were allowed to join around 1975 when they asked the group because of their integrity. The name was then changed to International Ministers Forum. Sis. Copeland became known as 'Preacher'."
         },
         {
-          title: "Ministry, Influence, & Legacy",
-          content: "A true pioneer in the Pentecostal, Healing Revival, Latter Rain, and Charismatic Movements. She ministered with many healing evangelists as part of the 'Voice of Healing' network, serving as an evangelist and convention speaker. Her ministry intersected with multiple revival currents throughout the 20th century."
-        },
-        {
-          title: "Publications & Tribute Works",
-          content: "A book titled \"A Tribute to the Life and Legacy of Rev. Mary Louise Copeland\" offers a detailed biography and reflections on her influence, providing background on the major movements she participated in and highlighting her interactions with key leaders."
+          title: "Legacy & Transition",
+          content: "IMF was incorporated in 1987 in Missouri the year before Sis. Copeland died in 1988. She was a true pioneer in the Pentecostal, Healing Revival, Latter Rain, and Charismatic Movements, ministering with many healing evangelists as part of the 'Voice of Healing' network."
         }
       ]
     },
     {
       name: "Pastor Doris Swartz",
-      role: "Secretary Treasurer, Founder of IMF",
+      role: "Second President, International Ministers Forum",
       image: "/images/leadership/doris-swartz.jpg",
       bioSections: [
         {
-          title: "Basic Data",
-          content: "Full name: Doris J. Swartz. Born: November 27, 1933. Died: May 22, 2012 at 4:01 AM in Dayton, Ohio at age 78."
+          title: "Personal & Ministry Background",
+          content: "Full name: Doris J. Swartz. Born: November 27, 1933. Died: May 22, 2012 at 4:01 AM in Dayton, Ohio at age 78. She was the Secretary Treasurer and trained under 'Preacher' Louise Copeland."
         },
         {
-          title: "Family",
-          content: "Parents: George Todd, Sr. (father), Gertrude Todd (mother). Siblings: George Todd, Jr.; Gloria Millat Todd; sister who predeceased her, Delores June Pierson. Children: David E. Swartz, Jr. (with wife Josephine), William K. Swartz. Grandchildren: 7 grandchildren and great-grandchildren alive at time of death."
+          title: "Leadership & Service",
+          content: "Pastor of United Christian Center Church, Dayton, OH for 45 years. She later moved back to Ohio to pastor the United Christian Center in Dayton for over 40 years. Became the second president of IMF after Sis. Copeland's death in 1988 and served until her death in 2012."
         },
         {
-          title: "Ministry & Work",
-          content: "Pastor of United Christian Center Church, Dayton, OH for 45 years and President of the International Ministers’ Forum. Her ministry spanned over 50 years, impacting people on four continents and according to records reaching all seven continents through her ministry efforts."
-        },
-        {
-          title: "Legacy & Other Notes",
-          content: "Known for long-term pastoral leadership in Dayton with global influence through personal ministry in many places beyond her home church. After her death, services were held at United Christian Center with interment at Woodland Cemetery."
+          title: "Legacy & Transition",
+          content: "After her death, services were held at United Christian Center with interment at Woodland Cemetery. She passed the leadership to Bishop Darrell & Kathy Gooden, who had been pastors for 43 years and married 53 years at that time."
         }
       ]
     }
@@ -57,43 +49,43 @@ export default function LeadershipPage() {
 
   const currentLeaders = [
     {
-      name: "Bishop Darrell Gooden",
-      role: "President, International Ministers Forum",
+      name: "Bishop Darrell & Pastor Kathy Gooden",
+      role: "President, International Ministers Forum (IMF) USA",
       image: "/images/leadership/president.png",
       bioSections: [
         {
           title: "Leadership Role",
-          content: "Serves as the President of the International Ministers Forum, providing spiritual and organizational leadership for the global ministry."
+          content: "Current President of the International Ministers Forum (IMF) USA. They Pastor the Rehoboth Christian Center in Tallapoosa, Georgia. Headquarters are located in Tallapoosa in the Rehoboth Christian Center."
         },
         {
           title: "Ministry Experience",
-          content: "Brings extensive experience in pastoral ministry and church leadership to his role as IMF President, guiding the organization's vision and strategic direction."
+          content: "They have been pastors for 43 years and married 53 years. They had IMF incorporated in Georgia. International Minister's Forum is recognized by the Federal Government as an established Ecclesiastical Fellowship."
         }
       ]
     },
     {
       name: "Pastor Paul Price",
-      role: "Vice President, International Ministers Forum",
+      role: "Vice President, International Ministers Forum (IMF) USA",
       image: "/images/leadership/vice-president.jpg",
       bioSections: [
         {
           title: "Leadership Role",
-          content: "Serves as Vice President, supporting the President in overseeing the operations and strategic direction of the International Ministers Forum."
+          content: "Made Vice President in 2012. Pastor of Cornerstone Worship Center in Indiana, Pennsylvania."
         },
         {
           title: "Ministry Focus",
-          content: "Committed to strengthening the organization's impact through collaborative leadership and program development across all IMF chapters."
+          content: "Serves as Vice President, supporting the President in overseeing the operations and strategic direction of the International Ministers Forum USA."
         }
       ]
     },
     {
-      name: "Amb. Blessing Jibuike",
+      name: "Rev. Olusegun and Rev Dr Blessing Jibuike",
       role: "President, IMF Africa",
       image: "/images/leadership/africa-president.png",
       bioSections: [
         {
           title: "Regional Leadership",
-          content: "Leads the Africa chapter of the International Ministers Forum, focusing on regional ministry initiatives and church planting efforts across the continent."
+          content: "President of IMF Nigeria and the entire IMF family in Nigeria and Africa. Recently inaugurated the IMF Lagos State chapter under the leadership of Rev Oladapo Taiwo."
         },
         {
           title: "African Ministry",
@@ -103,16 +95,16 @@ export default function LeadershipPage() {
     },
     {
       name: "Amb. Edward Grace",
-      role: "Secretary General, International Ministers Forum",
-      image: "/images/leadership/secretary-general.png",
+      role: "Secretary General, IMF Africa",
+      image: "/images/leadership/secretary-general.JPG",
       bioSections: [
         {
           title: "Administrative Leadership",
-          content: "Serves as the Secretary General, overseeing the administrative functions and international coordination of the IMF."
+          content: "Serves as the Secretary General of IMF Africa, overseeing the administrative functions and coordination of the IMF Africa chapter."
         },
         {
-          title: "Global Coordination",
-          content: "Responsible for facilitating communication and collaboration across all IMF chapters and international branches, ensuring effective implementation of organizational initiatives."
+          title: "Regional Coordination",
+          content: "Responsible for facilitating communication and collaboration within IMF Africa, ensuring effective implementation of organizational initiatives across the African continent."
         }
       ]
     },

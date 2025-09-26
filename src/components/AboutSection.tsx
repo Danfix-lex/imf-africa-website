@@ -114,7 +114,7 @@ const AboutSection: React.FC = () => {
                 fontSize: { xs: '1.3rem', md: '1.5rem' },
               }}
             >
-              Founded in 1987, the International Ministers Forum Africa (IMF Africa) stands as 
+              Founded in 1950, the International Ministers Forum Africa (IMF Africa) stands as 
               a beacon of hope and transformation across the African continent, dedicated to 
               empowering ministers, strengthening churches, and advancing God's Kingdom.
             </Typography>
@@ -330,7 +330,7 @@ const AboutSection: React.FC = () => {
                   fontSize: { xs: '1.1rem', md: '1.3rem' },
                 }}
               >
-                For over three decades, IMF Africa has been instrumental in training thousands 
+                For over seven decades, IMF Africa has been instrumental in training thousands 
                 of ministers, planting churches, and witnessing countless lives transformed by 
                 the power of the Gospel. Our commitment remains unwavering as we continue to 
                 advance God's Kingdom across this great continent.

@@ -31,24 +31,29 @@ const MissionPage: React.FC = () => {
     {
       icon: <ChurchIcon />,
       title: 'Mission',
-      description: 'To strengthen the church across Africa through biblical training, leadership development, and strategic ministry initiatives that transform communities and advance the Kingdom of God.',
+      description: 'IMF is committed to the gospel of Christ. Thus we must consider our action and decision in whatever we do. The scripture in 2 Peter 1:10 advises us to make our calling and election sure, and to walk worthy of our vocation. Integrity, accountability and responsibility are what IMF represents which are keys to successful ministry.',
       points: [
-        'Equip pastors and church leaders with advanced theological education',
-        'Establish sustainable church planting movements',
-        'Develop resources for contextualized ministry',
-        'Foster partnerships for maximum Kingdom impact'
+        'To provide strength that will stand with members against satanic attack',
+        'To give Godly counsel when needed',
+        'To help the local Church stand as member of the body of Christ',
+        'To promote fellowship with one another and provide a base of sharing ministries',
+        'To offer protection',
+        'To help promote unity among the brethren and to help bring peace where there is division',
+        'International Ministries Forum, Inc. has no desire to own your property or to promote false gain in any way',
+        'The most important outreach of the fellowship is to established a worldwide vision',
+        'Our desire is to spread the Gospel to all people both at home and in all areas of the world, through many outreaches, feeding/clothing programs and whatever means available as a tool of ministry',
+        'To host conventions in various parts of the world and to be of assistance in conventions and ministries of other fellowship with which we have networked'
       ],
       color: 'primary.main'
     },
     {
       icon: <PublicIcon />,
       title: 'Vision',
-      description: 'To see vibrant, biblically grounded churches in every community across Africa, led by well-trained, Spirit-filled leaders who are equipped to address both the spiritual and practical needs of their congregations.',
+      description: 'Our vision is to provide services that empower God called spirit-filled ministers, churches and religious organizations to carry out their God given assignments throughout the world. We will live in obedience to the Great commandment (Matthew 22:36-40) as we carry out the Great Commission (Matthew 28:18-20).',
       points: [
-        '5,000+ churches planted across Africa by 2030',
-        '100,000+ ministers equipped through our training programs',
-        'Resources available in 10+ African languages',
-        'Sustainable ministry movements in all 54 African nations'
+        'To spread the Gospel to all people both at home and in all areas of the world, through many outreaches, feeding/clothing programs and whatever means available as a tool of ministry',
+        'To host conventions in various parts of the world and to be of assistance in conventions and ministries of other fellowship with which we have networked',
+        'IMF has put roofs on buildings, dug wells for villages, built churches, Held meetings, supported feeding programs, planted homes for children, built homes for pastors and blessed many pastors and missionaries'
       ],
       color: 'secondary.main'
     }
@@ -57,50 +62,50 @@ const MissionPage: React.FC = () => {
   const strategicGoals = [
     {
       icon: <SchoolIcon />,
-      title: 'Leadership Development',
-      description: 'Comprehensive training programs for current and emerging church leaders.',
-      progress: 85,
+      title: 'Ordination & Licensing',
+      description: 'Providing spiritual covering and legal support for ministers through ordination and licensing processes.',
+      progress: 90,
     },
     {
       icon: <GroupsIcon />,
-      title: 'Church Planting',
-      description: 'Strategic initiatives to establish new congregations in underserved areas.',
-      progress: 75,
+      title: 'Fellowship & Community',
+      description: 'Building strong community bonds among ministers and churches across denominational lines.',
+      progress: 85,
     },
     {
       icon: <FavoriteIcon />,
-      title: 'Community Transformation',
-      description: 'Outreach programs addressing practical needs alongside spiritual growth.',
-      progress: 65,
+      title: 'Outreach & Missions',
+      description: 'Supporting global missions and local outreach programs to spread the Gospel.',
+      progress: 80,
     },
     {
       icon: <BibleIcon />,
       title: 'Resource Development',
-      description: 'Creation of contextualized materials for African ministry contexts.',
-      progress: 80,
+      description: 'Creating and distributing resources to support ministers and churches in their work.',
+      progress: 75,
     },
   ];
 
   const approach = [
     {
       icon: <TrendingUpIcon />,
-      title: 'Sustainable Growth',
-      description: 'We focus on long-term, sustainable ministry development rather than short-term programs.',
+      title: 'Spiritual Foundation',
+      description: 'Rooted in our Statement of Faith and commitment to biblical truth.',
     },
     {
       icon: <HandshakeIcon />,
       title: 'Partnership Model',
-      description: 'We work collaboratively with local churches and leaders to ensure contextual relevance.',
+      description: 'Working collaboratively with local churches and leaders to ensure contextual relevance.',
     },
     {
       icon: <AutoStoriesIcon />,
-      title: 'Biblical Foundation',
+      title: 'Biblical Authority',
       description: 'All our initiatives are grounded in Scripture and committed to the authority of God\'s Word.',
     },
     {
       icon: <GroupsIcon />,
       title: 'Community Focus',
-      description: 'We believe in the power of community and fellowship to transform lives and strengthen faith.',
+      description: 'Believing in the power of community and fellowship to transform lives and strengthen faith.',
     },
   ];
 
@@ -137,7 +142,7 @@ const MissionPage: React.FC = () => {
                   mx: 'auto',
                 }}
               >
-                Understanding our purpose, direction, and approach to ministry across Africa.
+                Understanding our purpose, direction, and approach to ministry across the world.
               </Typography>
             </Box>
           </motion.div>
@@ -371,7 +376,7 @@ const MissionPage: React.FC = () => {
               Partner With Us
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 400, mb: 4, maxWidth: 600, mx: 'auto' }}>
-              Join us in fulfilling our mission to strengthen the church across Africa.
+              Join us in fulfilling our mission to strengthen the church across the world.
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
               <Button

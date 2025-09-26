@@ -125,23 +125,24 @@ const WelcomePage: React.FC = () => {
           <Box sx={{ textAlign: 'center', mb: 8 }}>
             <motion.div variants={itemVariants}>
               <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
-                <Avatar
+                <Box
+                  component="img"
+                  src="/images/logo.png"
+                  alt="IMF Africa Logo"
                   sx={{
-                    width: 100,
                     height: 100,
-                    bgcolor: 'primary.main',
-                    fontSize: '3rem',
+                    width: 'auto',
+                    objectFit: 'contain',
                     boxShadow: '0 12px 40px rgba(25, 118, 210, 0.4)',
+                    borderRadius: '8px',
                   }}
-                >
-                  <ChurchIcon sx={{ fontSize: '4rem' }} />
-                </Avatar>
+                />
               </Box>
               
               <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 3 }}>
                 <Chip 
                   icon={<StarIcon />}
-                  label="Established 1987" 
+                  label="Established 1950" 
                   sx={{ 
                     bgcolor: 'primary.main', 
                     color: 'white',
@@ -152,7 +153,7 @@ const WelcomePage: React.FC = () => {
                   }} 
                 />
                 <Chip 
-                  label="37 Years of Ministry" 
+                  label="75 Years of Ministry" 
                   sx={{ 
                     bgcolor: 'secondary.main', 
                     color: 'white',

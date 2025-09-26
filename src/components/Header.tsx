@@ -35,6 +35,8 @@ import {
   ContactPhone as ContactIcon,
   TrendingUp as TrendingUpIcon,
   Group as GroupIcon,
+  History as HistoryIcon,
+  Assignment as AssignmentIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -51,8 +53,11 @@ interface NavigationItem {
 const navigation: NavigationItem[] = [
   { name: 'Home', href: '/welcome', icon: <HomeIcon /> },
   { name: 'About', href: '/site#about', icon: <InfoIcon /> },
+  { name: 'History', href: '/history', icon: <HistoryIcon /> },
+  { name: 'Purpose', href: '/purpose', icon: <AssignmentIcon /> },
   { name: 'Programs', href: '/site#programs', icon: <ChurchIcon /> },
   { name: 'Leadership', href: '/leadership', icon: <PersonIcon /> },
+  { name: 'Statement of Faith', href: '/statement-of-faith', icon: <ChurchIcon /> },
   { name: 'News', href: '/news', icon: <ArticleIcon /> },
   { name: 'Contact', href: '/contact', icon: <ContactIcon /> },
 ];

@@ -45,7 +45,16 @@ const Footer: React.FC = () => {
             {/* Brand Section */}
             <Grid size={{ xs: 12, md: 4 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                <AccountBalanceIcon sx={{ fontSize: 32 }} />
+                <Box
+                  component="img"
+                  src="/images/logo.png"
+                  alt="IMF Africa Logo"
+                  sx={{
+                    height: 32,
+                    width: 'auto',
+                    objectFit: 'contain',
+                  }}
+                />
                 <Box>
                   <Typography variant="h6" sx={{ fontWeight: 700 }}>
                     IMF Africa
@@ -172,6 +181,39 @@ const Footer: React.FC = () => {
                 justifyContent: { xs: 'center', md: 'flex-end' },
               }}
             >
+              <Typography
+                variant="body2"
+                sx={{
+                  opacity: 0.8,
+                  cursor: 'pointer',
+                  '&:hover': { opacity: 1 },
+                }}
+                onClick={() => window.location.href = '/purpose'}
+              >
+                Purpose & Membership
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  opacity: 0.8,
+                  cursor: 'pointer',
+                  '&:hover': { opacity: 1 },
+                }}
+                onClick={() => window.location.href = '/history'}
+              >
+                History
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  opacity: 0.8,
+                  cursor: 'pointer',
+                  '&:hover': { opacity: 1 },
+                }}
+                onClick={() => window.location.href = '/statement-of-faith'}
+              >
+                Statement of Faith
+              </Typography>
               <Typography
                 variant="body2"
                 sx={{
