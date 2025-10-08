@@ -12,223 +12,235 @@ import {
   useTheme,
 } from '@mui/material';
 import {
-  Church as ChurchIcon,
-  Public as PublicIcon,
   CalendarToday as CalendarIcon,
-  Group as GroupIcon,
+  Add as AddIcon,
+  AccessTime as TimeIcon,
+  Place as PlaceIcon,
 } from '@mui/icons-material';
-import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const ProgramsPage: React.FC = () => {
   const theme = useTheme();
 
-  const programs = [
-    {
-      icon: <ChurchIcon />,
-      title: 'Ministry Training Institute',
-      description: 'Comprehensive theological and pastoral training programs for ministers and church leaders across Africa.',
-      category: 'Ministry Training',
-      status: 'Active',
-    },
-    {
-      icon: <GroupIcon />,
-      title: 'Community Partnership Program',
-      description: 'Collaborative efforts with local organizations to address community needs and development.',
-      category: 'Community Outreach',
-      status: 'Active',
-    },
-    {
-      icon: <CalendarIcon />,
-      title: 'Leadership Development',
-      description: 'Advanced training programs for current and emerging church leaders.',
-      category: 'Leadership',
-      status: 'Active',
-    },
-    {
-      image: '/images/upcoming-program.jpg',
-      title: 'End of the Year Banquet & Award',
-      description: 'An evening of celebration, recognition, and kingdom impact! Join ministers, leaders, and visionaries from across the globe as we dine, fellowship, and explore divine strategies for greater ministry growth.',
-      category: 'Special Event',
-      status: 'Upcoming',
-      date: 'Friday, 21st November 2025',
-      venue: 'Festival Hotel Conference Center (Former Golden Tulip), Diamond Estate, Amuwo-Odofin, Lagos State.',
-      theme: 'Exploring Global Perspectives for Ministry Growth',
-    },
-  ];
+  // Function to generate Google Calendar URL
+  const addToGoogleCalendar = () => {
+    const startDate = '20251121T190000'; // Friday, 21st November 2025, 7:00 PM
+    const endDate = '20251121T220000'; // End at 10:00 PM
+    const title = 'End of the Year Banquet & Award';
+    const details = 'An evening of celebration, recognition, and kingdom impact! Join ministers, leaders, and visionaries from across the globe as we dine, fellowship, and explore divine strategies for greater ministry growth. Theme: Exploring Global Perspectives for Ministry Growth';
+    const location = 'Festival Hotel Conference Center (Former Golden Tulip), Diamond Estate, Amuwo-Odofin, Lagos State.';
+    
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
+    
+    window.open(googleCalendarUrl, '_blank');
+  };
+
+  // Function to generate iCal data
+  const downloadICal = () => {
+    const icsData = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'BEGIN:VEVENT',
+      'UID:' + Math.random().toString(36).substr(2, 9) + '@imfafrica.org',
+      'DTSTART:20251121T190000',
+      'DTEND:20251121T220000',
+      'SUMMARY:End of the Year Banquet & Award',
+      'DESCRIPTION:An evening of celebration\\, recognition\\, and kingdom impact! Join ministers\\, leaders\\, and visionaries from across the globe as we dine\\, fellowship\\, and explore divine strategies for greater ministry growth. Theme: Exploring Global Perspectives for Ministry Growth',
+      'LOCATION:Festival Hotel Conference Center (Former Golden Tulip)\\, Diamond Estate\\, Amuwo-Odofin\\, Lagos State.',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\n');
+
+    const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'imf-africa-event.ics';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <>
       <Header />
-      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: 15 }}>
-        <Container maxWidth="lg">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <Box sx={{ textAlign: 'center', mb: 8 }}>
-              <Typography
-                variant="h2"
-                sx={{
-                  fontWeight: 800,
-                  mb: 2,
-                  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
-              >
-                Our Programs
-              </Typography>
-              <Typography
-                variant="h5"
-                sx={{
-                  fontWeight: 400,
-                  color: 'text.secondary',
-                  maxWidth: 800,
-                  mx: 'auto',
-                }}
-              >
-                Comprehensive initiatives designed to strengthen churches, develop leaders, and transform communities across Africa.
-              </Typography>
-            </Box>
-          </motion.div>
-
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
-            {programs.map((program, index) => (
-              <Box component="div" key={index}>
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <Card
-                    sx={{
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      borderRadius: 3,
-                      overflow: 'visible',
-                      boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-                      border: '1px solid rgba(0,0,0,0.05)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        transform: 'translateY(-8px)',
-                        boxShadow: '0 16px 48px rgba(0,0,0,0.15)',
-                      },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        p: 4,
-                        bgcolor: 'primary.main',
-                        color: 'white',
-                        textAlign: 'center',
-                        position: 'relative',
-                        mt: -4,
-                        mx: 2,
-                        borderRadius: 2,
-                        boxShadow: '0 8px 24px rgba(25, 118, 210, 0.3)',
-                      }}
-                    >
-                      {program.image ? (
-                        <CardMedia
-                          component="img"
-                          image={program.image}
-                          alt={program.title}
-                          sx={{
-                            width: '100%',
-                            height: 150,
-                            objectFit: 'cover',
-                            borderRadius: 2,
-                            mb: 2,
-                          }}
-                        />
-                      ) : (
-                        <Box
-                          sx={{
-                            width: 80,
-                            height: 80,
-                            borderRadius: '50%',
-                            bgcolor: 'white',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: 'primary.main',
-                            mx: 'auto',
-                            mb: 2,
-                            boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-                          }}
-                        >
-                          {program.icon}
-                        </Box>
-                      )}
-                      <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
-                        {program.title}
-                      </Typography>
-                      <Chip
-                        label={program.category}
-                        size="small"
-                        sx={{
-                          bgcolor: 'rgba(255,255,255,0.2)',
-                          color: 'white',
-                          fontWeight: 500,
-                        }}
-                      />
-                      {program.date && (
-                        <Typography variant="body2" sx={{ mt: 1, fontStyle: 'italic' }}>
-                          {program.date}
-                        </Typography>
-                      )}
-                      {program.venue && (
-                        <Typography variant="body2" sx={{ mt: 1, fontSize: '0.8rem' }}>
-                          {program.venue}
-                        </Typography>
-                      )}
-                    </Box>
-
-                    <CardContent sx={{ flexGrow: 1, p: 4, pt: 6 }}>
-                      <Typography
-                        variant="body1"
-                        sx={{ color: 'text.secondary', mb: 3 }}
-                      >
-                        {program.description}
-                      </Typography>
-                      {program.theme && (
-                        <Box sx={{ mb: 2 }}>
-                          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-                            Theme:
-                          </Typography>
-                          <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-                            {program.theme}
-                          </Typography>
-                        </Box>
-                      )}
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <Chip
-                          label={program.status}
-                          size="small"
-                          color={program.status === 'Upcoming' ? 'warning' : 'success'}
-                          sx={{ fontWeight: 600 }}
-                        />
-                        <Button variant="outlined" size="small">
-                          {program.status === 'Upcoming' ? 'Register Now' : 'Learn More'}
-                        </Button>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </Box>
-            ))}
+      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: 15, pb: 8 }}>
+        <Container maxWidth="md">
+          <Box sx={{ textAlign: 'center', mb: 6 }}>
+            <Typography
+              variant="h2"
+              sx={{
+                fontWeight: 800,
+                mb: 2,
+                color: 'text.primary',
+              }}
+            >
+              Upcoming Program
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 400,
+                color: 'text.secondary',
+                maxWidth: 600,
+                mx: 'auto',
+              }}
+            >
+              Join us for our upcoming special event
+            </Typography>
           </Box>
+
+          <Card
+            sx={{
+              borderRadius: 3,
+              overflow: 'hidden',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+              border: '1px solid rgba(0,0,0,0.05)',
+            }}
+          >
+            {/* Flyer Image */}
+            <CardMedia
+              component="img"
+              image="/images/upcoming-program.jpg"
+              alt="End of the Year Banquet & Award"
+              sx={{
+                width: '100%',
+                height: 'auto',
+                objectFit: 'contain',
+                maxHeight: 600,
+              }}
+            />
+
+            <CardContent sx={{ p: 4 }}>
+              <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, color: 'text.primary' }}>
+                End of the Year Banquet & Award
+              </Typography>
+              
+              <Chip
+                label="Special Event"
+                size="small"
+                color="warning"
+                sx={{ 
+                  fontWeight: 600,
+                  mb: 3 
+                }}
+              />
+
+              <Typography
+                variant="body1"
+                sx={{ 
+                  color: 'text.secondary', 
+                  mb: 4, 
+                  fontSize: '1.1rem', 
+                  lineHeight: 1.7 
+                }}
+              >
+                An evening of celebration, recognition, and kingdom impact! Join ministers, leaders, and visionaries from across the globe as we dine, fellowship, and explore divine strategies for greater ministry growth.
+              </Typography>
+
+              {/* Event Details */}
+              <Box sx={{ mb: 4 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 3, color: 'text.primary' }}>
+                  Event Details
+                </Typography>
+                
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3 }}>
+                  <CalendarIcon sx={{ mr: 2, mt: 0.5, color: 'primary.main' }} />
+                  <Box>
+                    <Typography variant="body1" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                      Friday, 21st November 2025
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      7:00 PM - 10:00 PM
+                    </Typography>
+                  </Box>
+                </Box>
+                
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3 }}>
+                  <PlaceIcon sx={{ mr: 2, mt: 0.5, color: 'primary.main' }} />
+                  <Box>
+                    <Typography variant="body1" sx={{ fontWeight: 600, color: 'text.primary', mb: 1 }}>
+                      Venue
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Festival Hotel Conference Center (Former Golden Tulip), Diamond Estate, Amuwo-Odofin, Lagos State.
+                    </Typography>
+                  </Box>
+                </Box>
+                
+                <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                  <Box sx={{ mr: 2, mt: 0.5 }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                  </Box>
+                  <Box>
+                    <Typography variant="body1" sx={{ fontWeight: 600, color: 'text.primary', mb: 1 }}>
+                      Theme
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                      Exploring Global Perspectives for Ministry Growth
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* Calendar Buttons */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: 2,
+                  flexWrap: 'wrap',
+                }}
+              >
+                <Button
+                  variant="contained"
+                  size="large"
+                  startIcon={<CalendarIcon />}
+                  onClick={addToGoogleCalendar}
+                  sx={{
+                    px: 4,
+                    py: 1.5,
+                    borderRadius: 2,
+                    fontWeight: 600,
+                    textTransform: 'none',
+                    background: 'primary.main',
+                    '&:hover': {
+                      background: 'primary.dark',
+                    },
+                  }}
+                >
+                  Add to Google Calendar
+                </Button>
+                
+                <Button
+                  variant="outlined"
+                  size="large"
+                  startIcon={<AddIcon />}
+                  onClick={downloadICal}
+                  sx={{
+                    px: 4,
+                    py: 1.5,
+                    borderRadius: 2,
+                    fontWeight: 600,
+                    textTransform: 'none',
+                    borderColor: 'primary.main',
+                    color: 'primary.main',
+                    '&:hover': {
+                      bgcolor: 'primary.main',
+                      color: 'white',
+                    },
+                  }}
+                >
+                  Add to Calendar
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
         </Container>
       </Box>
       <Footer />

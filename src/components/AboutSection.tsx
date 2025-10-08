@@ -331,7 +331,7 @@ const AboutSection: React.FC = () => {
                 }}
               >
                 For over seven decades, IMF Africa has been instrumental in training thousands 
-                of ministers, planting churches, and witnessing countless lives transformed by 
+                of ministers, developing leaders, and witnessing countless lives transformed by 
                 the power of the Gospel. Our commitment remains unwavering as we continue to 
                 advance God's Kingdom across this great continent.
               </Typography>

@@ -2,6 +2,8 @@
 
 import { Box, Container, Typography, Paper, Grid, Avatar, Divider } from '@mui/material';
 import { motion } from 'framer-motion';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const MotionBox = motion(Box);
 
@@ -79,6 +81,21 @@ export default function LeadershipPage() {
       ]
     },
     {
+      name: "Sherry Swiger",
+      role: "Secretary, IMF USA",
+      image: "/images/leadership/secretary-usa.jpg",
+      bioSections: [
+        {
+          title: "Ministry Role",
+          content: "Serves as Secretary for IMF USA, providing administrative leadership and support for the organization's operations in the United States."
+        },
+        {
+          title: "Service & Dedication",
+          content: "Committed to supporting the mission of the International Ministers Forum through dedicated service and organizational leadership."
+        }
+      ]
+    },
+    {
       name: "Rev. Olusegun and Rev Dr Blessing Jibuike",
       role: "President, IMF Africa",
       image: "/images/leadership/africa-president.png",
@@ -96,7 +113,7 @@ export default function LeadershipPage() {
     {
       name: "Amb. Edward Grace",
       role: "Secretary General, IMF Africa",
-      image: "/images/leadership/secretary-general.JPG",
+      image: "/images/leadership/secretary-general.png",
       bioSections: [
         {
           title: "Administrative Leadership",
@@ -107,161 +124,156 @@ export default function LeadershipPage() {
           content: "Responsible for facilitating communication and collaboration within IMF Africa, ensuring effective implementation of organizational initiatives across the African continent."
         }
       ]
-    },
-    {
-      name: "Sherry Swiger",
-      role: "Secretary, IMF USA",
-      image: "/images/leadership/secretary-usa.jpg",
-      bioSections: [
-        {
-          title: "Ministry Role",
-          content: "Serves as Secretary for IMF USA, providing administrative leadership and support for the organization's operations in the United States."
-        },
-        {
-          title: "Service & Dedication",
-          content: "Committed to supporting the mission of the International Ministers Forum through dedicated service and organizational leadership."
-        }
-      ]
     }
   ];
 
   return (
-    <Container maxWidth="lg" sx={{ py: 8 }}>
-      <MotionBox
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <Typography variant="h2" component="h1" gutterBottom align="center" color="primary">
-          Our Leadership
-        </Typography>
-        <Typography variant="h5" component="h2" gutterBottom align="center" color="text.secondary" mb={6}>
-          Visionary Leaders Who Shaped and Continue to Guide the International Ministers Forum
-        </Typography>
-      </MotionBox>
+    <>
+      <Header />
+      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: 15, pb: 8 }}>
+        <Container maxWidth="lg" sx={{ py: 8 }}>
+          <MotionBox
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Typography variant="h2" component="h1" gutterBottom align="center" color="primary">
+              Our Leadership
+            </Typography>
+            <Typography variant="h5" component="h2" gutterBottom align="center" color="text.secondary" mb={6}>
+              Visionary Leaders Who Shaped and Continue to Guide the International Ministers Forum
+            </Typography>
+          </MotionBox>
 
-      {/* Founders Section */}
-      <MotionBox
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        <Typography variant="h3" component="h2" gutterBottom align="center" color="secondary" mt={6} mb={4}>
-          Founding Leaders
-        </Typography>
-      </MotionBox>
+          {/* Founders Section */}
+          <MotionBox
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <Typography variant="h3" component="h2" gutterBottom align="center" color="secondary" mt={6} mb={4}>
+              Founding Leaders
+            </Typography>
+          </MotionBox>
 
-      <Grid container spacing={6}>
-        {founders.map((founder, index) => (
-          <Grid size={{ xs: 12 }} key={`founder-${index}`}>
-            <MotionBox
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.2 + 0.3 }}
-            >
-              <Paper elevation={4} sx={{ p: 4, borderRadius: 4 }}>
-                <Grid container spacing={4} alignItems="center">
-                  <Grid size={{ xs: 12, md: 4 }} display="flex" justifyContent="center">
-                    <Avatar
-                      src={founder.image}
-                      alt={founder.name}
-                      sx={{
-                        width: 200,
-                        height: 200,
-                        border: '4px solid',
-                        borderColor: 'primary.main',
-                        boxShadow: 3
-                      }}
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12, md: 8 }}>
-                    <Typography variant="h3" component="h2" gutterBottom color="secondary">
-                      {founder.name}
-                    </Typography>
-                    <Typography variant="h6" component="h3" gutterBottom color="primary" fontStyle="italic">
-                      {founder.role}
-                    </Typography>
-                    
-                    {founder.bioSections.map((section, secIndex) => (
-                      <Box key={secIndex} mt={3}>
-                        <Typography variant="h6" component="h4" gutterBottom color="primary" fontWeight="medium">
-                          {section.title}
+          <Grid container spacing={6}>
+            {founders.map((founder, index) => (
+              <Grid size={{ xs: 12 }} key={`founder-${index}`}>
+                <MotionBox
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.2 + 0.3 }}
+                >
+                  <Paper elevation={4} sx={{ p: 4, borderRadius: 4 }}>
+                    <Grid container spacing={4} alignItems="center">
+                      <Grid size={{ xs: 12, md: 4 }} display="flex" justifyContent="center">
+                        <Avatar
+                          src={founder.image}
+                          alt={founder.name}
+                          sx={{
+                            width: 200,
+                            height: 200,
+                            border: '4px solid',
+                            borderColor: 'primary.main',
+                            boxShadow: 3,
+                            objectFit: 'cover',
+                            objectPosition: 'center'
+                          }}
+                        />
+                      </Grid>
+                      <Grid size={{ xs: 12, md: 8 }}>
+                        <Typography variant="h3" component="h2" gutterBottom color="secondary">
+                          {founder.name}
                         </Typography>
-                        <Typography variant="body1" paragraph color="text.primary" lineHeight={1.8}>
-                          {section.content}
+                        <Typography variant="h6" component="h3" gutterBottom color="primary" fontStyle="italic">
+                          {founder.role}
                         </Typography>
-                      </Box>
-                    ))}
-                  </Grid>
-                </Grid>
-              </Paper>
-            </MotionBox>
+                        
+                        {founder.bioSections.map((section, secIndex) => (
+                          <Box key={secIndex} mt={3}>
+                            <Typography variant="h6" component="h4" gutterBottom color="primary" fontWeight="medium">
+                              {section.title}
+                            </Typography>
+                            <Typography variant="body1" paragraph color="text.primary" lineHeight={1.8}>
+                              {section.content}
+                            </Typography>
+                          </Box>
+                        ))}
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                </MotionBox>
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
 
-      {/* Divider between sections */}
-      <Divider sx={{ my: 8, borderWidth: 2 }} />
+          {/* Divider between sections */}
+          <Divider sx={{ my: 8, borderWidth: 2 }} />
 
-      {/* Current Leadership Section */}
-      <MotionBox
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-      >
-        <Typography variant="h3" component="h2" gutterBottom align="center" color="secondary" mt={6} mb={4}>
-          Current Leadership
-        </Typography>
-      </MotionBox>
+          {/* Current Leadership Section */}
+          <MotionBox
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <Typography variant="h3" component="h2" gutterBottom align="center" color="secondary" mt={6} mb={4}>
+              Current Leadership
+            </Typography>
+          </MotionBox>
 
-      <Grid container spacing={6}>
-        {currentLeaders.map((leader, index) => (
-          <Grid size={{ xs: 12 }} key={`current-${index}`}>
-            <MotionBox
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.2 + 0.5 }}
-            >
-              <Paper elevation={4} sx={{ p: 4, borderRadius: 4 }}>
-                <Grid container spacing={4} alignItems="center">
-                  <Grid size={{ xs: 12, md: 4 }} display="flex" justifyContent="center">
-                    <Avatar
-                      src={leader.image}
-                      alt={leader.name}
-                      sx={{
-                        width: 200,
-                        height: 200,
-                        border: '4px solid',
-                        borderColor: 'primary.main',
-                        boxShadow: 3
-                      }}
-                    />
-                  </Grid>
-                  <Grid size={{ xs: 12, md: 8 }}>
-                    <Typography variant="h3" component="h2" gutterBottom color="secondary">
-                      {leader.name}
-                    </Typography>
-                    <Typography variant="h6" component="h3" gutterBottom color="primary" fontStyle="italic">
-                      {leader.role}
-                    </Typography>
-                    
-                    {leader.bioSections.map((section, secIndex) => (
-                      <Box key={secIndex} mt={3}>
-                        <Typography variant="h6" component="h4" gutterBottom color="primary" fontWeight="medium">
-                          {section.title}
+          <Grid container spacing={6}>
+            {currentLeaders.map((leader, index) => (
+              <Grid size={{ xs: 12 }} key={`current-${index}`}>
+                <MotionBox
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.2 + 0.5 }}
+                >
+                  <Paper elevation={4} sx={{ p: 4, borderRadius: 4 }}>
+                    <Grid container spacing={4} alignItems="center">
+                      <Grid size={{ xs: 12, md: 4 }} display="flex" justifyContent="center">
+                        <Avatar
+                          src={leader.image}
+                          alt={leader.name}
+                          sx={{
+                            width: 200,
+                            height: 200,
+                            border: '4px solid',
+                            borderColor: 'primary.main',
+                            boxShadow: 3,
+                            objectFit: 'cover',
+                            objectPosition: 'center'
+                          }}
+                        />
+                      </Grid>
+                      <Grid size={{ xs: 12, md: 8 }}>
+                        <Typography variant="h3" component="h2" gutterBottom color="secondary">
+                          {leader.name}
                         </Typography>
-                        <Typography variant="body1" paragraph color="text.primary" lineHeight={1.8}>
-                          {section.content}
+                        <Typography variant="h6" component="h3" gutterBottom color="primary" fontStyle="italic">
+                          {leader.role}
                         </Typography>
-                      </Box>
-                    ))}
-                  </Grid>
-                </Grid>
-              </Paper>
-            </MotionBox>
+                        
+                        {leader.bioSections.map((section, secIndex) => (
+                          <Box key={secIndex} mt={3}>
+                            <Typography variant="h6" component="h4" gutterBottom color="primary" fontWeight="medium">
+                              {section.title}
+                            </Typography>
+                            <Typography variant="body1" paragraph color="text.primary" lineHeight={1.8}>
+                              {section.content}
+                            </Typography>
+                          </Box>
+                        ))}
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                </MotionBox>
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
-    </Container>
+        </Container>
+      </Box>
+      <Footer />
+    </>
   );
 }

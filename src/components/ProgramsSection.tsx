@@ -35,7 +35,7 @@ const programs = [
   {
     icon: <SchoolIcon />,
     title: 'Ministry Training Institute',
-    description: 'Comprehensive theological and pastoral training programs for ministers and church leaders across Africa.',
+    description: 'Comprehensive theological and pastoral training programs for ministers and ministry leaders across Africa.',
     category: 'Ministry Training',
     status: 'Active',
     budget: '$5M',
@@ -45,13 +45,13 @@ const programs = [
     objectives: [
       'Train and equip pastors',
       'Develop theological education',
-      'Strengthen church leadership',
+      'Strengthen ministry leadership',
       'Promote biblical literacy',
     ],
     achievements: [
       '3,500 ministers graduated',
       '150 training centers established',
-      '2,200 churches planted',
+      '2,200 leaders equipped',
       '95% graduation rate achieved',
     ],
     color: '#1976d2',
@@ -84,7 +84,7 @@ const programs = [
   {
     icon: <TrendingUpIcon />,
     title: 'Women in Ministry',
-    description: 'Empowering women in church leadership and ministry through training, mentorship, and leadership development.',
+    description: 'Empowering women in ministry leadership and ministry through training, mentorship, and leadership development.',
     category: 'Women Leadership',
     status: 'Active',
     budget: '$1.8M',
@@ -108,7 +108,7 @@ const programs = [
   {
     icon: <AssessmentIcon />,
     title: 'Community Development',
-    description: 'Holistic community development programs addressing social, economic, and spiritual needs in partnership with local churches.',
+    description: 'Holistic community development programs addressing social, economic, and spiritual needs in partnership with local ministries.',
     category: 'Community Outreach',
     status: 'Active',
     budget: '$4M',
@@ -119,7 +119,7 @@ const programs = [
       'Address community needs',
       'Promote social justice',
       'Develop sustainable programs',
-      'Build church-community partnerships',
+      'Build ministry-community partnerships',
     ],
     achievements: [
       '180 communities served',
@@ -132,7 +132,7 @@ const programs = [
   {
     icon: <PublicIcon />,
     title: 'Global Missions Network',
-    description: 'Connecting African churches with global missions opportunities and building international ministry partnerships.',
+    description: 'Connecting African ministries with global missions opportunities and building international ministry partnerships.',
     category: 'Global Missions',
     status: 'Active',
     budget: '$6M',
@@ -212,7 +212,7 @@ const ProgramsSection: React.FC = () => {
               }}
             >
               Comprehensive ministry initiatives designed to equip leaders,
-              strengthen churches, and transform communities across Africa
+              strengthen ministries, and transform communities across Africa
             </Typography>
 
             {/* Category Filter Tabs */}

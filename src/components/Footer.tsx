@@ -8,17 +8,40 @@ import {
   Button,
   useTheme,
   Grid,
+  IconButton,
 } from '@mui/material';
 import {
   Email as EmailIcon,
   Phone as PhoneIcon,
   LocationOn as LocationIcon,
   AccountBalance as AccountBalanceIcon,
+  Facebook as FacebookIcon,
+  Instagram as InstagramIcon,
+  YouTube as YouTubeIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 
 const Footer: React.FC = () => {
   const theme = useTheme();
+
+  // Social media links
+  const socialMediaLinks = [
+    {
+      name: 'Facebook',
+      url: 'https://www.facebook.com/share/17Qb4aYirx/?mibextid=LQQJ4d',
+      icon: <FacebookIcon />,
+    },
+    {
+      name: 'Instagram',
+      url: 'https://www.instagram.com/imf_africa?igsh=eWM3anl1dHF3aHRh&utm_source=qr',
+      icon: <InstagramIcon />,
+    },
+    {
+      name: 'YouTube',
+      url: 'https://youtube.com/@internationalministersforumafr?si=FPDE9MFaqYpZxw95',
+      icon: <YouTubeIcon />,
+    },
+  ];
 
   return (
     <Box
@@ -72,6 +95,32 @@ const Footer: React.FC = () => {
                 across the African continent through fellowship, training,
                 and spiritual development programs.
               </Typography>
+              
+              {/* Social Media Links */}
+              <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
+                {socialMediaLinks.map((social, index) => (
+                  <IconButton
+                    key={index}
+                    component="a"
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{
+                      bgcolor: 'rgba(255, 255, 255, 0.1)',
+                      color: 'white',
+                      '&:hover': {
+                        bgcolor: 'rgba(255, 255, 255, 0.2)',
+                        transform: 'translateY(-2px)',
+                      },
+                      transition: 'all 0.3s ease',
+                      width: 40,
+                      height: 40,
+                    }}
+                  >
+                    {social.icon}
+                  </IconButton>
+                ))}
+              </Box>
             </Grid>
 
             {/* Contact Information */}

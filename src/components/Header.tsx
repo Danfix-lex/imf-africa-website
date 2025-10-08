@@ -52,11 +52,12 @@ interface NavigationItem {
 // Simplified navigation structure for better clarity
 const navigation: NavigationItem[] = [
   { name: 'Home', href: '/welcome', icon: <HomeIcon /> },
-  { name: 'About', href: '/site#about', icon: <InfoIcon /> },
+  { name: 'About', href: '/about', icon: <InfoIcon /> },
   { name: 'History', href: '/history', icon: <HistoryIcon /> },
   { name: 'Purpose', href: '/purpose', icon: <AssignmentIcon /> },
-  { name: 'Programs', href: '/site#programs', icon: <ChurchIcon /> },
+  { name: 'Programs', href: '/programs', icon: <ChurchIcon /> },
   { name: 'Leadership', href: '/leadership', icon: <PersonIcon /> },
+  { name: 'Gallery', href: '/gallery', icon: <ChurchIcon /> },
   { name: 'Statement of Faith', href: '/statement-of-faith', icon: <ChurchIcon /> },
   { name: 'News', href: '/news', icon: <ArticleIcon /> },
   { name: 'Contact', href: '/contact', icon: <ContactIcon /> },
