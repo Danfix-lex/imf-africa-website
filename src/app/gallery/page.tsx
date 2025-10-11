@@ -55,6 +55,7 @@ const GalleryPage: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [visibleItems, setVisibleItems] = useState(12); // Initial visible items
 
   // Fetch gallery items from Cloudinary
   useEffect(() => {
@@ -77,6 +78,9 @@ const GalleryPage: React.FC = () => {
     ? galleryItems 
     : galleryItems.filter(item => item.category === selectedCategory);
 
+  // Items to display based on visibility
+  const itemsToDisplay = filteredItems.slice(0, visibleItems);
+
   const handleOpenDialog = (item: GalleryItem) => {
     setSelectedItem(item);
     setOpenDialog(true);
@@ -96,6 +100,11 @@ const GalleryPage: React.FC = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  // Load more items
+  const loadMore = () => {
+    setVisibleItems(prev => Math.min(prev + 12, filteredItems.length));
   };
 
   if (loading) {
@@ -151,7 +160,10 @@ const GalleryPage: React.FC = () => {
             <Box sx={{ mb: 6, display: 'flex', justifyContent: 'center' }}>
               <Tabs
                 value={selectedCategory}
-                onChange={(e, value) => setSelectedCategory(value)}
+                onChange={(e, value) => {
+                  setSelectedCategory(value);
+                  setVisibleItems(12); // Reset visible items when category changes
+                }}
                 variant="scrollable"
                 scrollButtons="auto"
                 sx={{
@@ -181,7 +193,7 @@ const GalleryPage: React.FC = () => {
 
           {/* Gallery Grid */}
           <Grid container spacing={4}>
-            {filteredItems.map((item, index) => (
+            {itemsToDisplay.map((item, index) => (
               <Grid size={{ xs: 12, sm: 6, md: 4 }} key={item.id}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
@@ -207,13 +219,14 @@ const GalleryPage: React.FC = () => {
                     }}
                   >
                     <Box sx={{ position: 'relative' }} onClick={() => handleOpenDialog(item)}>
-                      {/* Using CldImage for optimized Cloudinary delivery */}
+                      {/* Using CldImage for optimized Cloudinary delivery with lazy loading */}
                       <CldImage
                         src={item.thumbnail}
                         alt={item.title}
                         width={600}
                         height={400}
                         crop="fill"
+                        loading={index < 6 ? "eager" : "lazy"} // Eager load first 6 images
                         style={{
                           height: 200,
                           objectFit: 'cover',
@@ -282,6 +295,31 @@ const GalleryPage: React.FC = () => {
               </Grid>
             ))}
           </Grid>
+
+          {/* Load More Button */}
+          {visibleItems < filteredItems.length && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+              <Button
+                variant="contained"
+                onClick={loadMore}
+                sx={{
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: 3,
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+                  '&:hover': {
+                    background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
+                    transform: 'translateY(-2px)',
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                Load More
+              </Button>
+            </Box>
+          )}
         </Container>
 
         {/* Media Dialog */}

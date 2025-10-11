@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
+import compression from 'compression';
 import { User } from './models/index';
 
 dotenv.config();
@@ -25,12 +26,26 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
+// Caching middleware for static assets
+const cacheMiddleware = (seconds: number) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    res.set('Cache-Control', `public, max-age=${seconds}`);
+    next();
+  };
+};
+
 // Middleware
+app.use(compression()); // Add compression
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(morgan('combined'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Apply caching to static assets
+app.use('/api/gallery', cacheMiddleware(3600)); // Cache gallery API for 1 hour
+app.use('/api/programs', cacheMiddleware(1800)); // Cache programs API for 30 minutes
+app.use('/api/news', cacheMiddleware(1800)); // Cache news API for 30 minutes
 
 // MongoDB connection with retry logic
 const connectDB = async () => {

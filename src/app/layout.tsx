@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box } from '@mui/material';
 import theme from '@/theme/theme';
 import { AuthProvider } from '@/contexts/AuthContext';
+import PerformanceMonitor from '@/components/PerformanceMonitor';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -11,14 +12,34 @@ import '@fontsource/roboto/700.css';
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "IMF Africa | International Ministers Forum Africa",
+  title: {
+    default: "IMF Africa | International Ministers Forum",
+    template: "%s | IMF Africa"
+  },
   description: "International Ministers Forum Africa - Empowering ministers and strengthening churches across the African continent through fellowship, training, and spiritual development programs.",
   keywords: "IMF Africa, International Ministers Forum, Africa ministry, church training, pastoral development, African churches",
   authors: [{ name: "IMF Africa" }],
+  creator: "IMF Africa",
+  publisher: "IMF Africa",
   openGraph: {
     title: "IMF Africa - International Ministers Forum",
     description: "Empowering ministers and strengthening churches across Africa",
     type: "website",
+    siteName: "IMF Africa",
+  },
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-48x48.png', sizes: '48x48', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: [
+      { url: '/favicon-16x16.png' },
+      { url: '/favicon-32x32.png' },
+      { url: '/favicon-48x48.png' },
+    ],
   },
 };
 
@@ -29,6 +50,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+      </head>
       <body style={{ margin: 0, padding: 0, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
@@ -38,6 +65,7 @@ export default function RootLayout({
                 {children}
               </Box>
             </AuthProvider>
+            <PerformanceMonitor />
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

@@ -5,43 +5,45 @@ import {
   Toolbar,
   Typography,
   Button,
-  Box,
   IconButton,
   Drawer,
   List,
   ListItem,
-  ListItemText,
-  useMediaQuery,
+  Box,
   useTheme,
-  Container,
+  useMediaQuery,
   Avatar,
   Menu,
   MenuItem,
   Divider,
+  Badge,
+  Container,
+  ListItemText,
   Chip,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
   Close as CloseIcon,
-  Church as ChurchIcon,
-  Person as PersonIcon,
-  Logout as LogoutIcon,
-  AccountCircle as AccountCircleIcon,
-  Home as HomeIcon,
+  AccountCircle as AccountIcon,
   Info as InfoIcon,
-  School as SchoolIcon,
-  Article as ArticleIcon,
-  Payment as PaymentIcon,
-  ContactPhone as ContactIcon,
-  TrendingUp as TrendingUpIcon,
-  Group as GroupIcon,
   History as HistoryIcon,
   Assignment as AssignmentIcon,
+  Church as ChurchIcon,
+  Person as PersonIcon,
+  PhotoLibrary as PhotoLibraryIcon,
+  Article as ArticleIcon,
+  ContactMail as ContactIcon,
+  Dashboard as DashboardIcon,
+  Logout as LogoutIcon,
+  Login as LoginIcon,
+  Home as HomeIcon,
+  AccountCircle as AccountCircleIcon,
 } from '@mui/icons-material';
-import { motion } from 'framer-motion';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
+import { CldImage } from 'next-cloudinary';
+import { motion } from 'framer-motion';
 
 interface NavigationItem {
   name: string;
@@ -49,16 +51,16 @@ interface NavigationItem {
   icon?: React.ReactNode;
 }
 
-// Simplified navigation structure for better clarity
+// Simplified navigation structure with abbreviated names for better alignment
 const navigation: NavigationItem[] = [
   { name: 'Home', href: '/welcome', icon: <HomeIcon /> },
   { name: 'About', href: '/about', icon: <InfoIcon /> },
   { name: 'History', href: '/history', icon: <HistoryIcon /> },
   { name: 'Purpose', href: '/purpose', icon: <AssignmentIcon /> },
   { name: 'Programs', href: '/programs', icon: <ChurchIcon /> },
-  { name: 'Leadership', href: '/leadership', icon: <PersonIcon /> },
+  { name: 'Leaders', href: '/leadership', icon: <PersonIcon /> },
   { name: 'Gallery', href: '/gallery', icon: <ChurchIcon /> },
-  { name: 'Statement of Faith', href: '/statement-of-faith', icon: <ChurchIcon /> },
+  { name: 'Statement', href: '/statement-of-faith', icon: <ChurchIcon /> },
   { name: 'News', href: '/news', icon: <ArticleIcon /> },
   { name: 'Contact', href: '/contact', icon: <ContactIcon /> },
 ];
@@ -70,6 +72,7 @@ const Header: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const { user, logout, isAuthenticated } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -100,13 +103,14 @@ const Header: React.FC = () => {
         borderColor: 'divider'
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Box
-            component="img"
-            src="/images/logo.png"
+          <CldImage
+            src="logo/imf-africa-logo.png"
             alt="IMF Africa Logo"
-            sx={{
-              height: 28,
+            width={28}
+            height={28}
+            style={{
               width: 'auto',
+              height: 28,
               objectFit: 'contain',
             }}
           />
@@ -217,12 +221,13 @@ const Header: React.FC = () => {
               transition={{ duration: 0.5 }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, md: 2 } }}>
-                <Box
-                  component="img"
-                  src="/images/logo.png"
+                <CldImage
+                  src="logo/imf-africa-logo.png"
                   alt="IMF Africa Logo"
-                  sx={{
-                    height: { xs: 32, md: 40 },
+                  width={40}
+                  height={40}
+                  style={{
+                    height: '40px',
                     width: 'auto',
                     objectFit: 'contain',
                     filter: 'drop-shadow(0 2px 4px rgba(25, 118, 210, 0.3))',
@@ -285,10 +290,10 @@ const Header: React.FC = () => {
                         sx={{
                           color: 'text.primary',
                           fontWeight: 600,
-                          px: { xs: 1, sm: 1.5, md: 2 },
+                          px: { xs: 0.8, sm: 1.2, md: 1.5 },
                           py: 1,
                           borderRadius: 2,
-                          fontSize: { xs: '0.75rem', sm: '0.85rem', md: '0.9rem' },
+                          fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.85rem' },
                           textTransform: 'none',
                           transition: 'all 0.3s ease',
                           minWidth: 'auto',

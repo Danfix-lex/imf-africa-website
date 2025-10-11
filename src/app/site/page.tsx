@@ -16,7 +16,7 @@ export default function SitePage() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header />
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', pt: { xs: 8, md: 15 } }}>
         <HeroSection />
         <StatisticsSection />
         <AboutSection />

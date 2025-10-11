@@ -24,6 +24,7 @@ import {
   Assessment as PolicyIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
+import { CldImage } from 'next-cloudinary';
 
 const newsArticles = [
   {
@@ -37,7 +38,7 @@ const newsArticles = [
     category: 'Ministry Training',
     tags: ['Ministry Training', 'West Africa', 'Church Leadership', 'Theological Education'],
     featured: true,
-    imageUrl: '/api/placeholder/600/300',
+    imageUrl: 'news/ministry-training-west-africa.jpg', // Cloudinary image path
     readTime: '5 min read',
     views: '12.5K',
   },
@@ -52,7 +53,7 @@ const newsArticles = [
     category: 'Digital Ministry',
     tags: ['Digital Ministry', 'Church Technology', 'Online Discipleship', 'Innovation'],
     featured: false,
-    imageUrl: '/api/placeholder/600/300',
+    imageUrl: 'news/digital-ministry-platform.jpg', // Cloudinary image path
     readTime: '7 min read',
     views: '8.7K',
   },
@@ -67,7 +68,7 @@ const newsArticles = [
     category: 'Church Unity',
     tags: ['Church Unity', 'Fellowship', 'Denominational Cooperation', 'Africa'],
     featured: true,
-    imageUrl: '/api/placeholder/600/300',
+    imageUrl: 'news/church-unity-africa.jpg', // Cloudinary image path
     readTime: '6 min read',
     views: '15.2K',
   },
@@ -82,7 +83,7 @@ const newsArticles = [
     category: 'Youth Ministry',
     tags: ['Youth Ministry', 'Discipleship', 'East Africa', 'Leadership'],
     featured: false,
-    imageUrl: '/api/placeholder/600/300',
+    imageUrl: 'news/youth-ministry-east-africa.jpg', // Cloudinary image path
     readTime: '4 min read',
     views: '6.3K',
   },
@@ -97,7 +98,7 @@ const newsArticles = [
     category: 'Women Ministry',
     tags: ['Women Leadership', 'Ministry Development', 'Mentorship', 'Cooperation'],
     featured: false,
-    imageUrl: '/api/placeholder/600/300',
+    imageUrl: 'news/women-ministers-network.jpg', // Cloudinary image path
     readTime: '6 min read',
     views: '9.4K',
   },
@@ -243,12 +244,13 @@ const NewsSection: React.FC = () => {
                         },
                       }}
                     >
-                      <CardMedia
-                        component="img"
-                        height="250"
-                        image={article.imageUrl}
+                      <CldImage
+                        src={article.imageUrl}
                         alt={article.title}
-                        sx={{ objectFit: 'cover' }}
+                        width={600}
+                        height={250}
+                        crop="fill"
+                        style={{ width: '100%', height: 250, objectFit: 'cover' }}
                       />
                       <CardContent sx={{ p: 4 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
@@ -360,13 +362,15 @@ const NewsSection: React.FC = () => {
                         },
                       }}
                     >
-                      <CardMedia
-                        component="img"
-                        height="180"
-                        image={article.imageUrl}
+                      <CldImage
+                        src={article.imageUrl}
                         alt={article.title}
-                        sx={{ objectFit: 'cover' }}
+                        width={600}
+                        height={180}
+                        crop="fill"
+                        style={{ width: '100%', height: 180, objectFit: 'cover' }}
                       />
+
                       <CardContent sx={{ p: 3 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                           <Box

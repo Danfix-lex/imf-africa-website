@@ -1,9 +1,34 @@
 'use client';
 
-import { Box, Container, Typography, Paper, Grid, Avatar, Divider } from '@mui/material';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import {
+  Box,
+  Container,
+  Typography,
+  Card,
+  CardContent,
+  Avatar,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Chip,
+  useTheme,
+  Button,
+  Divider,
+} from '@mui/material';
+import {
+  ExpandMore as ExpandMoreIcon,
+  ArrowBack as ArrowBackIcon,
+  History as HistoryIcon,
+  School as SchoolIcon,
+  Work as WorkIcon,
+  VolunteerActivism as VolunteerActivismIcon,
+} from '@mui/icons-material';
+import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { CldImage } from 'next-cloudinary';
+import { motion } from 'framer-motion';
 
 const MotionBox = motion(Box);
 
@@ -12,7 +37,7 @@ export default function LeadershipPage() {
     {
       name: "Rev. Mary Louise Copeland",
       role: "First President, International Ministers Forum",
-      image: "/images/leadership/mary-copeland.jpg",
+      image: "leadership/mary-copeland.jpg",
       bioSections: [
         {
           title: "Early Life & Ministry Beginnings",
@@ -31,7 +56,7 @@ export default function LeadershipPage() {
     {
       name: "Pastor Doris Swartz",
       role: "Second President, International Ministers Forum",
-      image: "/images/leadership/doris-swartz.jpg",
+      image: "leadership/doris-swartz.jpg",
       bioSections: [
         {
           title: "Personal & Ministry Background",
@@ -53,7 +78,7 @@ export default function LeadershipPage() {
     {
       name: "Bishop Darrell & Pastor Kathy Gooden",
       role: "President, International Ministers Forum (IMF) USA",
-      image: "/images/leadership/president.png",
+      image: "leadership/president.png",
       bioSections: [
         {
           title: "Leadership Role",
@@ -68,7 +93,7 @@ export default function LeadershipPage() {
     {
       name: "Pastor Paul Price",
       role: "Vice President, International Ministers Forum (IMF) USA",
-      image: "/images/leadership/vice-president.jpg",
+      image: "leadership/vice-president.jpg",
       bioSections: [
         {
           title: "Leadership Role",
@@ -83,7 +108,7 @@ export default function LeadershipPage() {
     {
       name: "Sherry Swiger",
       role: "Secretary, IMF USA",
-      image: "/images/leadership/secretary-usa.jpg",
+      image: "leadership/secretary-usa.jpg",
       bioSections: [
         {
           title: "Ministry Role",
@@ -98,7 +123,7 @@ export default function LeadershipPage() {
     {
       name: "Rev. Olusegun and Rev Dr Blessing Jibuike",
       role: "President, IMF Africa",
-      image: "/images/leadership/africa-president.png",
+      image: "leadership/africa-president.png",
       bioSections: [
         {
           title: "Regional Leadership",
@@ -113,15 +138,15 @@ export default function LeadershipPage() {
     {
       name: "Amb. Edward Grace",
       role: "Secretary General, IMF Africa",
-      image: "/images/leadership/secretary-general.png",
+      image: "leadership/secretary-general.png",
       bioSections: [
         {
           title: "Administrative Leadership",
           content: "Serves as the Secretary General of IMF Africa, overseeing the administrative functions and coordination of the IMF Africa chapter."
         },
         {
-          title: "Regional Coordination",
-          content: "Responsible for facilitating communication and collaboration within IMF Africa, ensuring effective implementation of organizational initiatives across the African continent."
+          title: "Service & Dedication",
+          content: "Serves as Secretary for IMF USA, providing administrative leadership and support for the organization's operations in the United States."
         }
       ]
     }
@@ -156,56 +181,100 @@ export default function LeadershipPage() {
             </Typography>
           </MotionBox>
 
-          <Grid container spacing={6}>
-            {founders.map((founder, index) => (
-              <Grid size={{ xs: 12 }} key={`founder-${index}`}>
-                <MotionBox
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.2 + 0.3 }}
-                >
-                  <Paper elevation={4} sx={{ p: 4, borderRadius: 4 }}>
-                    <Grid container spacing={4} alignItems="center">
-                      <Grid size={{ xs: 12, md: 4 }} display="flex" justifyContent="center">
-                        <Avatar
+          {founders.map((founder, index) => (
+                <Box key={founder.name} sx={{ mb: 6 }}>
+                  <Card
+                    sx={{
+                      borderRadius: 4,
+                      overflow: 'hidden',
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                      border: '1px solid rgba(0,0,0,0.05)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        transform: 'translateY(-8px)',
+                        boxShadow: '0 16px 48px rgba(0,0,0,0.15)',
+                      },
+                    }}
+                  >
+                    <Box sx={{ display: { xs: 'block', md: 'flex' } }}>
+                      <Box sx={{ 
+                        width: { xs: '100%', md: 300 }, 
+                        height: { xs: 300, md: 'auto' },
+                        position: 'relative'
+                      }}>
+                        <CldImage
                           src={founder.image}
                           alt={founder.name}
-                          sx={{
-                            width: 200,
-                            height: 200,
-                            border: '4px solid',
-                            borderColor: 'primary.main',
-                            boxShadow: 3,
+                          width={300}
+                          height={300}
+                          crop="fill"
+                          style={{
+                            width: '100%',
+                            height: '100%',
                             objectFit: 'cover',
-                            objectPosition: 'center'
                           }}
                         />
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 8 }}>
-                        <Typography variant="h3" component="h2" gutterBottom color="secondary">
-                          {founder.name}
-                        </Typography>
-                        <Typography variant="h6" component="h3" gutterBottom color="primary" fontStyle="italic">
-                          {founder.role}
-                        </Typography>
-                        
-                        {founder.bioSections.map((section, secIndex) => (
-                          <Box key={secIndex} mt={3}>
-                            <Typography variant="h6" component="h4" gutterBottom color="primary" fontWeight="medium">
+                      </Box>
+                      <CardContent sx={{ flex: 1, p: 4 }}>
+                        <Box sx={{ mb: 3 }}>
+                          <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, color: 'primary.main' }}>
+                            {founder.name}
+                          </Typography>
+                          <Chip 
+                            label={founder.role} 
+                            color="primary" 
+                            variant="outlined" 
+                            sx={{ 
+                              fontWeight: 600,
+                              mb: 2,
+                              '& .MuiChip-label': {
+                                px: 2
+                              }
+                            }} 
+                          />
+                        </Box>
+
+                        {founder.bioSections.map((section, sectionIndex) => (
+                          <Accordion 
+                            key={sectionIndex} 
+                            defaultExpanded={sectionIndex === 0}
+                            sx={{ 
+                              mb: 2,
+                              boxShadow: 'none',
+                              border: '1px solid',
+                              borderColor: 'divider',
+                              '&:before': {
+                                display: 'none',
+                              },
+                              '&.Mui-expanded': {
+                                margin: '8px 0',
+                              }
+                            }}
+                          >
+                            <AccordionSummary
+                              expandIcon={<ExpandMoreIcon />}
+                              sx={{
+                                fontWeight: 600,
+                                color: 'text.primary',
+                                '& .MuiAccordionSummary-content': {
+                                  my: 1,
+                                }
+                              }}
+                            >
                               {section.title}
-                            </Typography>
-                            <Typography variant="body1" paragraph color="text.primary" lineHeight={1.8}>
-                              {section.content}
-                            </Typography>
-                          </Box>
+                            </AccordionSummary>
+                            <AccordionDetails sx={{ color: 'text.secondary', pt: 0 }}>
+                              <Typography>
+                                {section.content}
+                              </Typography>
+                            </AccordionDetails>
+                          </Accordion>
                         ))}
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                </MotionBox>
-              </Grid>
-            ))}
-          </Grid>
+                      </CardContent>
+                    </Box>
+                  </Card>
+                </Box>
+              ))}
 
           {/* Divider between sections */}
           <Divider sx={{ my: 8, borderWidth: 2 }} />
@@ -221,56 +290,101 @@ export default function LeadershipPage() {
             </Typography>
           </MotionBox>
 
-          <Grid container spacing={6}>
-            {currentLeaders.map((leader, index) => (
-              <Grid size={{ xs: 12 }} key={`current-${index}`}>
-                <MotionBox
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.2 + 0.5 }}
-                >
-                  <Paper elevation={4} sx={{ p: 4, borderRadius: 4 }}>
-                    <Grid container spacing={4} alignItems="center">
-                      <Grid size={{ xs: 12, md: 4 }} display="flex" justifyContent="center">
-                        <Avatar
+          {currentLeaders.map((leader, index) => (
+                <Box key={leader.name} sx={{ mb: 6 }}>
+                  <Card
+                    sx={{
+                      borderRadius: 4,
+                      overflow: 'hidden',
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                      border: '1px solid rgba(0,0,0,0.05)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        transform: 'translateY(-8px)',
+                        boxShadow: '0 16px 48px rgba(0,0,0,0.15)',
+                      },
+                    }}
+                  >
+                    <Box sx={{ display: { xs: 'block', md: 'flex' } }}>
+                      <Box sx={{ 
+                        width: { xs: '100%', md: 300 }, 
+                        height: { xs: 300, md: 'auto' },
+                        position: 'relative'
+                      }}>
+                        <CldImage
                           src={leader.image}
                           alt={leader.name}
-                          sx={{
-                            width: 200,
-                            height: 200,
-                            border: '4px solid',
-                            borderColor: 'primary.main',
-                            boxShadow: 3,
+                          width={300}
+                          height={300}
+                          crop="fill"
+                          style={{
+                            width: '100%',
+                            height: '100%',
                             objectFit: 'cover',
-                            objectPosition: 'center'
                           }}
                         />
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 8 }}>
-                        <Typography variant="h3" component="h2" gutterBottom color="secondary">
-                          {leader.name}
-                        </Typography>
-                        <Typography variant="h6" component="h3" gutterBottom color="primary" fontStyle="italic">
-                          {leader.role}
-                        </Typography>
-                        
-                        {leader.bioSections.map((section, secIndex) => (
-                          <Box key={secIndex} mt={3}>
-                            <Typography variant="h6" component="h4" gutterBottom color="primary" fontWeight="medium">
+                      </Box>
+                      <CardContent sx={{ flex: 1, p: 4 }}>
+                        <Box sx={{ mb: 3 }}>
+                          <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, color: 'primary.main' }}>
+                            {leader.name}
+                          </Typography>
+                          <Chip 
+                            label={leader.role} 
+                            color="secondary" 
+                            variant="outlined" 
+                            sx={{ 
+                              fontWeight: 600,
+                              mb: 2,
+                              '& .MuiChip-label': {
+                                px: 2
+                              }
+                            }} 
+                          />
+                        </Box>
+
+                        {leader.bioSections.map((section, sectionIndex) => (
+                          <Accordion 
+                            key={sectionIndex} 
+                            defaultExpanded={sectionIndex === 0}
+                            sx={{ 
+                              mb: 2,
+                              boxShadow: 'none',
+                              border: '1px solid',
+                              borderColor: 'divider',
+                              '&:before': {
+                                display: 'none',
+                              },
+                              '&.Mui-expanded': {
+                                margin: '8px 0',
+                              }
+                            }}
+                          >
+                            <AccordionSummary
+                              expandIcon={<ExpandMoreIcon />}
+                              sx={{
+                                fontWeight: 600,
+                                color: 'text.primary',
+                                '& .MuiAccordionSummary-content': {
+                                  my: 1,
+                                }
+                              }}
+                            >
                               {section.title}
-                            </Typography>
-                            <Typography variant="body1" paragraph color="text.primary" lineHeight={1.8}>
-                              {section.content}
-                            </Typography>
-                          </Box>
+                            </AccordionSummary>
+                            <AccordionDetails sx={{ color: 'text.secondary', pt: 0 }}>
+                              <Typography>
+                                {section.content}
+                              </Typography>
+                            </AccordionDetails>
+                          </Accordion>
                         ))}
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                </MotionBox>
-              </Grid>
-            ))}
-          </Grid>
+                      </CardContent>
+                    </Box>
+                  </Card>
+                </Box>
+              ))}
+
         </Container>
       </Box>
       <Footer />

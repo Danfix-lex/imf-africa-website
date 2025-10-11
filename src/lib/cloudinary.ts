@@ -7,8 +7,18 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// Simple in-memory cache for gallery images
+const galleryCache: { data: any; timestamp: number } = { data: null, timestamp: 0 };
+const GALLERY_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
 export async function getGalleryImages() {
   try {
+    // Check if we have valid cached data
+    const now = Date.now();
+    if (galleryCache.data && (now - galleryCache.timestamp) < GALLERY_CACHE_DURATION) {
+      return galleryCache.data;
+    }
+
     // Get all images from Cloudinary with specific tags or folder
     const result = await cloudinary.search
       .expression('folder:gallery') // Change this to your folder name
@@ -29,6 +39,10 @@ export async function getGalleryImages() {
       category: resource.context?.custom?.category || 'General',
       date: resource.created_at,
     }));
+
+    // Update cache
+    galleryCache.data = galleryItems;
+    galleryCache.timestamp = now;
 
     return galleryItems;
   } catch (error) {

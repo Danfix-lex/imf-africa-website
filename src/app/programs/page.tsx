@@ -1,4 +1,5 @@
 'use client';
+
 import React from 'react';
 import {
   Box,
@@ -6,19 +7,23 @@ import {
   Typography,
   Card,
   CardContent,
-  CardMedia,
   Button,
-  Chip,
   useTheme,
+  Chip,
 } from '@mui/material';
 import {
   CalendarToday as CalendarIcon,
-  Add as AddIcon,
+  LocationOn as LocationIcon,
   AccessTime as TimeIcon,
+  Groups as GroupsIcon,
+  ArrowBack as ArrowBackIcon,
   Place as PlaceIcon,
+  Add as AddIcon,
 } from '@mui/icons-material';
+import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { CldImage } from 'next-cloudinary';
 
 const ProgramsPage: React.FC = () => {
   const theme = useTheme();
@@ -101,18 +106,18 @@ const ProgramsPage: React.FC = () => {
             }}
           >
             {/* Flyer Image */}
-            <CardMedia
-              component="img"
-              image="/images/upcoming-program.jpg"
+            <CldImage
+              src="programs/upcoming-program.jpg"
               alt="End of the Year Banquet & Award"
-              sx={{
+              width={800}
+              height={600}
+              crop="fill"
+              style={{
                 width: '100%',
                 height: 'auto',
                 objectFit: 'contain',
-                maxHeight: 600,
               }}
             />
-
             <CardContent sx={{ p: 4 }}>
               <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, color: 'text.primary' }}>
                 End of the Year Banquet & Award

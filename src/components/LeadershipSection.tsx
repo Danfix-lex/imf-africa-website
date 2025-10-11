@@ -6,7 +6,6 @@ import {
   Typography,
   Card,
   CardContent,
-  Avatar,
   useTheme,
   Chip,
 } from '@mui/material';
@@ -14,6 +13,7 @@ import {
   LocationOn as LocationIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
+import { CldImage } from 'next-cloudinary';
 
 const leadershipTeam = [
   {
@@ -22,7 +22,7 @@ const leadershipTeam = [
     position: 'President, IMF USA',
     department: 'Executive Leadership',
     bio: 'Current President of the International Ministers Forum (IMF) USA. They Pastor the Rehoboth Christian Center in Tallapoosa, Georgia. They have been pastors for 43 years and married 53 years. They had IMF incorporated in Georgia.',
-    avatar: '/images/leadership/president.png',
+    avatar: 'leadership/president.png',
     location: 'Tallapoosa, Georgia, USA',
   },
   {
@@ -31,7 +31,7 @@ const leadershipTeam = [
     position: 'Vice President, IMF USA',
     department: 'Operations & Development',
     bio: 'Made Vice President in 2012. Pastor of Cornerstone Worship Center in Indiana, Pennsylvania.',
-    avatar: '/images/leadership/vice-president.jpg',
+    avatar: 'leadership/vice-president.jpg',
     location: 'Indiana, Pennsylvania, USA',
   },
   {
@@ -40,7 +40,7 @@ const leadershipTeam = [
     position: 'President, IMF Africa',
     department: 'Regional Coordination',
     bio: 'President of IMF Nigeria and the entire IMF family in Nigeria and Africa. Recently inaugurated the IMF Lagos State chapter under the leadership of Rev Oladapo Taiwo.',
-    avatar: '/images/leadership/africa-president.png',
+    avatar: 'leadership/africa-president.png',
     location: 'Lagos, Nigeria',
   },
   {
@@ -49,7 +49,7 @@ const leadershipTeam = [
     position: 'Secretary General, IMF Africa',
     department: 'Administration & Finance',
     bio: 'Serves as the Secretary General of IMF Africa, overseeing the administrative functions and coordination of the IMF Africa chapter.',
-    avatar: '/images/leadership/secretary-general.JPG',
+    avatar: 'leadership/secretary-general.png',
     location: 'Africa Region',
   },
 ];
@@ -148,20 +148,31 @@ const LeadershipSection: React.FC = () => {
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <Avatar
-                      src={leader.avatar}
-                      alt={leader.name}
+                    <Box
                       sx={{
                         width: { xs: 100, md: 120 },
                         height: { xs: 100, md: 120 },
                         mx: 'auto',
                         mb: 3,
+                        borderRadius: '50%',
+                        overflow: 'hidden',
                         border: `4px solid ${theme.palette.primary.main}20`,
                         boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
                       }}
                     >
-                      {leader.name.split(' ').map(n => n[0]).join('')}
-                    </Avatar>
+                      <CldImage
+                        src={leader.avatar}
+                        alt={leader.name}
+                        width={120}
+                        height={120}
+                        crop="fill"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                        }}
+                      />
+                    </Box>
                   </motion.div>
 
                   <Typography variant="h5" sx={{ 
