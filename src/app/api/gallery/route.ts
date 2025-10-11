@@ -101,7 +101,13 @@ export async function GET(request: Request) {
     });
   } catch (error: any) {
     console.error('Error in gallery API route:', error);
-    return new NextResponse(JSON.stringify({ error: 'Failed to fetch gallery items', details: error.message }), { 
+    return new NextResponse(JSON.stringify({ 
+      error: 'Failed to fetch gallery items', 
+      details: error.message,
+      // Add more specific error information for debugging
+      timestamp: new Date().toISOString(),
+      cloudinaryConfigured: !!(process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET)
+    }), { 
       status: 500,
       headers: {
         'Content-Type': 'application/json',

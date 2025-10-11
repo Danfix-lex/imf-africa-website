@@ -65,6 +65,12 @@ export async function getGalleryImages() {
       return cachedData;
     }
 
+    // Check if Cloudinary is properly configured
+    if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      console.error('Cloudinary environment variables are not properly configured');
+      throw new Error('Cloudinary service is not properly configured. Please check environment variables.');
+    }
+
     console.log('Fetching images from Cloudinary gallery folder');
     // Get all images and videos from Cloudinary with specific tags or folder
     const result = await cloudinary.search
@@ -155,9 +161,9 @@ export async function getGalleryImages() {
     galleryCache.set(cacheKey, galleryItems);
 
     return galleryItems;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching images from Cloudinary:', error);
-    return [];
+    throw new Error(`Failed to fetch gallery items from Cloudinary: ${error.message || 'Unknown error occurred'}. Please check Cloudinary configuration and folder permissions.`);
   }
 }
 

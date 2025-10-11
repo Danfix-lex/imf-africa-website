@@ -100,11 +100,18 @@ const GalleryPage: React.FC = () => {
         }
         
         const data = await response.json();
-        setGalleryItems(data);
+        
+        // Check if we received valid data
+        if (!data || (Array.isArray(data) && data.length === 0)) {
+          setError('No gallery items found. Please check if media has been uploaded to Cloudinary.');
+        } else {
+          setGalleryItems(data);
+        }
+        
         setLoading(false);
       } catch (error: any) {
         console.error('Error fetching gallery items:', error);
-        setError(`Error fetching gallery items: ${error.message}`);
+        setError(`Error fetching gallery items: ${error.message || 'Unknown error occurred'}. Please try again later.`);
         setLoading(false);
       }
     };
