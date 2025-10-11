@@ -9,17 +9,60 @@ cloudinary.config({
 
 console.log('Cloudinary configured with cloud name:', process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
 
-// Simple in-memory cache for gallery images
-const galleryCache: { data: any; timestamp: number } = { data: null, timestamp: 0 };
-const GALLERY_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+// Enhanced in-memory cache for gallery images with LRU eviction
+class LRUCache<T> {
+  private cache: Map<string, { value: T; timestamp: number }> = new Map();
+  private maxSize: number;
+  private ttl: number; // Time to live in milliseconds
+
+  constructor(maxSize: number = 100, ttl: number = 5 * 60 * 1000) {
+    this.maxSize = maxSize;
+    this.ttl = ttl;
+  }
+
+  get(key: string): T | null {
+    const item = this.cache.get(key);
+    if (!item) return null;
+
+    // Check if item has expired
+    if (Date.now() - item.timestamp > this.ttl) {
+      this.cache.delete(key);
+      return null;
+    }
+
+    // Move to front (most recently used)
+    this.cache.delete(key);
+    this.cache.set(key, { value: item.value, timestamp: item.timestamp });
+    return item.value;
+  }
+
+  set(key: string, value: T): void {
+    // Remove oldest items if we're at max size
+    if (this.cache.size >= this.maxSize) {
+      const firstKey = this.cache.keys().next().value;
+      if (firstKey) this.cache.delete(firstKey);
+    }
+
+    this.cache.set(key, { value, timestamp: Date.now() });
+  }
+
+  clear(): void {
+    this.cache.clear();
+  }
+}
+
+// Create cache instances
+const galleryCache = new LRUCache<any[]>(50, 5 * 60 * 1000); // 50 items, 5 minutes TTL
+const thumbnailCache = new LRUCache<string>(200, 10 * 60 * 1000); // 200 items, 10 minutes TTL
 
 export async function getGalleryImages() {
   try {
     // Check if we have valid cached data
-    const now = Date.now();
-    if (galleryCache.data && (now - galleryCache.timestamp) < GALLERY_CACHE_DURATION) {
+    const cacheKey = 'gallery_images';
+    const cachedData = galleryCache.get(cacheKey);
+    if (cachedData) {
       console.log('Returning cached gallery images');
-      return galleryCache.data;
+      return cachedData;
     }
 
     console.log('Fetching images from Cloudinary gallery folder');
@@ -38,31 +81,62 @@ export async function getGalleryImages() {
       // Generate proper thumbnail URL using Cloudinary's transformation
       let thumbnailUrl = resource.secure_url;
       
-      if (resource.resource_type === 'image') {
+      // Check thumbnail cache first
+      const thumbnailCacheKey = `${resource.public_id}_thumb`;
+      const cachedThumbnail = thumbnailCache.get(thumbnailCacheKey);
+      
+      if (cachedThumbnail) {
+        thumbnailUrl = cachedThumbnail;
+      } else if (resource.resource_type === 'image' && resource.format !== 'pdf') {
         // For images, generate a thumbnail
         thumbnailUrl = cloudinary.url(resource.public_id, {
-          width: 300,
-          height: 200,
+          width: 400,
+          height: 220,
           crop: "fill",
-          format: resource.format
+          format: 'webp',
+          quality: 'auto',
         });
+        // Cache the thumbnail URL
+        thumbnailCache.set(thumbnailCacheKey, thumbnailUrl);
       } else if (resource.resource_type === 'video') {
         // For videos, generate a thumbnail from the middle of the video
         thumbnailUrl = cloudinary.url(resource.public_id, {
-          width: 300,
-          height: 200,
+          width: 400,
+          height: 220,
           crop: "fill",
-          format: 'jpg',
+          format: 'webp',
+          quality: 'auto',
           resource_type: 'video',
           transformation: [
             { start_offset: 'auto' }
           ]
         });
+        // Cache the thumbnail URL
+        thumbnailCache.set(thumbnailCacheKey, thumbnailUrl);
+      } else {
+        // For documents and other resource types, we'll handle them differently in the UI
+        // So we don't need a thumbnail URL
+        thumbnailUrl = '';
+      }
+      
+      // Determine the type based on resource_type
+      let itemType: 'image' | 'video' | 'document' = 'image';
+      const documentFormats = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'rtf', 'odt', 'ods', 'odp'];
+      
+      // More robust document detection
+      if (resource.resource_type === 'video') {
+        itemType = 'video';
+      } else if (resource.resource_type === 'raw') {
+        // Raw files are always documents
+        itemType = 'document';
+      } else if (resource.resource_type === 'image' && documentFormats.includes((resource.format || '').toLowerCase())) {
+        // Image resources that are actually documents (like PDFs uploaded as images)
+        itemType = 'document';
       }
       
       return {
         id: resource.asset_id,
-        type: resource.resource_type === 'video' ? 'video' : 'image',
+        type: itemType,
         title: resource.context?.custom?.title || resource.public_id.split('/').pop() || 'Untitled',
         description: resource.context?.custom?.alt || 'No description available',
         url: resource.secure_url,
@@ -78,8 +152,7 @@ export async function getGalleryImages() {
     console.log('Transformed', galleryItems.length, 'gallery items');
 
     // Update cache
-    galleryCache.data = galleryItems;
-    galleryCache.timestamp = now;
+    galleryCache.set(cacheKey, galleryItems);
 
     return galleryItems;
   } catch (error) {
@@ -91,17 +164,24 @@ export async function getGalleryImages() {
 // Function to upload media to Cloudinary
 export async function uploadMedia(file: Buffer, options: any) {
   try {
-    const result = await cloudinary.uploader.upload_stream(
-      options,
-      (error, result) => {
-        if (error) {
-          console.error('Error uploading to Cloudinary:', error);
-          return null;
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        options,
+        (error, result) => {
+          if (error) {
+            console.error('Error uploading to Cloudinary:', error);
+            reject(error);
+          } else {
+            resolve(result);
+          }
         }
-        return result;
-      }
-    );
-    return result;
+      );
+      
+      // Write file buffer to upload stream
+      uploadStream.end(file);
+    });
+    
+    return result as any;
   } catch (error) {
     console.error('Error in uploadMedia function:', error);
     return null;

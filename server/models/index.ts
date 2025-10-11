@@ -199,7 +199,7 @@ export interface IUser extends Document {
   state?: string;
   city?: string;
   denomination?: string;
-  churchName?: string;
+  ministryName?: string;
   position?: string;
   isActive: boolean;
   isEmailVerified: boolean;
@@ -273,14 +273,14 @@ const UserSchema: Schema = new Schema({
     type: String,
     trim: true,
   },
-  churchName: {
+  ministryName: {
     type: String,
     trim: true,
   },
   position: {
     type: String,
     trim: true,
-    enum: ['Pastor', 'Minister', 'Church Leader', 'Evangelist', 'Missionary', 'Church Member', 'Student', 'Other'],
+    enum: ['Pastor', 'Minister', 'Evangelist', 'Missionary', 'Ministry Leader', 'Student', 'Other'],
   },
   isActive: {
     type: Boolean,

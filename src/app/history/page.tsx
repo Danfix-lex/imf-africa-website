@@ -56,7 +56,7 @@ const HistoryPage: React.FC = () => {
     },
     {
       title: "Worldwide Impact",
-      content: "IMF has put roofs on buildings, dug wells for villages, built churches, held meetings, supported feeding programs, planted homes for children, built homes for pastors and blessed many pastors and missionaries."
+      content: "IMF has put roofs on buildings, dug wells for villages, built meeting facilities, held meetings, supported feeding programs, built homes for children, built homes for pastors and blessed many pastors and missionaries."
     },
     {
       title: "Annual Conferences",
@@ -148,7 +148,7 @@ const HistoryPage: React.FC = () => {
                   Throughout the years, IMF has been led by visionary leaders who understood the importance 
                   of fellowship, training, and missions. Today, under the leadership of Bishop Darrell & 
                   Pastor Kathy Gooden, IMF continues to expand its reach and impact, staying true to its 
-                  mission of empowering God-called, spirit-filled ministers, churches, and religious 
+                  mission of empowering God-called, spirit-filled ministers, ministries, and religious 
                   organizations to carry out their God-given assignments throughout the world.
                 </Typography>
               </CardContent>

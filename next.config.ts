@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
   // Optimize images
   images: {
     domains: ['res.cloudinary.com'],
+    // Add image optimization
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    formats: ['image/webp'],
   },
   // Enable React strict mode
   reactStrictMode: true,
@@ -20,6 +24,15 @@ const nextConfig: NextConfig = {
   experimental: {
     // Optimize CSS processing
     optimizeCss: true,
+    // Enable Turbopack for faster builds
+    turbo: {
+      rules: {
+        "*.svg": {
+          loaders: ["@svgr/webpack"],
+          as: "*.js",
+        },
+      },
+    },
   },
   // Webpack optimizations
   webpack: (config, { dev, isServer }) => {
@@ -41,10 +54,52 @@ const nextConfig: NextConfig = {
           priority: 10,
           reuseExistingChunk: true,
         },
+        // Split MUI components for better caching
+        mui: {
+          test: /[\\/]node_modules[\\/]@mui[\\/]/,
+          name: 'mui',
+          chunks: 'all',
+          priority: 20,
+          reuseExistingChunk: true,
+        },
       };
+      
+      // Minimize bundle size
+      config.optimization.minimize = true;
     }
     
     return config;
+  },
+  // Add headers for caching
+  async headers() {
+    return [
+      {
+        source: '/:all*(svg|jpg|png|webp|avif|gif|ico|woff|woff2|ttf|eot)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+        ],
+      },
+    ];
   },
 };
 

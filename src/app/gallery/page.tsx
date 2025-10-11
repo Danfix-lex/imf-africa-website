@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import {
   Box,
   Container,
@@ -20,6 +20,7 @@ import {
   CircularProgress,
   CardActions,
   Alert,
+  alpha,
 } from '@mui/material';
 import {
   Image as ImageIcon,
@@ -28,17 +29,41 @@ import {
   ZoomIn as ZoomInIcon,
   Download as DownloadIcon,
   Videocam as VideoIcon,
+  PictureAsPdf as PdfIcon,
+  Description as DocumentIcon,
 } from '@mui/icons-material';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-// Import CldImage and check if we need to configure it
+// Lazy load images for better performance
+const LazyImage = ({ src, alt, sx, onError }: { src: string; alt: string; sx?: any; onError?: (e: any) => void }) => {
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
+
+  return (
+    <Box
+      component="img"
+      src={src}
+      alt={alt}
+      sx={{
+        ...sx,
+        opacity: loaded ? 1 : 0,
+        transition: 'opacity 0.3s ease',
+      }}
+      onLoad={() => setLoaded(true)}
+      onError={(e) => {
+        setError(true);
+        if (onError) onError(e);
+      }}
+    />
+  );
+};
 
 // Update the gallery item type
 interface GalleryItem {
   id: string;
-  type: 'image' | 'video';
+  type: 'image' | 'video' | 'document';
   title: string;
   description: string;
   url: string;
@@ -47,11 +72,11 @@ interface GalleryItem {
   category: string;
   date: string;
   duration?: number; // For videos
-  format?: string; // For videos
+  format?: string; // For videos and documents
 }
 
 // Remove mock data - will fetch from Cloudinary instead
-const categories = ['All', 'Events', 'Training', 'Outreach', 'Youth', 'Worship', 'Videos'];
+const categories = ['All', 'Events', 'Training', 'Outreach', 'Youth', 'Worship', 'Videos', 'Documents'];
 
 const GalleryPage: React.FC = () => {
   const theme = useTheme();
@@ -67,9 +92,7 @@ const GalleryPage: React.FC = () => {
   useEffect(() => {
     const fetchGalleryItems = async () => {
       try {
-        console.log('Fetching gallery items from API...');
         const response = await fetch('/api/gallery');
-        console.log('Gallery API response status:', response.status);
         
         if (!response.ok) {
           const errorText = await response.text();
@@ -77,7 +100,6 @@ const GalleryPage: React.FC = () => {
         }
         
         const data = await response.json();
-        console.log('Received gallery items:', data);
         setGalleryItems(data);
         setLoading(false);
       } catch (error: any) {
@@ -94,6 +116,8 @@ const GalleryPage: React.FC = () => {
     ? galleryItems 
     : selectedCategory === 'Videos'
     ? galleryItems.filter(item => item.type === 'video')
+    : selectedCategory === 'Documents'
+    ? galleryItems.filter(item => item.type === 'document')
     : galleryItems.filter(item => item.category === selectedCategory);
 
   // Items to display based on visibility
@@ -129,7 +153,7 @@ const GalleryPage: React.FC = () => {
     return (
       <>
         <Header />
-        <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: 15, pb: 8, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: { xs: 12, md: 15 }, pb: 8, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <CircularProgress />
           <Typography sx={{ ml: 2 }}>Loading gallery...</Typography>
         </Box>
@@ -143,7 +167,7 @@ const GalleryPage: React.FC = () => {
     return (
       <>
         <Header />
-        <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: 15, pb: 8 }}>
+        <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: { xs: 12, md: 15 }, pb: 8 }}>
           <Container maxWidth="xl">
             <Alert severity="error" sx={{ mb: 4 }}>
               <Typography variant="h6">Gallery Error</Typography>
@@ -168,17 +192,17 @@ const GalleryPage: React.FC = () => {
     return (
       <>
         <Header />
-        <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: 15, pb: 8 }}>
+        <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: { xs: 12, md: 15 }, pb: 8 }}>
           <Container maxWidth="xl">
             <Box sx={{ textAlign: 'center', py: 8 }}>
               <Typography variant="h4" gutterBottom>
                 No Gallery Items Found
               </Typography>
               <Typography variant="body1" color="text.secondary">
-                There are currently no images or videos in your gallery.
+                There are currently no images, videos, or documents in your gallery.
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-                Please make sure you have uploaded images to your Cloudinary "gallery" folder.
+                Please make sure you have uploaded media to your Cloudinary "gallery" folder.
               </Typography>
               <Button 
                 variant="contained" 
@@ -198,12 +222,12 @@ const GalleryPage: React.FC = () => {
   return (
     <>
       <Header />
-      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: 15, pb: 8 }}>
+      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: { xs: 12, md: 15 }, pb: 8 }}>
         <Container maxWidth="xl">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.4 }}
           >
             <Box sx={{ textAlign: 'center', mb: 6 }}>
               <Typography
@@ -215,6 +239,7 @@ const GalleryPage: React.FC = () => {
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
+                  fontSize: { xs: '2rem', md: '2.75rem' }
                 }}
               >
                 Media Gallery
@@ -226,6 +251,7 @@ const GalleryPage: React.FC = () => {
                   color: 'text.secondary',
                   maxWidth: 700,
                   mx: 'auto',
+                  fontSize: { xs: '1rem', md: '1.25rem' }
                 }}
               >
                 Explore photos and videos from our ministry events, training sessions, and community outreach programs
@@ -249,10 +275,26 @@ const GalleryPage: React.FC = () => {
                     fontSize: '1rem',
                     minWidth: 'auto',
                     px: 3,
+                    py: 1.5,
+                    borderRadius: 2,
+                    minHeight: 'auto',
+                    mr: 1,
+                    '&.Mui-selected': {
+                      color: 'primary.main',
+                      bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    },
+                    '&:hover': {
+                      bgcolor: alpha(theme.palette.primary.main, 0.05),
+                    }
                   },
                   '& .MuiTabs-indicator': {
                     background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                     height: 3,
+                  },
+                  '& .MuiTabs-scrollButtons': {
+                    '&.Mui-disabled': {
+                      opacity: 0.3,
+                    },
                   },
                 }}
               >
@@ -268,145 +310,177 @@ const GalleryPage: React.FC = () => {
           </motion.div>
 
           {/* Gallery Grid */}
-          <Grid container spacing={4}>
-            {itemsToDisplay.map((item, index) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={item.id}>
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ y: -8 }}
-                >
-                  <Card
-                    sx={{
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      borderRadius: 3,
-                      overflow: 'hidden',
-                      boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-                      border: '1px solid rgba(0,0,0,0.05)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: '0 16px 48px rgba(0,0,0,0.15)',
-                        transform: 'translateY(-4px)',
-                      },
-                      cursor: 'pointer',
-                    }}
+          <Grid container spacing={{ xs: 3, md: 4 }}>
+            <AnimatePresence>
+              {itemsToDisplay.map((item, index) => (
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={item.id}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    whileHover={{ y: -4 }}
                   >
-                    <Box sx={{ position: 'relative' }} onClick={() => handleOpenDialog(item)}>
-                      {/* Handle both images and videos properly */}
-                      {item.type === 'video' ? (
+                    <Card
+                      sx={{
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        borderRadius: 3,
+                        overflow: 'hidden',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+                        border: '1px solid rgba(0,0,0,0.05)',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          boxShadow: '0 16px 48px rgba(0,0,0,0.15)',
+                          transform: 'translateY(-4px)',
+                        },
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <Box sx={{ position: 'relative' }} onClick={() => handleOpenDialog(item)}>
+                        {/* Handle both images and videos properly */}
+                        {item.type === 'video' ? (
+                          <Box
+                            sx={{
+                              width: '100%',
+                              height: 220,
+                              bgcolor: 'black',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              position: 'relative',
+                            }}
+                          >
+                            <PlayIcon sx={{ color: 'white', fontSize: 48 }} />
+                            <Box
+                              sx={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                bgcolor: 'rgba(0,0,0,0.3)',
+                              }}
+                            />
+                          </Box>
+                        ) : item.type === 'document' ? (
+                          // Document preview with icon
+                          <Box
+                            sx={{
+                              width: '100%',
+                              height: 220,
+                              bgcolor: alpha(theme.palette.primary.main, 0.1),
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              position: 'relative',
+                            }}
+                          >
+                            {(item.format && item.format.toLowerCase() === 'pdf') ? (
+                              <PdfIcon sx={{ color: 'primary.main', fontSize: 64 }} />
+                            ) : (
+                              <DocumentIcon sx={{ color: 'primary.main', fontSize: 64 }} />
+                            )}
+                          </Box>
+                        ) : (
+                          // Use optimized image loading
+                          <Box sx={{ width: '100%', height: 220, position: 'relative' }}>
+                            <LazyImage
+                              src={item.thumbnail || `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/w_400,h_220,c_fill,f_webp,q_auto/${item.url.split('/').pop()}`}
+                              alt={item.title}
+                              sx={{
+                                width: '100%',
+                                height: 220,
+                                objectFit: 'cover',
+                              }}
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.src = `https://via.placeholder.com/400x220?text=${encodeURIComponent(item.title)}`;
+                              }}
+                            />
+                          </Box>
+                        )}
                         <Box
                           sx={{
-                            width: '100%',
-                            height: 200,
-                            bgcolor: 'black',
+                            position: 'absolute',
+                            top: 16,
+                            right: 16,
+                            bgcolor: 'primary.main',
+                            color: 'white',
+                            width: 44,
+                            height: 44,
+                            borderRadius: '50%',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            position: 'relative',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
                           }}
                         >
-                          <PlayIcon sx={{ color: 'white', fontSize: 48 }} />
-                          <Box
-                            sx={{
-                              position: 'absolute',
-                              top: 0,
-                              left: 0,
-                              width: '100%',
-                              height: '100%',
-                              bgcolor: 'rgba(0,0,0,0.3)',
-                            }}
-                          />
+                          {item.type === 'image' ? <ImageIcon /> : item.type === 'video' ? <VideoIcon /> : <DocumentIcon />}
                         </Box>
-                      ) : (
-                        // Fallback to regular img tag if CldImage fails
-                        <Box
-                          component="img"
-                          src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_300,h_200/${item.thumbnail}`}
-                          alt={item.title}
+                        <Chip
+                          label={item.category}
+                          size="small"
                           sx={{
-                            width: '100%',
-                            height: 200,
-                            objectFit: 'cover',
-                          }}
-                          onError={(e) => {
-                            // Removed console.error for production
-                            const target = e.target as HTMLImageElement;
-                            target.src = 'https://via.placeholder.com/300x200?text=Image+Not+Found';
+                            position: 'absolute',
+                            bottom: 16,
+                            left: 16,
+                            bgcolor: 'rgba(255, 255, 255, 0.9)',
+                            color: 'text.primary',
+                            fontWeight: 600,
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
                           }}
                         />
-                      )}
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          top: 16,
-                          right: 16,
-                          bgcolor: 'primary.main',
-                          color: 'white',
-                          width: 40,
-                          height: 40,
-                          borderRadius: '50%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        {item.type === 'image' ? <ImageIcon /> : <VideoIcon />}
                       </Box>
-                      <Chip
-                        label={item.category}
-                        size="small"
-                        sx={{
-                          position: 'absolute',
-                          bottom: 16,
-                          left: 16,
-                          bgcolor: 'rgba(255, 255, 255, 0.9)',
-                          color: 'text.primary',
-                          fontWeight: 600,
-                        }}
-                      />
-                    </Box>
-                    <CardContent sx={{ flexGrow: 1, p: 3 }} onClick={() => handleOpenDialog(item)}>
-                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                        {item.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                        {item.description}
-                      </Typography>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="caption" color="text.secondary">
-                          {new Date(item.date).toLocaleDateString()}
+                      <CardContent sx={{ flexGrow: 1, p: 3 }} onClick={() => handleOpenDialog(item)}>
+                        <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, fontSize: '1.1rem' }}>
+                          {item.title}
                         </Typography>
-                        {item.type === 'video' && item.duration && (
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.6 }}>
+                          {item.description}
+                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <Typography variant="caption" color="text.secondary">
-                            {Math.floor(item.duration / 60)}:{String(Math.floor(item.duration % 60)).padStart(2, '0')}
+                            {new Date(item.date).toLocaleDateString()}
                           </Typography>
-                        )}
-                      </Box>
-                    </CardContent>
-                    <CardActions sx={{ justifyContent: 'center', p: 2 }}>
-                      <Button
-                        variant="outlined"
-                        startIcon={<DownloadIcon />}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDownload(item.downloadUrl, item.title);
-                        }}
-                        sx={{
-                          borderRadius: 2,
-                          textTransform: 'none',
-                          fontWeight: 600,
-                        }}
-                      >
-                        Download
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </motion.div>
-              </Grid>
-            ))}
+                          {item.type === 'video' && item.duration && (
+                            <Typography variant="caption" color="text.secondary">
+                              {Math.floor(item.duration / 60)}:{String(Math.floor(item.duration % 60)).padStart(2, '0')}
+                            </Typography>
+                          )}
+                        </Box>
+                      </CardContent>
+                      <CardActions sx={{ justifyContent: 'center', p: 2 }}>
+                        <Button
+                          variant="outlined"
+                          startIcon={<DownloadIcon />}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDownload(item.downloadUrl, item.title);
+                          }}
+                          sx={{
+                            borderRadius: 2,
+                            textTransform: 'none',
+                            fontWeight: 600,
+                            px: 2,
+                            py: 0.8,
+                            borderColor: alpha(theme.palette.primary.main, 0.3),
+                            color: 'primary.main',
+                            '&:hover': {
+                              bgcolor: alpha(theme.palette.primary.main, 0.1),
+                              borderColor: 'primary.main',
+                            }
+                          }}
+                        >
+                          Download
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </motion.div>
+                </Grid>
+              ))}
+            </AnimatePresence>
           </Grid>
 
           {/* Load More Button */}
@@ -416,15 +490,17 @@ const GalleryPage: React.FC = () => {
                 variant="contained"
                 onClick={loadMore}
                 sx={{
-                  px: 4,
+                  px: 5,
                   py: 1.5,
                   borderRadius: 3,
                   fontWeight: 600,
                   textTransform: 'none',
                   background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+                  boxShadow: `0 6px 16px ${alpha(theme.palette.primary.main, 0.3)}`,
                   '&:hover': {
                     background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
                     transform: 'translateY(-2px)',
+                    boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.4)}`,
                   },
                   transition: 'all 0.3s ease',
                 }}
@@ -445,6 +521,7 @@ const GalleryPage: React.FC = () => {
             '& .MuiDialog-paper': {
               borderRadius: 3,
               overflow: 'hidden',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
             },
           }}
         >
@@ -491,22 +568,75 @@ const GalleryPage: React.FC = () => {
                         }}
                       />
                     </Box>
-                  ) : (
+                  ) : selectedItem.type === 'document' ? (
+                    // Document preview with download option
                     <Box
-                      component="img"
-                      src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_800,h_600/${selectedItem.url}`}
-                      alt={selectedItem.title}
                       sx={{
                         width: '100%',
                         maxHeight: '70vh',
-                        objectFit: 'contain',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        bgcolor: 'background.paper',
+                        p: 4,
                       }}
-                      onError={(e) => {
-                        // Removed console.error for production
-                        const target = e.target as HTMLImageElement;
-                        target.src = 'https://via.placeholder.com/800x600?text=Image+Not+Available';
-                      }}
-                    />
+                    >
+                      <Box
+                        sx={{
+                          mb: 4,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: 120,
+                          height: 120,
+                          borderRadius: '50%',
+                          bgcolor: alpha(theme.palette.primary.main, 0.1),
+                        }}
+                      >
+                        {(selectedItem.format && selectedItem.format.toLowerCase() === 'pdf') ? (
+                          <PdfIcon sx={{ color: 'primary.main', fontSize: 64 }} />
+                        ) : (
+                          <DocumentIcon sx={{ color: 'primary.main', fontSize: 64 }} />
+                        )}
+                      </Box>
+                      <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
+                        {selectedItem.title}
+                      </Typography>
+                      <Typography variant="body1" color="text.secondary" sx={{ mb: 3, textAlign: 'center' }}>
+                        {selectedItem.description || 'Document file'}
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        startIcon={<DownloadIcon />}
+                        onClick={() => handleDownload(selectedItem.url, selectedItem.title)}
+                        sx={{
+                          px: 4,
+                          py: 1.5,
+                          borderRadius: 2,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Download {selectedItem.format?.toUpperCase() || 'Document'}
+                      </Button>
+                    </Box>
+                  ) : (
+                    // Use optimized image loading for dialog
+                    <Box sx={{ width: '100%', maxHeight: '70vh', position: 'relative' }}>
+                      <LazyImage
+                        src={selectedItem.url}
+                        alt={selectedItem.title}
+                        sx={{
+                          width: '100%',
+                          maxHeight: '70vh',
+                          objectFit: 'contain',
+                        }}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = `https://via.placeholder.com/800x600?text=${encodeURIComponent(selectedItem.title)}`;
+                        }}
+                      />
+                    </Box>
                   )}
                   <IconButton
                     sx={{
@@ -528,7 +658,7 @@ const GalleryPage: React.FC = () => {
                   <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
                     {selectedItem.title}
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+                  <Typography variant="body1" color="text.secondary" sx={{ mb: 2, lineHeight: 1.7 }}>
                     {selectedItem.description}
                   </Typography>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>

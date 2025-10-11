@@ -50,7 +50,7 @@ const coreValues = [
   {
     icon: <PartnershipIcon />,
     title: "Strategic Partnerships",
-    description: "Building lasting relationships with churches, organizations, and leaders across Africa.",
+    description: "Building lasting relationships with organizations and leaders across Africa.",
     color: '#E65100'
   },
   {
@@ -116,7 +116,7 @@ const AboutSection: React.FC = () => {
             >
               Founded in 1950, the International Ministers Forum Africa (IMF Africa) stands as 
               a beacon of hope and transformation across the African continent, dedicated to 
-              empowering ministers, strengthening churches, and advancing God's Kingdom.
+              empowering ministers, strengthening ministries, and advancing God's Kingdom.
             </Typography>
             
             <Typography

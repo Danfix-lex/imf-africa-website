@@ -50,7 +50,7 @@ const StatementOfFaithPage: React.FC = () => {
   const imfAnthem = [
     {
       title: "IMF Anthem",
-      content: "God is moving the people of power, God is moving IMF, that will move through the land by his spirit, and will glorify his precious name.\n\nChorus: Move your church Lord, make us strong Lord, Join our hands Lord through your Son. Make us one Lord, in your Body, in your kingdom, of your Son."
+      content: "God is moving the people of power, God is moving IMF, that will move through the land by his spirit, and will glorify his precious name.\n\nChorus: Move your people Lord, make us strong Lord, Join our hands Lord through your Son. Make us one Lord, in your Body, in your kingdom, of your Son."
     }
   ];
 

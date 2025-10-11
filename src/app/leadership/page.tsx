@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import {
   Box,
   Container,
@@ -15,6 +15,8 @@ import {
   useTheme,
   Button,
   Divider,
+  alpha,
+  CircularProgress,
 } from '@mui/material';
 import {
   ExpandMore as ExpandMoreIcon,
@@ -27,58 +29,37 @@ import {
 import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { CldImage } from 'next-cloudinary';
 import { motion } from 'framer-motion';
 
 const MotionBox = motion(Box);
 
 // Component to handle image loading with fallback
 const LeaderImage = ({ src, name }: { src: string; name: string }) => {
-  const [imageError, setImageError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   
-  if (imageError) {
-    // Fallback to avatar with initials
-    const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2);
-    return (
-      <Box sx={{ 
-        width: '100%', 
-        height: '100%', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        bgcolor: 'primary.main',
-        color: 'white',
-        fontSize: '3rem',
-        fontWeight: 'bold'
-      }}>
-        {initials}
-      </Box>
-    );
-  }
-  
-  // Use regular img tag instead of CldImage
   return (
-    <img
-      src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dprrsr08j'}/image/upload/${src}`}
+    <Box
+      component="img"
+      src={`https://res.cloudinary.com/dprrsr08j/image/upload/${src}`}
       alt={name}
-      width={300}
-      height={300}
-      style={{
+      sx={{
         width: '100%',
         height: '100%',
         objectFit: 'cover',
+        opacity: loaded ? 1 : 0,
+        transition: 'opacity 0.3s ease',
       }}
+      onLoad={() => setLoaded(true)}
       onError={(e) => {
-        setImageError(true);
-      }}
-      onLoad={() => {
-        // Image loaded successfully
+        const target = e.target as HTMLImageElement;
+        target.src = `https://via.placeholder.com/300x300?text=${encodeURIComponent(name)}`;
       }}
     />
   );
 };
 
 export default function LeadershipPage() {
+  const theme = useTheme();
   const founders = [
     {
       name: "Rev. Mary Louise Copeland",
@@ -114,7 +95,7 @@ export default function LeadershipPage() {
         },
         {
           title: "Legacy & Transition",
-          content: "After her death, services were held at United Christian Center with interment at Woodland Cemetery. She passed the leadership to Bishop Darrell & Kathy Gooden, who had been pastors for 43 years and married 53 years at that time."
+          content: "After her death, services were held at United Christian Center with interment at Woodland Cemetery. She passed the leadership to Bishop Darrell & Kathy Gooden, who had been ministers for 43 years and married 53 years at that time."
         }
       ]
     }
@@ -124,15 +105,15 @@ export default function LeadershipPage() {
     {
       name: "Bishop Darrell & Pastor Kathy Gooden",
       role: "President, International Ministers Forum (IMF) USA",
-      image: "v1760178637/president_drjwco.png", // Updated to use full Cloudinary path
+      image: "v1760178642/president_drjwco.png", // Updated to use full Cloudinary path
       bioSections: [
         {
           title: "Leadership Role",
-          content: "Current President of the International Ministers Forum (IMF) USA. They Pastor the Rehoboth Christian Center in Tallapoosa, Georgia. Headquarters are located in Tallapoosa in the Rehoboth Christian Center."
+          content: "Current President of the International Ministers Forum (IMF) USA. They lead the Rehoboth Christian Center in Tallapoosa, Georgia. Headquarters are located in Tallapoosa in the Rehoboth Christian Center."
         },
         {
           title: "Ministry Experience",
-          content: "They have been pastors for 43 years and married 53 years. They had IMF incorporated in Georgia. International Minister's Forum is recognized by the Federal Government as an established Ecclesiastical Fellowship."
+          content: "They have been ministers for 43 years and married 53 years. They had IMF incorporated in Georgia. International Minister's Forum is recognized by the Federal Government as an established Ecclesiastical Fellowship."
         }
       ]
     },
@@ -143,7 +124,7 @@ export default function LeadershipPage() {
       bioSections: [
         {
           title: "Leadership Role",
-          content: "Made Vice President in 2012. Pastor of Cornerstone Worship Center in Indiana, Pennsylvania."
+          content: "Made Vice President in 2012. Minister of Cornerstone Worship Center in Indiana, Pennsylvania."
         },
         {
           title: "Ministry Focus",
@@ -173,11 +154,11 @@ export default function LeadershipPage() {
       bioSections: [
         {
           title: "Regional Leadership",
-          content: "President of IMF Nigeria and the entire IMF family in Nigeria and Africa. Recently inaugurated the IMF Lagos State chapter under the leadership of Rev Oladapo Taiwo."
+          content: "President of IMF Nigeria and the entire IMF family in Nigeria and Africa. Recently established the IMF Lagos State chapter under the leadership of Rev Oladapo Taiwo."
         },
         {
           title: "African Ministry",
-          content: "Dedicated to expanding the reach of IMF programs throughout Africa and supporting local church leaders in their spiritual development and community impact."
+          content: "Dedicated to expanding the reach of IMF programs throughout Africa and supporting local ministry leaders in their spiritual development and community impact."
         }
       ]
     },
@@ -192,7 +173,7 @@ export default function LeadershipPage() {
         },
         {
           title: "Service & Dedication",
-          content: "Dedicated to supporting the mission of the International Ministers Forum through administrative leadership and coordination of the IMF Africa chapter."
+          content: "Committed to supporting the mission of the International Ministers Forum through administrative leadership and coordination of the IMF Africa chapter."
         }
       ]
     }
@@ -201,17 +182,39 @@ export default function LeadershipPage() {
   return (
     <>
       <Header />
-      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: 15, pb: 8 }}>
+      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: { xs: 12, md: 15 }, pb: 8 }}>
         <Container maxWidth="lg" sx={{ py: 8 }}>
           <MotionBox
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.4 }}
           >
-            <Typography variant="h2" component="h1" gutterBottom align="center" color="primary">
+            <Typography 
+              variant="h2" 
+              component="h1" 
+              gutterBottom 
+              align="center" 
+              sx={{
+                fontWeight: 800,
+                mb: 2,
+                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontSize: { xs: '2rem', md: '2.75rem' }
+              }}
+            >
               Our Leadership
             </Typography>
-            <Typography variant="h5" component="h2" gutterBottom align="center" color="text.secondary" mb={6}>
+            <Typography 
+              variant="h5" 
+              component="h2" 
+              gutterBottom 
+              align="center" 
+              color="text.secondary" 
+              mb={6}
+              sx={{ fontSize: { xs: '1rem', md: '1.25rem' } }}
+            >
               Visionary Leaders Who Shaped and Continue to Guide the International Ministers Forum
             </Typography>
           </MotionBox>
@@ -222,7 +225,18 @@ export default function LeadershipPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <Typography variant="h3" component="h2" gutterBottom align="center" color="secondary" mt={6} mb={4}>
+            <Typography 
+              variant="h3" 
+              component="h2" 
+              gutterBottom 
+              align="center" 
+              sx={{ 
+                fontWeight: 700, 
+                mb: 4, 
+                color: 'primary.main',
+                fontSize: '1.75rem'
+              }}
+            >
               Founding Leaders
             </Typography>
           </MotionBox>
@@ -233,7 +247,7 @@ export default function LeadershipPage() {
                     sx={{
                       borderRadius: 4,
                       overflow: 'hidden',
-                      boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
                       border: '1px solid rgba(0,0,0,0.05)',
                       transition: 'all 0.3s ease',
                       '&:hover': {
@@ -252,11 +266,13 @@ export default function LeadershipPage() {
                         height: { xs: 300, md: 300 },
                         position: 'relative'
                       }}>
-                        <LeaderImage src={founder.image} name={founder.name} />
+                        <Suspense fallback={<CircularProgress />}>
+                          <LeaderImage src={founder.image} name={founder.name} />
+                        </Suspense>
                       </Box>
                       <CardContent sx={{ flex: 1, p: 4 }}>
                         <Box sx={{ mb: 3 }}>
-                          <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, color: 'primary.main' }}>
+                          <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, color: 'primary.main', fontSize: '1.5rem' }}>
                             {founder.name}
                           </Typography>
                           <Chip 
@@ -287,6 +303,12 @@ export default function LeadershipPage() {
                               },
                               '&.Mui-expanded': {
                                 margin: '8px 0',
+                              },
+                              '& .MuiAccordionSummary-root': {
+                                borderRadius: 1,
+                                '&:hover': {
+                                  bgcolor: alpha(theme.palette.primary.main, 0.05),
+                                }
                               }
                             }}
                           >
@@ -302,7 +324,7 @@ export default function LeadershipPage() {
                             >
                               {section.title}
                             </AccordionSummary>
-                            <AccordionDetails sx={{ color: 'text.secondary', pt: 0 }}>
+                            <AccordionDetails sx={{ color: 'text.secondary', pt: 0, lineHeight: 1.7 }}>
                               <Typography>
                                 {section.content}
                               </Typography>
@@ -316,7 +338,7 @@ export default function LeadershipPage() {
               ))}
 
           {/* Divider between sections */}
-          <Divider sx={{ my: 8, borderWidth: 2 }} />
+          <Divider sx={{ my: 8, borderWidth: 1, borderColor: 'divider' }} />
 
           {/* Current Leadership Section */}
           <MotionBox
@@ -324,7 +346,18 @@ export default function LeadershipPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <Typography variant="h3" component="h2" gutterBottom align="center" color="secondary" mt={6} mb={4}>
+            <Typography 
+              variant="h3" 
+              component="h2" 
+              gutterBottom 
+              align="center" 
+              sx={{ 
+                fontWeight: 700, 
+                mb: 4, 
+                color: 'primary.main',
+                fontSize: '1.75rem'
+              }}
+            >
               Current Leadership
             </Typography>
           </MotionBox>
@@ -335,7 +368,7 @@ export default function LeadershipPage() {
                     sx={{
                       borderRadius: 4,
                       overflow: 'hidden',
-                      boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
                       border: '1px solid rgba(0,0,0,0.05)',
                       transition: 'all 0.3s ease',
                       '&:hover': {
@@ -344,7 +377,7 @@ export default function LeadershipPage() {
                       },
                     }}
                   >
-                    <Box sx={{ display: { xs: 'block', md: 'flex' } }}
+                    <Box sx={{ display: { xs: 'block', md: 'flex' }}}
                       onError={(e) => {
                         console.error('Error in leader card:', leader.name, e);
                       }}
@@ -354,11 +387,13 @@ export default function LeadershipPage() {
                         height: { xs: 300, md: 300 },
                         position: 'relative'
                       }}>
-                        <LeaderImage src={leader.image} name={leader.name} />
+                        <Suspense fallback={<CircularProgress />}>
+                          <LeaderImage src={leader.image} name={leader.name} />
+                        </Suspense>
                       </Box>
                       <CardContent sx={{ flex: 1, p: 4 }}>
                         <Box sx={{ mb: 3 }}>
-                          <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, color: 'primary.main' }}>
+                          <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, color: 'primary.main', fontSize: '1.5rem' }}>
                             {leader.name}
                           </Typography>
                           <Chip 
@@ -389,6 +424,12 @@ export default function LeadershipPage() {
                               },
                               '&.Mui-expanded': {
                                 margin: '8px 0',
+                              },
+                              '& .MuiAccordionSummary-root': {
+                                borderRadius: 1,
+                                '&:hover': {
+                                  bgcolor: alpha(theme.palette.primary.main, 0.05),
+                                }
                               }
                             }}
                           >
@@ -404,7 +445,7 @@ export default function LeadershipPage() {
                             >
                               {section.title}
                             </AccordionSummary>
-                            <AccordionDetails sx={{ color: 'text.secondary', pt: 0 }}>
+                            <AccordionDetails sx={{ color: 'text.secondary', pt: 0, lineHeight: 1.7 }}>
                               <Typography>
                                 {section.content}
                               </Typography>

@@ -8,7 +8,7 @@ interface User {
   email: string;
   country: string;
   position?: string;
-  churchName?: string;
+  ministryName?: string;
   isEmailVerified: boolean;
 }
 
@@ -32,7 +32,7 @@ interface RegisterData {
   state?: string;
   city?: string;
   denomination?: string;
-  churchName?: string;
+  ministryName?: string;
   position?: string;
 }
 

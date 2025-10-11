@@ -21,7 +21,7 @@ const leadershipTeam = [
     position: 'President, IMF USA',
     department: 'Executive Leadership',
     bio: 'Current President of the International Ministers Forum (IMF) USA. They Pastor the Rehoboth Christian Center in Tallapoosa, Georgia. They have been pastors for 43 years and married 53 years. They had IMF incorporated in Georgia.',
-    avatar: 'leadership/president.png',
+    avatar: 'v1760178642/president_drjwco.png',
     location: 'Tallapoosa, Georgia, USA',
   },
   {
@@ -30,7 +30,7 @@ const leadershipTeam = [
     position: 'Vice President, IMF USA',
     department: 'Operations & Development',
     bio: 'Made Vice President in 2012. Pastor of Cornerstone Worship Center in Indiana, Pennsylvania.',
-    avatar: 'leadership/vice-president.jpg',
+    avatar: 'v1760178637/vice-president_hp54ma.jpg',
     location: 'Indiana, Pennsylvania, USA',
   },
   {
@@ -39,7 +39,7 @@ const leadershipTeam = [
     position: 'President, IMF Africa',
     department: 'Regional Coordination',
     bio: 'President of IMF Nigeria and the entire IMF family in Nigeria and Africa. Recently inaugurated the IMF Lagos State chapter under the leadership of Rev Oladapo Taiwo.',
-    avatar: 'leadership/africa-president.png',
+    avatar: 'v1760178644/africa-president_g9db07.png',
     location: 'Lagos, Nigeria',
   },
   {
@@ -48,7 +48,7 @@ const leadershipTeam = [
     position: 'Secretary General, IMF Africa',
     department: 'Administration & Finance',
     bio: 'Serves as the Secretary General of IMF Africa, overseeing the administrative functions and coordination of the IMF Africa chapter.',
-    avatar: 'leadership/secretary-general.png',
+    avatar: 'v1760178639/secretary-general_hkrf1z.jpg',
     location: 'Africa Region',
   },
 ];
@@ -161,7 +161,7 @@ const LeadershipSection: React.FC = () => {
                     >
                       <Box
                         component="img"
-                        src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_120,h_120/${leader.avatar}`}
+                        src={`https://res.cloudinary.com/dprrsr08j/image/upload/${leader.avatar}`}
                         alt={leader.name}
                         sx={{
                           width: '100%',

@@ -33,7 +33,7 @@ const ChamplainPage: React.FC = () => {
     'Practical ministry training workshops',
     'Leadership development seminars',
     'Mentorship and coaching programs',
-    'Resource centers for local churches',
+    'Resource centers for local ministries',
     'Pastoral counseling certification',
     'Church administration training',
     'Preaching and teaching excellence workshops'
@@ -43,7 +43,7 @@ const ChamplainPage: React.FC = () => {
     'Enhanced biblical knowledge and understanding',
     'Improved pastoral skills and effectiveness',
     'Stronger leadership capabilities',
-    'Better church management practices',
+    'Better ministry management practices',
     'Increased ministry impact in local communities',
     'Networking opportunities with other leaders',
     'Access to exclusive resources and materials',
@@ -55,7 +55,7 @@ const ChamplainPage: React.FC = () => {
       title: 'Advanced Theological Studies',
       duration: '12 months',
       level: 'Advanced',
-      description: 'In-depth study of biblical languages, theology, and church history'
+      description: 'In-depth study of biblical languages, theology, and ministry history'
     },
     {
       title: 'Practical Ministry Training',
@@ -73,7 +73,7 @@ const ChamplainPage: React.FC = () => {
       title: 'Church Administration',
       duration: '4 months',
       level: 'Beginner',
-      description: 'Essential skills for managing church operations and finances'
+      description: 'Essential skills for managing ministry operations and finances'
     }
   ];
 
@@ -178,7 +178,7 @@ const ChamplainPage: React.FC = () => {
                     fontSize: { xs: '1.1rem', md: '1.3rem' },
                   }}
                 >
-                  A specialized initiative focused on equipping and empowering local church leaders 
+                  A specialized initiative focused on equipping and empowering local ministry leaders 
                   through advanced theological education and practical ministry training programs across Africa.
                 </Typography>
               </Box>
@@ -230,21 +230,21 @@ const ChamplainPage: React.FC = () => {
                   </Typography>
                   <Typography variant="body1" sx={{ lineHeight: 2, mb: 4, fontSize: '1.1rem' }}>
                     IMF Africa Champlain is our flagship leadership development initiative designed to equip 
-                    and empower local church leaders across Africa with the knowledge, skills, and spiritual 
+                    and empower local ministry leaders across Africa with the knowledge, skills, and spiritual 
                     foundation necessary for effective ministry. Named after our founder's vision, this program 
                     represents our commitment to raising up a new generation of spiritually mature and practically 
-                    skilled church leaders.
+                    skilled ministry leaders.
                   </Typography>
                   <Typography variant="body1" sx={{ lineHeight: 2, mb: 4, fontSize: '1.1rem' }}>
                     Through a combination of advanced theological education, practical ministry training, and 
-                    ongoing mentorship, Champlain provides church leaders with the tools they need to effectively 
-                    shepherd their congregations, manage church operations, and expand their ministry impact. 
+                    ongoing mentorship, Champlain provides ministry leaders with the tools they need to effectively 
+                    shepherd their congregations, manage ministry operations, and expand their ministry impact. 
                     Our comprehensive approach ensures that participants not only gain academic knowledge but 
                     also develop the practical skills necessary for real-world ministry challenges.
                   </Typography>
                   <Typography variant="body1" sx={{ lineHeight: 2, fontSize: '1.1rem' }}>
-                    Since its inception, IMF Africa Champlain has trained over 5,000 church leaders who have 
-                    gone on to plant new churches, revitalize existing congregations, and lead their communities 
+                    Since its inception, IMF Africa Champlain has trained over 5,000 ministry leaders who have 
+                    gone on to revitalize existing congregations and lead their communities 
                     in spiritual and social transformation.
                   </Typography>
                 </CardContent>

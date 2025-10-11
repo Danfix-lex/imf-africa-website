@@ -117,7 +117,7 @@ const RemittalsSection: React.FC = () => {
                 mb: 4,
               }}
             >
-              Support ministry work and send financial assistance to churches and ministers across the African continent with our secure payment platform
+              Support ministry work and send financial assistance to ministers across the African continent with our secure payment platform
             </Typography>
 
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 4 }}>

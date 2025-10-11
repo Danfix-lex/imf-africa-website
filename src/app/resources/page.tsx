@@ -95,7 +95,7 @@ export default function ResourcesPage() {
                   "Building Strong Churches in Africa" - Book by Dr. Samuel Okafor
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                  A comprehensive guide to establishing and growing healthy churches in the African context, 
+                  A comprehensive guide to establishing and growing healthy ministries in the African context, 
                   with practical insights from 30 years of ministry experience.
                 </Typography>
                 <Button variant="outlined" startIcon={<DownloadIcon />}>

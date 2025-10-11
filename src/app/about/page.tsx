@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { Suspense } from 'react';
 import {
   Box,
   Container,
@@ -9,9 +9,10 @@ import {
   Button,
   useTheme,
   Grid,
+  alpha,
+  CircularProgress,
 } from '@mui/material';
 import {
-  Church as ChurchIcon,
   School as SchoolIcon,
   Favorite as FavoriteIcon,
   Groups as GroupsIcon,
@@ -24,13 +25,35 @@ import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
+// Lazy load images for better performance
+const LazyImage = ({ src, alt, sx, onError }: { src: string; alt: string; sx?: any; onError?: (e: any) => void }) => {
+  const [loaded, setLoaded] = React.useState(false);
+
+  return (
+    <Box
+      component="img"
+      src={src}
+      alt={alt}
+      sx={{
+        ...sx,
+        opacity: loaded ? 1 : 0,
+        transition: 'opacity 0.3s ease',
+      }}
+      onLoad={() => setLoaded(true)}
+      onError={(e) => {
+        if (onError) onError(e);
+      }}
+    />
+  );
+};
+
 const AboutPage: React.FC = () => {
   const theme = useTheme();
 
   const stats = [
     { icon: <PublicIcon />, value: '54', label: 'African Nations', description: 'Countries with active ministry presence', color: '#1565C0' },
     { icon: <SchoolIcon />, value: '15K+', label: 'Ministers Equipped', description: 'Pastors trained and ordained', color: '#2E7D32' },
-    { icon: <ChurchIcon />, value: '3,200+', label: 'Churches Planted', description: 'New congregations established', color: '#7B1FA2' },
+    { icon: <GroupsIcon />, value: '3,200+', label: 'Ministries Supported', description: 'Ministries receiving ongoing support', color: '#7B1FA2' },
     { icon: <FavoriteIcon />, value: '750K+', label: 'Lives Transformed', description: 'Souls reached for Christ', color: '#C62828' },
   ];
 
@@ -48,7 +71,7 @@ const AboutPage: React.FC = () => {
     {
       icon: <HandshakeIcon />,
       title: 'Partnership',
-      description: 'We work collaboratively with local churches, leaders, and organizations to maximize impact.',
+      description: 'We work collaboratively with local leaders, and organizations to maximize impact.',
     },
     {
       icon: <StarIcon />,
@@ -60,12 +83,12 @@ const AboutPage: React.FC = () => {
   return (
     <>
       <Header />
-      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: 15 }}>
+      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: { xs: 12, md: 15 }, pb: 8 }}>
         <Container maxWidth="lg">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.4 }}
           >
             <Box sx={{ textAlign: 'center', mb: 8 }}>
               <Typography
@@ -77,6 +100,7 @@ const AboutPage: React.FC = () => {
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
+                  fontSize: { xs: '2rem', md: '2.75rem' }
                 }}
               >
                 About IMF Africa
@@ -88,17 +112,18 @@ const AboutPage: React.FC = () => {
                   color: 'text.secondary',
                   maxWidth: 800,
                   mx: 'auto',
+                  fontSize: { xs: '1rem', md: '1.25rem' }
                 }}
               >
-                Empowering churches and transforming communities across Africa through biblical training, leadership development, and strategic ministry initiatives.
+                Empowering ministers and transforming communities across Africa through biblical training, leadership development, and strategic ministry initiatives.
               </Typography>
             </Box>
           </motion.div>
 
           <Box sx={{ mb: 10 }}>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' }, gap: 4 }}>
+            <Grid container spacing={4}>
               {stats.map((stat, index) => (
-                <Box component="div" key={index}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -114,7 +139,7 @@ const AboutPage: React.FC = () => {
                         p: 4,
                         borderRadius: 3,
                         textAlign: 'center',
-                        boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
                         border: '1px solid rgba(0,0,0,0.05)',
                         transition: 'all 0.3s ease',
                         '&:hover': {
@@ -138,10 +163,10 @@ const AboutPage: React.FC = () => {
                       >
                         {stat.icon}
                       </Box>
-                      <Typography variant="h3" sx={{ fontWeight: 800, mb: 1, color: stat.color }}>
+                      <Typography variant="h3" sx={{ fontWeight: 800, mb: 1, color: stat.color, fontSize: '2rem' }}>
                         {stat.value}
                       </Typography>
-                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, fontSize: '1.1rem' }}>
                         {stat.label}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
@@ -149,70 +174,92 @@ const AboutPage: React.FC = () => {
                       </Typography>
                     </Card>
                   </motion.div>
-                </Box>
+                </Grid>
               ))}
-            </Box>
+            </Grid>
           </Box>
 
           <Box sx={{ mb: 10 }}>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 8 }}>
-              <Box component="div">
+            <Grid container spacing={8}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <motion.div
-                  initial={{ opacity: 0, x: -30 }}
+                  initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6 }}
+                  transition={{ duration: 0.4 }}
                 >
                   <Box sx={{ pr: { md: 4 } }}>
-                    <Typography variant="h4" sx={{ fontWeight: 700, mb: 4 }}>
+                    <Typography variant="h4" sx={{ fontWeight: 700, mb: 4, fontSize: '1.75rem' }}>
                       Our Story
                     </Typography>
-                    <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
+                    <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary', lineHeight: 1.7 }}>
                       The International Ministers Forum (IMF) has been in existence since August 18, 1950. Originally started as a women's ministerial group, Louise Copeland was the first president of the forum, serving from 1960 until 1998. She was pastor of Faith Tabernacle in Poplar Bluff, Missouri.
                     </Typography>
-                    <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
+                    <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary', lineHeight: 1.7 }}>
                       Men were allowed to join around 1975 when they asked the group because of their integrity. The name was then changed to International Ministers Forum. Mary Smith was her vice president and trained under her. Sis. Copeland became known as "Preacher".
                     </Typography>
-                    <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
+                    <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary', lineHeight: 1.7 }}>
                       IMF was incorporated in 1987 in Missouri the year before Sis. Copeland died in 1988. Sis. Doris Swartz was the secretary treasurer and trained under "preacher". She later moved back to Ohio to pastor the United Christian Center in Dayton for over 40 years. Sis. Doris became the second president until her death in 2012 and passed the leadership to Bishop Darrell & Kathy Gooden.
                     </Typography>
-                    <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary' }}>
-                      Our vision is to see vibrant, biblically grounded churches in every community across Africa, led by well-trained, Spirit-filled leaders who are equipped to address both the spiritual and practical needs of their congregations. IMF is committed to the gospel of Christ. Thus we must consider our action and decision in whatever we do. The scripture in 2 Peter 1:10 advises us to make our calling and election sure, and to walk worthy of our vocation. Integrity, accountability and responsibility are what IMF represents which are keys to successful ministry.
+                    <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary', lineHeight: 1.7 }}>
+                      Our vision is to see vibrant, biblically grounded ministries in every community across Africa, led by well-trained, Spirit-filled leaders who are equipped to address both the spiritual and practical needs of their communities. IMF is committed to the gospel of Christ. Thus we must consider our action and decision in whatever we do. The scripture in 2 Peter 1:10 advises us to make our calling and election sure, and to walk worthy of our vocation. Integrity, accountability and responsibility are what IMF represents which are keys to successful ministry.
                     </Typography>
-                    <Button variant="contained" size="large">
+                    <Button 
+                      variant="contained" 
+                      size="large"
+                      sx={{
+                        px: 4,
+                        py: 1.5,
+                        borderRadius: 2,
+                        fontWeight: 600,
+                        textTransform: 'none',
+                        background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+                        boxShadow: `0 6px 16px ${alpha(theme.palette.primary.main, 0.3)}`,
+                        '&:hover': {
+                          background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
+                          transform: 'translateY(-2px)',
+                          boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.4)}`,
+                        },
+                        transition: 'all 0.3s ease',
+                      }}
+                    >
                       Learn More About Our Mission
                     </Button>
                   </Box>
                 </motion.div>
-              </Box>
-              <Box component="div">
+              </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <motion.div
-                  initial={{ opacity: 0, x: 30 }}
+                  initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6 }}
+                  transition={{ duration: 0.4 }}
                 >
-                  <Box
-                    sx={{
-                      height: '100%',
-                      borderRadius: 3,
-                      overflow: 'hidden',
-                      boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-                      backgroundImage: 'url(/api/placeholder/600/400)',
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                  />
+                  <Suspense fallback={<CircularProgress />}>
+                    <LazyImage
+                      src="https://res.cloudinary.com/dprrsr08j/image/upload/v1760178679/logo_wv6j8l.png"
+                      alt="IMF Africa Logo"
+                      sx={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                      }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'https://via.placeholder.com/400x400?text=IMF+Africa+Logo';
+                      }}
+                    />
+                  </Suspense>
                 </motion.div>
-              </Box>
-            </Box>
+              </Grid>
+            </Grid>
           </Box>
 
           <Box sx={{ mb: 10 }}>
-            <Typography variant="h4" sx={{ fontWeight: 700, mb: 6, textAlign: 'center' }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, mb: 6, textAlign: 'center', fontSize: '1.75rem' }}>
               Our Core Values
             </Typography>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' }, gap: 4 }}>
+            <Grid container spacing={4}>
               {values.map((value, index) => (
-                <Box component="div" key={index}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -227,7 +274,7 @@ const AboutPage: React.FC = () => {
                         p: 4,
                         borderRadius: 3,
                         textAlign: 'center',
-                        boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
                         border: '1px solid rgba(0,0,0,0.05)',
                         transition: 'all 0.3s ease',
                         '&:hover': {
@@ -251,17 +298,17 @@ const AboutPage: React.FC = () => {
                       >
                         {value.icon}
                       </Box>
-                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, fontSize: '1.1rem' }}>
                         {value.title}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
                         {value.description}
                       </Typography>
                     </Card>
                   </motion.div>
-                </Box>
+                </Grid>
               ))}
-            </Box>
+            </Grid>
           </Box>
         </Container>
       </Box>

@@ -1,33 +1,122 @@
 import { NextResponse } from 'next/server';
 import { getGalleryImages } from '@/lib/cloudinary';
 
-// Simple in-memory cache
-const cache: { data: any; timestamp: number } = { data: null, timestamp: 0 };
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+// Enhanced cache with size limit and TTL
+class APICache {
+  private cache: Map<string, { data: any; timestamp: number; etag: string }> = new Map();
+  private maxSize: number;
+  private ttl: number;
+
+  constructor(maxSize: number = 50, ttl: number = 5 * 60 * 1000) {
+    this.maxSize = maxSize;
+    this.ttl = ttl;
+  }
+
+  get(key: string): { data: any; etag: string } | null {
+    const item = this.cache.get(key);
+    if (!item) return null;
+
+    // Check if item has expired
+    if (Date.now() - item.timestamp > this.ttl) {
+      this.cache.delete(key);
+      return null;
+    }
+
+    return { data: item.data, etag: item.etag };
+  }
+
+  set(key: string, data: any, etag: string): void {
+    // Remove oldest items if we're at max size
+    if (this.cache.size >= this.maxSize) {
+      const firstKey = this.cache.keys().next().value;
+      if (firstKey) this.cache.delete(firstKey);
+    }
+
+    this.cache.set(key, { data, timestamp: Date.now(), etag });
+  }
+
+  clear(): void {
+    this.cache.clear();
+  }
+}
+
+// Create cache instance
+const apiCache = new APICache(50, 5 * 60 * 1000); // 50 items, 5 minutes TTL
 
 export async function GET(request: Request) {
   try {
     console.log('Gallery API called');
     
-    // Check if we have valid cached data
-    const now = Date.now();
-    if (cache.data && (now - cache.timestamp) < CACHE_DURATION) {
-      console.log('Returning cached data');
-      return NextResponse.json(cache.data);
+    // Generate ETag based on request
+    const url = new URL(request.url);
+    const cacheKey = `gallery_${url.search}`;
+    
+    // Check if client has cached version
+    const ifNoneMatch = request.headers.get('If-None-Match');
+    
+    // Check our cache
+    const cached = apiCache.get(cacheKey);
+    if (cached && ifNoneMatch === cached.etag) {
+      console.log('Returning 304 Not Modified');
+      return new NextResponse(null, { 
+        status: 304,
+        headers: {
+          'ETag': cached.etag,
+          'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
+        }
+      });
     }
 
     console.log('Fetching fresh data from Cloudinary');
     const galleryItems = await getGalleryImages();
     console.log('Fetched', galleryItems.length, 'items from Cloudinary');
-    console.log('Gallery items:', JSON.stringify(galleryItems, null, 2));
+    
+    // Generate ETag based on data
+    const dataString = JSON.stringify(galleryItems);
+    const etag = `"${Buffer.from(dataString).toString('base64')}"`;
+    
+    // If client has this version, return 304
+    if (ifNoneMatch === etag) {
+      console.log('Returning 304 Not Modified (after fetch)');
+      return new NextResponse(null, { 
+        status: 304,
+        headers: {
+          'ETag': etag,
+          'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
+        }
+      });
+    }
     
     // Update cache
-    cache.data = galleryItems;
-    cache.timestamp = now;
+    apiCache.set(cacheKey, galleryItems, etag);
     
-    return NextResponse.json(galleryItems);
+    // Return data with caching headers
+    return new NextResponse(JSON.stringify(galleryItems), {
+      headers: {
+        'Content-Type': 'application/json',
+        'ETag': etag,
+        'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
+        'Last-Modified': new Date().toUTCString(),
+      },
+    });
   } catch (error: any) {
     console.error('Error in gallery API route:', error);
-    return NextResponse.json({ error: 'Failed to fetch gallery items', details: error.message }, { status: 500 });
+    return new NextResponse(JSON.stringify({ error: 'Failed to fetch gallery items', details: error.message }), { 
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   }
+}
+
+// Add OPTIONS method for CORS preflight
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, If-None-Match',
+    },
+  });
 }

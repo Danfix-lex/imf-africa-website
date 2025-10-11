@@ -29,7 +29,7 @@ const features = [
   {
     icon: <PublicIcon />,
     title: 'Global Fellowship',
-    description: 'International church partnerships',
+    description: 'International ministry partnerships',
   },
 ];
 
@@ -77,7 +77,7 @@ const CallToActionSection: React.FC = () => {
               }}
             >
               Partner with us to create lasting spiritual impact across the African
-              continent through innovative ministry programs and church development initiatives.
+              continent through innovative ministry programs and development initiatives.
             </Typography>
             <Button
               variant="contained"

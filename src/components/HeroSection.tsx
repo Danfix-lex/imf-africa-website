@@ -215,7 +215,7 @@ const HeroSection: React.FC = () => {
                   }}
                 >
                   A Christ-centered organization dedicated to empowering African ministers, 
-                  strengthening local churches, and advancing God's Kingdom across the continent 
+                  strengthening local ministries, and advancing God's Kingdom across the continent 
                   through biblical training, spiritual formation, and transformational ministry.
                 </Typography>
               </motion.div>

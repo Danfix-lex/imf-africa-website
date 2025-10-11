@@ -37,7 +37,7 @@ const GenerationPage: React.FC = () => {
     {
       icon: <SchoolIcon />,
       title: 'Leadership Development',
-      description: 'Training programs to develop the next generation of church and community leaders'
+      description: 'Training programs to develop the next generation of ministry and community leaders'
     },
     {
       icon: <MusicNoteIcon />,
@@ -261,7 +261,7 @@ const GenerationPage: React.FC = () => {
                   <Typography variant="body1" sx={{ lineHeight: 2, mb: 4, fontSize: '1.1rem' }}>
                     IMF Africa Generation Next is our vibrant and dynamic platform specifically designed to 
                     engage, empower, and equip the youth and teen population within our ministry community. 
-                    Recognizing that young people are the future of the church and society, this initiative 
+                    Recognizing that young people are the future of ministry and society, this initiative 
                     provides a dedicated space where they can grow spiritually, develop leadership skills, 
                     express their creativity, and make a meaningful impact in their communities.
                   </Typography>
@@ -274,7 +274,7 @@ const GenerationPage: React.FC = () => {
                   </Typography>
                   <Typography variant="body1" sx={{ lineHeight: 2, fontSize: '1.1rem' }}>
                     Since its launch, IMF Africa Generation Next has engaged over 50,000 young people across 
-                    the continent, with many going on to become church leaders, community activists, 
+                    the continent, with many going on to become ministry leaders, community activists, 
                     entrepreneurs, and change agents in their respective spheres of influence.
                   </Typography>
                 </CardContent>

@@ -55,7 +55,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
     state: '',
     city: '',
     denomination: '',
-    churchName: '',
+    ministryName: '',
     position: '',
   });
 
@@ -266,8 +266,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchToLogin 
                 <TextField
                   fullWidth
                   label="Church Name"
-                  value={formData.churchName}
-                  onChange={handleChange('churchName')}
+                  value={formData.ministryName}
+                  onChange={handleChange('ministryName')}
                   disabled={isLoading}
                 />
               </Box>

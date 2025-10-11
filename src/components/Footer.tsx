@@ -9,6 +9,7 @@ import {
   useTheme,
   Grid,
   IconButton,
+  alpha,
 } from '@mui/material';
 import {
   Email as EmailIcon,
@@ -19,7 +20,6 @@ import {
   Instagram as InstagramIcon,
   YouTube as YouTubeIcon,
 } from '@mui/icons-material';
-import { CldImage } from 'next-cloudinary';
 
 const Footer: React.FC = () => {
   const theme = useTheme();
@@ -49,30 +49,33 @@ const Footer: React.FC = () => {
       sx={{
         bgcolor: 'background.paper',
         py: 6,
-        borderTop: '1px solid',
-        borderColor: 'divider',
+        borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+        boxShadow: '0 -2px 10px rgba(0,0,0,0.05)',
       }}
     >
       <Container maxWidth="lg">
-        <Grid container spacing={4}>
+        <Grid container spacing={6}>
           <Grid size={{ xs: 12, md: 4 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <CldImage
-                src="v1760178679/logo_wv6j8l.png"
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+              <Box
+                component="img"
+                src="https://res.cloudinary.com/dprrsr08j/image/upload/v1760178679/logo_wv6j8l.png"
                 alt="IMF Africa Logo"
-                width={40}
-                height={40}
-                style={{
-                  width: '40px',
+                sx={{
+                  width: '48px',
                   height: 'auto',
                   objectFit: 'contain',
                 }}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'https://via.placeholder.com/48x48?text=Logo';
+                }}
               />
-              <Typography variant="h6" sx={{ fontWeight: 700, color: 'white' }}>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.main', fontSize: '1.4rem' }}>
                 IMF AFRICA
               </Typography>
             </Box>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2, maxWidth: 300 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3, maxWidth: 300, lineHeight: 1.7 }}>
               Equipping Christian leaders across Africa with world-class ministry training and resources.
             </Typography>
             
@@ -86,15 +89,16 @@ const Footer: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
-                    color: 'white',
+                    bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    color: 'primary.main',
                     '&:hover': {
-                      bgcolor: 'rgba(255, 255, 255, 0.2)',
-                      transform: 'translateY(-2px)',
+                      bgcolor: alpha(theme.palette.primary.main, 0.2),
+                      transform: 'translateY(-3px)',
                     },
                     transition: 'all 0.3s ease',
-                    width: 40,
-                    height: 40,
+                    width: 44,
+                    height: 44,
+                    boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.1)}`,
                   }}
                 >
                   {social.icon}
@@ -105,39 +109,54 @@ const Footer: React.FC = () => {
 
           {/* Contact Information */}
           <Grid size={{ xs: 12, md: 4 }}>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, color: 'primary.main', fontSize: '1.3rem' }}>
               Contact Information
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <EmailIcon sx={{ fontSize: 20, opacity: 0.8 }} />
-                <Typography variant="body2">
-                  africa@imfministers.org
-                </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+                <EmailIcon sx={{ fontSize: 22, color: 'primary.main', mt: 0.5 }} />
+                <Box>
+                  <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                    Email
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    africa@imfministers.org
+                  </Typography>
+                </Box>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <PhoneIcon sx={{ fontSize: 20, opacity: 0.8 }} />
-                <Typography variant="body2">
-                  +234 (0) 123-456-789
-                </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+                <PhoneIcon sx={{ fontSize: 22, color: 'primary.main', mt: 0.5 }} />
+                <Box>
+                  <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                    Phone
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    +234 (0) 123-456-789
+                  </Typography>
+                </Box>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <LocationIcon sx={{ fontSize: 20, opacity: 0.8 }} />
-                <Typography variant="body2">
-                  Lagos, Nigeria
-                </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+                <LocationIcon sx={{ fontSize: 22, color: 'primary.main', mt: 0.5 }} />
+                <Box>
+                  <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                    Location
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Lagos, Nigeria
+                  </Typography>
+                </Box>
               </Box>
             </Box>
           </Grid>
 
           {/* Newsletter Signup */}
           <Grid size={{ xs: 12, md: 4 }}>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, color: 'primary.main', fontSize: '1.3rem' }}>
               Stay Updated
             </Typography>
             <Typography
               variant="body2"
-              sx={{ opacity: 0.9, mb: 3, lineHeight: 1.6 }}
+              sx={{ color: 'text.secondary', mb: 3, lineHeight: 1.7 }}
             >
               Subscribe to our newsletter for the latest updates on ministry
               programs, fellowship events, and spiritual developments.
@@ -149,21 +168,24 @@ const Footer: React.FC = () => {
                 size="small"
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                    bgcolor: 'background.default',
+                    borderRadius: 2,
                     '& fieldset': {
-                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                      borderColor: 'divider',
                     },
                     '&:hover fieldset': {
-                      borderColor: 'rgba(255, 255, 255, 0.5)',
+                      borderColor: alpha(theme.palette.primary.main, 0.5),
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: 'white',
+                      borderColor: 'primary.main',
+                      borderWidth: 2,
                     },
                   },
                   '& .MuiOutlinedInput-input': {
-                    color: 'white',
+                    color: 'text.primary',
+                    py: 1.5,
                     '&::placeholder': {
-                      color: 'rgba(255, 255, 255, 0.7)',
+                      color: 'text.secondary',
                       opacity: 1,
                     },
                   },
@@ -172,13 +194,19 @@ const Footer: React.FC = () => {
               <Button
                 variant="contained"
                 sx={{
-                  bgcolor: 'secondary.main',
+                  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
                   color: 'white',
                   '&:hover': {
-                    bgcolor: 'secondary.dark',
+                    background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
+                    transform: 'translateY(-2px)',
                   },
-                  borderRadius: 2,
-                  py: 1,
+                  borderRadius: 3,
+                  py: 1.5,
+                  px: 3,
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  boxShadow: `0 6px 16px ${alpha(theme.palette.primary.main, 0.3)}`,
+                  transition: 'all 0.3s ease',
                 }}
               >
                 Subscribe
@@ -190,8 +218,9 @@ const Footer: React.FC = () => {
         {/* Bottom Section */}
         <Box
           sx={{
-            borderTop: '1px solid rgba(255, 255, 255, 0.2)',
-            pt: { xs: 4, md: 6 },
+            borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+            pt: { xs: 4, md: 5 },
+            mt: 5,
             display: 'flex',
             flexDirection: { xs: 'column', md: 'row' },
             justifyContent: 'space-between',
@@ -199,7 +228,7 @@ const Footer: React.FC = () => {
             gap: 2,
           }}
         >
-          <Typography variant="body2" sx={{ opacity: 0.8 }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.9rem' }}>
             © 2024 International Ministers Forum Africa. All rights reserved.
           </Typography>
           <Box
@@ -213,20 +242,24 @@ const Footer: React.FC = () => {
             <Typography
               variant="body2"
               sx={{
-                opacity: 0.8,
                 cursor: 'pointer',
-                '&:hover': { opacity: 1 },
+                color: 'text.secondary',
+                fontSize: '0.9rem',
+                '&:hover': { color: 'primary.main' },
+                transition: 'color 0.2s ease',
               }}
               onClick={() => window.location.href = '/purpose'}
             >
-              Purpose & Membership
+              Purpose
             </Typography>
             <Typography
               variant="body2"
               sx={{
-                opacity: 0.8,
                 cursor: 'pointer',
-                '&:hover': { opacity: 1 },
+                color: 'text.secondary',
+                fontSize: '0.9rem',
+                '&:hover': { color: 'primary.main' },
+                transition: 'color 0.2s ease',
               }}
               onClick={() => window.location.href = '/history'}
             >
@@ -235,9 +268,11 @@ const Footer: React.FC = () => {
             <Typography
               variant="body2"
               sx={{
-                opacity: 0.8,
                 cursor: 'pointer',
-                '&:hover': { opacity: 1 },
+                color: 'text.secondary',
+                fontSize: '0.9rem',
+                '&:hover': { color: 'primary.main' },
+                transition: 'color 0.2s ease',
               }}
               onClick={() => window.location.href = '/statement-of-faith'}
             >
@@ -246,32 +281,26 @@ const Footer: React.FC = () => {
             <Typography
               variant="body2"
               sx={{
-                opacity: 0.8,
                 cursor: 'pointer',
-                '&:hover': { opacity: 1 },
+                color: 'text.secondary',
+                fontSize: '0.9rem',
+                '&:hover': { color: 'primary.main' },
+                transition: 'color 0.2s ease',
               }}
             >
-              Privacy Policy
+              Privacy
             </Typography>
             <Typography
               variant="body2"
               sx={{
-                opacity: 0.8,
                 cursor: 'pointer',
-                '&:hover': { opacity: 1 },
+                color: 'text.secondary',
+                fontSize: '0.9rem',
+                '&:hover': { color: 'primary.main' },
+                transition: 'color 0.2s ease',
               }}
             >
-              Terms of Service
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                opacity: 0.8,
-                cursor: 'pointer',
-                '&:hover': { opacity: 1 },
-              }}
-            >
-              Accessibility
+              Terms
             </Typography>
           </Box>
         </Box>

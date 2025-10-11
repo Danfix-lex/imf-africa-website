@@ -85,7 +85,7 @@ const achievements = [
     title: 'Church Plants',
     value: 3200,
     suffix: '+',
-    description: 'New churches established across Africa',
+    description: 'New ministries established across Africa',
     color: '#7b1fa2',
     progress: 80,
   },
@@ -339,7 +339,7 @@ const StatisticsSection: React.FC = () => {
                 fontSize: '1.1rem',
               }}
             >
-              Every number represents real people, communities, and churches experiencing
+              Every number represents real people, communities, and ministries experiencing
               spiritual transformation. Our commitment extends beyond training to
               building strong faith communities and fostering long-term spiritual growth.
             </Typography>

@@ -83,7 +83,7 @@ const PaymentIntegration: React.FC = () => {
 
   const transferPurposes = [
     { value: 'ministry-support', label: 'Ministry Support' },
-    { value: 'church-donation', label: 'Church Donation' },
+    { value: 'ministry-donation', label: 'Ministry Donation' },
     { value: 'pastor-support', label: 'Pastor Support' },
     { value: 'mission-work', label: 'Mission Work' },
     { value: 'education', label: 'Education Support' },

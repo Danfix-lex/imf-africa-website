@@ -1,28 +1,28 @@
 'use client';
 import { createTheme } from '@mui/material/styles';
 
-const theme = createTheme({
+const darkTheme = createTheme({
   palette: {
-    mode: 'light',
+    mode: 'dark',
     primary: {
-      main: '#1976d2', // IMF Blue
+      main: '#90caf9', // Lighter blue for dark mode
       dark: '#115293',
-      light: '#42a5f5',
+      light: '#e3f2fd',
     },
     secondary: {
-      main: '#f57c00', // Complementary orange
+      main: '#ff9800', // Orange for contrast
       dark: '#e65100',
-      light: '#ffb74d',
+      light: '#ffcc80',
     },
     background: {
-      default: '#fafafa',
-      paper: '#ffffff',
+      default: '#121212',
+      paper: '#1e1e1e',
     },
     text: {
-      primary: '#2c3e50',
-      secondary: '#7f8c8d',
+      primary: '#ffffff',
+      secondary: '#b0bec5',
     },
-    divider: 'rgba(0, 0, 0, 0.12)',
+    divider: 'rgba(255, 255, 255, 0.12)',
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
@@ -81,21 +81,21 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 12,
-          boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
         },
       },
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          backgroundColor: 'rgba(30, 30, 30, 0.95)',
           backdropFilter: 'blur(10px)',
-          color: '#2c3e50',
-          boxShadow: '0 2px 20px rgba(0,0,0,0.1)',
+          color: '#ffffff',
+          boxShadow: '0 2px 20px rgba(0,0,0,0.3)',
         },
       },
     },
   },
 });
 
-export default theme;
+export default darkTheme;

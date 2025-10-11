@@ -20,6 +20,9 @@ import {
   Container,
   ListItemText,
   Chip,
+  alpha,
+  Switch,
+  FormControlLabel,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -38,11 +41,13 @@ import {
   Login as LoginIcon,
   Home as HomeIcon,
   AccountCircle as AccountCircleIcon,
+  Brightness4 as DarkModeIcon,
+  Brightness7 as LightModeIcon,
 } from '@mui/icons-material';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { CldImage } from 'next-cloudinary';
+import { useThemeContext } from '@/contexts/ThemeContext';
 import { motion } from 'framer-motion';
 
 interface NavigationItem {
@@ -51,18 +56,15 @@ interface NavigationItem {
   icon?: React.ReactNode;
 }
 
-// Simplified navigation structure with abbreviated names for better alignment
+// Organized navigation structure with logical grouping
 const navigation: NavigationItem[] = [
-  { name: 'Home', href: '/welcome', icon: <HomeIcon /> },
-  { name: 'About', href: '/about', icon: <InfoIcon /> },
-  { name: 'History', href: '/history', icon: <HistoryIcon /> },
-  { name: 'Purpose', href: '/purpose', icon: <AssignmentIcon /> },
-  { name: 'Programs', href: '/programs', icon: <ChurchIcon /> },
-  { name: 'Leaders', href: '/leadership', icon: <PersonIcon /> },
-  { name: 'Gallery', href: '/gallery', icon: <PhotoLibraryIcon /> },
-  { name: 'Statement', href: '/statement-of-faith', icon: <ArticleIcon /> },
-  { name: 'News', href: '/news', icon: <ArticleIcon /> },
-  { name: 'Contact', href: '/contact', icon: <ContactIcon /> },
+  { name: 'Home', href: '/welcome' },
+  { name: 'About', href: '/about' },
+  { name: 'Leadership', href: '/leadership' },
+  { name: 'Programs', href: '/programs' },
+  { name: 'Gallery', href: '/gallery' },
+  { name: 'News', href: '/news' },
+  { name: 'Contact', href: '/contact' },
 ];
 
 const Header: React.FC = () => {
@@ -71,6 +73,7 @@ const Header: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const { user, logout, isAuthenticated } = useAuth();
+  const { mode, toggleTheme } = useThemeContext();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -103,19 +106,21 @@ const Header: React.FC = () => {
         borderColor: 'divider'
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {/* Fixed logo path to use the correct Cloudinary path */}
-          <CldImage
-            src="v1760178679/logo_wv6j8l.png"
+          <Box
+            component="img"
+            src="https://res.cloudinary.com/dprrsr08j/image/upload/v1760178679/logo_wv6j8l.png"
             alt="IMF Africa Logo"
-            width={28}
-            height={28}
-            style={{
+            sx={{
               width: 'auto',
-              height: 28,
+              height: 24,
               objectFit: 'contain',
             }}
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = 'https://via.placeholder.com/24x24?text=Logo';
+            }}
           />
-          <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.main' }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main', fontSize: '1.1rem' }}>
             IMF AFRICA
           </Typography>
         </Box>
@@ -124,60 +129,83 @@ const Header: React.FC = () => {
         </IconButton>
       </Box>
       
-      <List sx={{ pt: 2, flex: 1 }}>
+      {/* Theme Toggle in Mobile Menu */}
+      <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={mode === 'dark'}
+              onChange={toggleTheme}
+              icon={<LightModeIcon />}
+              checkedIcon={<DarkModeIcon />}
+            />
+          }
+          label={mode === 'dark' ? 'Dark Mode' : 'Light Mode'}
+          sx={{ 
+            m: 0,
+            width: '100%',
+            justifyContent: 'space-between',
+            ml: 0,
+            '& .MuiFormControlLabel-label': {
+              fontWeight: 500,
+              fontSize: '0.95rem'
+            }
+          }}
+        />
+      </Box>
+      
+      <List sx={{ pt: 1, flex: 1 }}>
         {navigation.map((item) => (
-          <Box key={item.name}>
-            <ListItem 
-              component={Link} 
-              href={item.href}
-              onClick={handleDrawerToggle}
+          <ListItem 
+            key={item.name}
+            component={Link} 
+            href={item.href}
+            onClick={handleDrawerToggle}
+            sx={{ 
+              cursor: 'pointer',
+              '&:hover': { bgcolor: 'action.hover' },
+              borderRadius: 1,
+              mx: 0.5,
+              my: 0.25,
+              py: 1.2,
+              bgcolor: pathname === item.href ? alpha(theme.palette.primary.main, 0.1) : 'transparent'
+            }}
+          >
+            <ListItemText 
+              primary={item.name}
               sx={{ 
-                cursor: 'pointer',
-                '&:hover': { bgcolor: 'action.hover' },
-                borderRadius: 1,
-                mx: 1,
-                my: 0.5,
-                py: 1.5
+                '& .MuiTypography-root': { 
+                  fontWeight: pathname === item.href ? 600 : 500,
+                  color: pathname === item.href ? 'primary.main' : 'text.primary',
+                  fontSize: '0.95rem'
+                }
               }}
-            >
-              <Box sx={{ mr: 2, color: 'primary.main', minWidth: 24, display: 'flex', alignItems: 'center' }}>
-                {item.icon}
-              </Box>
-              <ListItemText 
-                primary={item.name}
-                sx={{ 
-                  '& .MuiTypography-root': { 
-                    fontWeight: 500,
-                    color: 'text.primary',
-                    fontSize: '1rem'
-                  }
-                }}
-              />
-            </ListItem>
-          </Box>
+            />
+          </ListItem>
         ))}
       </List>
 
       {/* Mobile User Profile */}
       {isAuthenticated && user && (
-        <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider', mt: 'auto' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+        <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
             <Avatar
               sx={{
-                width: 40,
-                height: 40,
+                width: 32,
+                height: 32,
                 bgcolor: 'primary.main',
                 color: 'white',
                 fontWeight: 600,
+                fontSize: '0.8rem'
               }}
             >
               {user.firstName[0]}{user.lastName[0]}
             </Avatar>
             <Box>
-              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+              <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.85rem' }}>
                 {user.firstName} {user.lastName}
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
                 {user.country}
               </Typography>
             </Box>
@@ -185,9 +213,10 @@ const Header: React.FC = () => {
           <Button
             fullWidth
             variant="outlined"
+            size="small"
             onClick={handleLogout}
-            startIcon={<LogoutIcon />}
-            sx={{ borderRadius: 2 }}
+            startIcon={<LogoutIcon sx={{ fontSize: '1rem' }} />}
+            sx={{ borderRadius: 1, py: 0.5, fontSize: '0.8rem' }}
           >
             Sign Out
           </Button>
@@ -202,183 +231,158 @@ const Header: React.FC = () => {
         position="fixed" 
         elevation={0}
         sx={{ 
-          bgcolor: 'rgba(255, 255, 255, 0.98)',
-          backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(0,0,0,0.08)',
-          boxShadow: '0 2px 20px rgba(0,0,0,0.05)'
+          bgcolor: 'background.paper',
+          borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          backdropFilter: 'blur(10px)',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
         }}
       >
         <Container maxWidth="xl">
           <Toolbar sx={{ 
             justifyContent: 'space-between', 
-            py: { xs: 1, md: 1.5 }, 
-            minHeight: { xs: 64, md: 80 },
-            px: { xs: 2, sm: 3, md: 4 }
+            minHeight: 72,
+            px: { xs: 2, sm: 3 }
           }}>
             {/* Logo Section */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, md: 2 } }}>
-                {/* Fixed logo path to use the correct Cloudinary path */}
-                <CldImage
-                  src="v1760178679/logo_wv6j8l.png"
-                  alt="IMF Africa Logo"
-                  width={40}
-                  height={40}
-                  style={{
-                    height: '40px',
-                    width: 'auto',
-                    objectFit: 'contain',
-                    filter: 'drop-shadow(0 2px 4px rgba(25, 118, 210, 0.3))',
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box
+                component="img"
+                src="https://res.cloudinary.com/dprrsr08j/image/upload/v1760178679/logo_wv6j8l.png"
+                alt="IMF Africa Logo"
+                sx={{
+                  height: '36px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                }}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'https://via.placeholder.com/36x36?text=Logo';
+                }}
+              />
+              <Link href="/welcome" style={{ textDecoration: 'none' }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 700,
+                    color: 'primary.main',
+                    fontSize: '1.3rem',
+                    lineHeight: 1,
+                    letterSpacing: '-0.5px'
                   }}
-                />
-                <Box>
-                  <Link href="/welcome" style={{ textDecoration: 'none' }}>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 800,
-                        color: 'primary.main',
-                        fontSize: { xs: '1.1rem', md: '1.4rem' },
-                        letterSpacing: '0.5px',
-                        lineHeight: 1,
-                      }}
-                    >
-                      IMF AFRICA
-                    </Typography>
-                  </Link>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: 'text.secondary',
-                      display: 'block',
-                      lineHeight: 1,
-                      fontSize: { xs: '0.7rem', md: '0.8rem' },
-                      fontWeight: 500,
-                      letterSpacing: '0.3px',
-                    }}
-                  >
-                    International Ministers Forum
-                  </Typography>
-                </Box>
-              </Box>
-            </motion.div>
+                >
+                  IMF AFRICA
+                </Typography>
+              </Link>
+            </Box>
 
             {/* Desktop Navigation */}
             {!isMobile ? (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1, md: 1.5 } }}>
-                  {navigation.map((item, index) => (
-                    <motion.div
-                      key={item.name}
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ 
-                        duration: 0.3, 
-                        delay: index * 0.1 + 0.3 
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                {navigation.map((item) => (
+                  <Button
+                    key={item.name}
+                    component={Link}
+                    href={item.href}
+                    sx={{
+                      color: pathname === item.href ? 'primary.main' : 'text.primary',
+                      fontWeight: pathname === item.href ? 600 : 500,
+                      px: 1.8,
+                      py: 1,
+                      borderRadius: 2,
+                      fontSize: '0.95rem',
+                      textTransform: 'none',
+                      minWidth: 'auto',
+                      position: 'relative',
+                      '&:hover': {
+                        bgcolor: alpha(theme.palette.primary.main, 0.1),
+                      },
+                      '&::after': pathname === item.href ? {
+                        content: '""',
+                        position: 'absolute',
+                        bottom: -8,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: '60%',
+                        height: 3,
+                        bgcolor: 'primary.main',
+                        borderRadius: 3,
+                      } : {}
+                    }}
+                  >
+                    {item.name}
+                  </Button>
+                ))}
+                
+                {/* Theme Toggle */}
+                <IconButton
+                  onClick={toggleTheme}
+                  sx={{
+                    mx: 1,
+                    color: 'text.primary',
+                    '&:hover': {
+                      bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    }
+                  }}
+                >
+                  {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
+                </IconButton>
+                
+                {/* Desktop User Profile Section */}
+                {isAuthenticated && user ? (
+                  <IconButton
+                    onClick={handleProfileMenuOpen}
+                    sx={{
+                      p: 0,
+                      ml: 2,
+                      border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                      '&:hover': {
+                        border: `2px solid ${theme.palette.primary.main}`,
+                      }
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        bgcolor: 'primary.main',
+                        color: 'white',
+                        fontWeight: 600,
+                        fontSize: '0.85rem',
                       }}
                     >
-                      <Button
-                        component={Link}
-                        href={item.href}
-                        startIcon={item.icon}
-                        sx={{
-                          color: 'text.primary',
-                          fontWeight: 600,
-                          px: { xs: 0.8, sm: 1.2, md: 1.5 },
-                          py: 1,
-                          borderRadius: 2,
-                          fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.85rem' },
-                          textTransform: 'none',
-                          transition: 'all 0.3s ease',
-                          minWidth: 'auto',
-                          '&:hover': {
-                            bgcolor: 'primary.main',
-                            color: 'white',
-                            transform: 'translateY(-2px)',
-                            boxShadow: '0 4px 20px rgba(25, 118, 210, 0.3)',
-                          },
-                        }}
-                      >
-                        {item.name}
-                      </Button>
-                    </motion.div>
-                  ))}
-                  
-                  {/* Desktop User Profile Section */}
-                  {isAuthenticated && user ? (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: { xs: 1, sm: 2 } }}>
-                      <Chip
-                        label={user.country}
-                        size="small"
-                        sx={{ 
-                          bgcolor: 'primary.main', 
-                          color: 'white',
-                          fontWeight: 500,
-                          fontSize: '0.75rem'
-                        }}
-                      />
-                      <IconButton
-                        onClick={handleProfileMenuOpen}
-                        sx={{
-                          p: 0,
-                          '&:hover': {
-                            transform: 'scale(1.1)',
-                          },
-                          transition: 'transform 0.2s ease',
-                        }}
-                      >
-                        <Avatar
-                          sx={{
-                            width: { xs: 32, sm: 36, md: 40 },
-                            height: { xs: 32, sm: 36, md: 40 },
-                            bgcolor: 'primary.main',
-                            color: 'white',
-                            fontWeight: 600,
-                            fontSize: '0.9rem',
-                            boxShadow: '0 2px 10px rgba(25, 118, 210, 0.3)',
-                          }}
-                        >
-                          {user.firstName[0]}{user.lastName[0]}
-                        </Avatar>
-                      </IconButton>
-                    </Box>
-                  ) : (
-                    <Box sx={{ ml: { xs: 1, sm: 2 } }}>
-                      <Button
-                        component={Link}
-                        href="/auth"
-                        variant="contained"
-                        sx={{
-                          px: { xs: 2, sm: 2.5, md: 3 },
-                          py: { xs: 0.8, sm: 1, md: 1 },
-                          borderRadius: 2,
-                          fontWeight: 600,
-                          textTransform: 'none',
-                          fontSize: { xs: '0.75rem', sm: '0.85rem', md: '0.9rem' },
-                          background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
-                          '&:hover': {
-                            background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
-                            transform: 'translateY(-2px)',
-                          },
-                          transition: 'all 0.3s ease',
-                        }}
-                      >
-                        Join Us
-                      </Button>
-                    </Box>
-                  )}
-                </Box>
-              </motion.div>
+                      {user.firstName[0]}{user.lastName[0]}
+                    </Avatar>
+                  </IconButton>
+                ) : (
+                  <Button
+                    component={Link}
+                    href="/auth"
+                    variant="contained"
+                    size="medium"
+                    sx={{
+                      ml: 2,
+                      px: 2.5,
+                      py: 1,
+                      borderRadius: 2,
+                      fontWeight: 600,
+                      textTransform: 'none',
+                      fontSize: '0.9rem',
+                      bgcolor: 'primary.main',
+                      boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.25)}`,
+                      '&:hover': {
+                        bgcolor: 'primary.dark',
+                        boxShadow: `0 6px 16px ${alpha(theme.palette.primary.main, 0.35)}`,
+                        transform: 'translateY(-2px)',
+                      },
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    Join Us
+                  </Button>
+                )}
+              </Box>
             ) : (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 {isAuthenticated && user && (
                   <Avatar
                     sx={{
@@ -387,7 +391,7 @@ const Header: React.FC = () => {
                       bgcolor: 'primary.main',
                       color: 'white',
                       fontWeight: 600,
-                      fontSize: '0.8rem',
+                      fontSize: '0.75rem',
                     }}
                   >
                     {user.firstName[0]}{user.lastName[0]}
@@ -397,12 +401,11 @@ const Header: React.FC = () => {
                   color="primary"
                   onClick={handleDrawerToggle}
                   sx={{ 
-                    ml: 1,
+                    p: 0.75,
+                    bgcolor: alpha(theme.palette.primary.main, 0.1),
                     '&:hover': {
-                      bgcolor: 'primary.main',
-                      color: 'white',
-                    },
-                    transition: 'all 0.3s ease',
+                      bgcolor: alpha(theme.palette.primary.main, 0.2),
+                    }
                   }}
                 >
                   <MenuIcon />
@@ -423,42 +426,52 @@ const Header: React.FC = () => {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         sx={{
           '& .MuiPaper-root': {
-            borderRadius: 3,
-            minWidth: 220,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-            border: '1px solid rgba(0,0,0,0.05)',
+            borderRadius: 2,
+            minWidth: 200,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+            mt: 1.5,
           },
         }}
       >
         {user && (
-          <Box sx={{ p: 3 }}>
-            <Typography variant="subtitle1" fontWeight={600}>
-              {user.firstName} {user.lastName}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {user.email}
-            </Typography>
-            {user.position && (
-              <Chip
-                label={user.position}
-                size="small"
-                sx={{ mt: 1, bgcolor: 'grey.100' }}
-              />
-            )}
+          <Box sx={{ p: 2.5, pb: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
+              <Avatar
+                sx={{
+                  width: 40,
+                  height: 40,
+                  bgcolor: 'primary.main',
+                  color: 'white',
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                }}
+              >
+                {user.firstName[0]}{user.lastName[0]}
+              </Avatar>
+              <Box>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  {user.firstName} {user.lastName}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {user.email}
+                </Typography>
+              </Box>
+            </Box>
           </Box>
         )}
-        <Divider />
-        <MenuItem onClick={() => router.push('/dashboard')} sx={{ py: 1.5 }}>
-          <AccountCircleIcon sx={{ mr: 2 }} />
+        <Divider sx={{ my: 0.5 }} />
+        <MenuItem onClick={() => router.push('/dashboard')} sx={{ py: 1.2, fontSize: '0.95rem', mx: 0.5, borderRadius: 1 }}>
+          <AccountCircleIcon sx={{ mr: 1.5, fontSize: '1.1rem' }} />
           Dashboard
         </MenuItem>
-        <MenuItem onClick={handleProfileMenuClose} sx={{ py: 1.5 }}>
-          <PersonIcon sx={{ mr: 2 }} />
+        <MenuItem onClick={handleProfileMenuClose} sx={{ py: 1.2, fontSize: '0.95rem', mx: 0.5, borderRadius: 1 }}>
+          <PersonIcon sx={{ mr: 1.5, fontSize: '1.1rem' }} />
           My Profile
         </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleLogout} sx={{ color: 'error.main', py: 1.5 }}>
-          <LogoutIcon sx={{ mr: 2 }} />
+        <Divider sx={{ my: 0.5 }} />
+        <MenuItem onClick={handleLogout} sx={{ color: 'error.main', py: 1.2, fontSize: '0.95rem', mx: 0.5, borderRadius: 1 }}>
+          <LogoutIcon sx={{ mr: 1.5, fontSize: '1.1rem' }} />
           Sign Out
         </MenuItem>
       </Menu>
@@ -476,6 +489,8 @@ const Header: React.FC = () => {
           '& .MuiDrawer-paper': {
             width: 280,
             bgcolor: 'background.paper',
+            borderLeft: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+            boxShadow: '-10px 0 30px rgba(0,0,0,0.1)',
           },
         }}
       >

@@ -29,7 +29,7 @@ const newsArticles = [
   {
     id: 1,
     title: 'International Ministers Forum Launches Major Training Initiative in West Africa',
-    excerpt: 'New comprehensive ministry training program targets church leaders, theological education, and spiritual development across 15 West African countries.',
+    excerpt: 'New comprehensive ministry training program targets ministry leaders, theological education, and spiritual development across 15 West African countries.',
     content: 'The International Ministers Forum Africa has launched a landmark ministry training initiative for West African nations, marking the largest single commitment to pastoral education in the region\'s history...',
     author: 'Rev. Dr. Sarah Johnson',
     authorRole: 'Director of Training Programs',
@@ -44,8 +44,8 @@ const newsArticles = [
   {
     id: 2,
     title: 'Digital Ministry Platform Expands to 25 African Countries',
-    excerpt: 'Revolutionary digital discipleship and online ministry solutions are transforming church engagement across the continent.',
-    content: 'A groundbreaking digital ministry platform has expanded to 25 African countries, bringing modern ministry tools to thousands of churches and millions of believers...',
+    excerpt: 'Revolutionary digital discipleship and online ministry solutions are transforming engagement across the continent.',
+    content: 'A groundbreaking digital ministry platform has expanded to 25 African countries, bringing modern ministry tools to thousands of ministries and millions of believers...',
     author: 'Pastor Michael Chen',
     authorRole: 'Digital Ministry Lead',
     publishDate: '2024-01-12',
@@ -59,15 +59,15 @@ const newsArticles = [
   {
     id: 3,
     title: 'African Church Unity Reaches Historic Milestone',
-    excerpt: 'Cross-denominational fellowship among African churches increases by 45% following successful implementation of unity programs.',
-    content: 'African church unity has reached unprecedented levels with a 45% increase in cross-denominational partnerships, driven by successful fellowship initiatives...',
+    excerpt: 'Cross-denominational fellowship among African ministries increases by 45% following successful implementation of unity programs.',
+    content: 'African ministry unity has reached unprecedented levels with a 45% increase in cross-denominational partnerships, driven by successful fellowship initiatives...',
     author: 'Dr. Amara Okafor',
     authorRole: 'Church Relations Specialist',
     publishDate: '2024-01-10',
     category: 'Church Unity',
     tags: ['Church Unity', 'Fellowship', 'Denominational Cooperation', 'Africa'],
     featured: true,
-    imageUrl: 'news/church-unity-africa.jpg', // Cloudinary image path
+    imageUrl: 'news/ministry-unity-africa.jpg', // Cloudinary image path
     readTime: '6 min read',
     views: '15.2K',
   },
@@ -171,7 +171,7 @@ const NewsSection: React.FC = () => {
                 mb: 4,
               }}
             >
-              Stay informed about our latest ministry initiatives, church developments, and spiritual growth across Africa
+              Stay informed about our latest ministry initiatives, developments, and spiritual growth across Africa
             </Typography>
 
             {/* Search and Filter */}
@@ -245,7 +245,7 @@ const NewsSection: React.FC = () => {
                     >
                       <Box
                         component="img"
-                        src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_600,h_250/${article.imageUrl}`}
+                        src={`https://res.cloudinary.com/dprrsr08j/image/upload/c_fill,w_600,h_250/${article.imageUrl}`}
                         alt={article.title}
                         sx={{ width: '100%', height: 250, objectFit: 'cover' }}
                         onError={(e) => {
@@ -365,7 +365,7 @@ const NewsSection: React.FC = () => {
                     >
                       <Box
                         component="img"
-                        src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_600,h_180/${article.imageUrl}`}
+                        src={`https://res.cloudinary.com/dprrsr08j/image/upload/c_fill,w_600,h_180/${article.imageUrl}`}
                         alt={article.title}
                         sx={{ width: '100%', height: 180, objectFit: 'cover' }}
                         onError={(e) => {

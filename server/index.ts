@@ -138,7 +138,7 @@ app.post('/api/auth/register', async (req, res) => {
       state,
       city,
       denomination,
-      churchName,
+      ministryName: churchName,
       position
     });
 
@@ -208,7 +208,7 @@ app.post('/api/auth/login', async (req, res) => {
         email: user.email,
         country: user.country,
         position: user.position,
-        churchName: user.churchName,
+        ministryName: user.ministryName,
         isEmailVerified: user.isEmailVerified
       }
     });

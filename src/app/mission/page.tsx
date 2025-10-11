@@ -49,11 +49,11 @@ const MissionPage: React.FC = () => {
     {
       icon: <PublicIcon />,
       title: 'Vision',
-      description: 'Our vision is to provide services that empower God called spirit-filled ministers, churches and religious organizations to carry out their God given assignments throughout the world. We will live in obedience to the Great commandment (Matthew 22:36-40) as we carry out the Great Commission (Matthew 28:18-20).',
+      description: 'Our vision is to provide services that empower God called spirit-filled ministers, ministries and religious organizations to carry out their God given assignments throughout the world. We will live in obedience to the Great commandment (Matthew 22:36-40) as we carry out the Great Commission (Matthew 28:18-20).',
       points: [
         'To spread the Gospel to all people both at home and in all areas of the world, through many outreaches, feeding/clothing programs and whatever means available as a tool of ministry',
         'To host conventions in various parts of the world and to be of assistance in conventions and ministries of other fellowship with which we have networked',
-        'IMF has put roofs on buildings, dug wells for villages, built churches, Held meetings, supported feeding programs, planted homes for children, built homes for pastors and blessed many pastors and missionaries'
+        'IMF has put roofs on buildings, dug wells for villages, built meeting facilities, Held meetings, supported feeding programs, built homes for children, built homes for pastors and blessed many pastors and missionaries'
       ],
       color: 'secondary.main'
     }
@@ -69,7 +69,7 @@ const MissionPage: React.FC = () => {
     {
       icon: <GroupsIcon />,
       title: 'Fellowship & Community',
-      description: 'Building strong community bonds among ministers and churches across denominational lines.',
+      description: 'Building strong community bonds among ministers and ministries across denominational lines.',
       progress: 85,
     },
     {
@@ -81,7 +81,7 @@ const MissionPage: React.FC = () => {
     {
       icon: <BibleIcon />,
       title: 'Resource Development',
-      description: 'Creating and distributing resources to support ministers and churches in their work.',
+      description: 'Creating and distributing resources to support ministers and ministries in their work.',
       progress: 75,
     },
   ];
@@ -95,7 +95,7 @@ const MissionPage: React.FC = () => {
     {
       icon: <HandshakeIcon />,
       title: 'Partnership Model',
-      description: 'Working collaboratively with local churches and leaders to ensure contextual relevance.',
+      description: 'Working collaboratively with local leaders to ensure contextual relevance.',
     },
     {
       icon: <AutoStoriesIcon />,
@@ -376,7 +376,7 @@ const MissionPage: React.FC = () => {
               Partner With Us
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 400, mb: 4, maxWidth: 600, mx: 'auto' }}>
-              Join us in fulfilling our mission to strengthen the church across the world.
+              Join us in fulfilling our mission to strengthen ministries across the world.
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
               <Button

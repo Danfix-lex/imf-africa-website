@@ -20,7 +20,7 @@ export default function TrainingPage() {
       level: 'Intermediate',
       duration: '12 weeks',
       format: 'Hybrid',
-      description: 'Comprehensive training in church administration, finance, and strategic planning',
+      description: 'Comprehensive training in ministry administration, finance, and strategic planning',
       instructors: ['Pastor James Wilson', 'Dr. Lisa Thompson']
     },
     {
@@ -53,7 +53,7 @@ export default function TrainingPage() {
       duration: '12 months'
     },
     {
-      name: 'Church Administration Specialist',
+      name: 'Ministry Administration Specialist',
       requirements: 'Complete 4 management courses',
       duration: '8 months'
     }

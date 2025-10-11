@@ -162,12 +162,7 @@ const DashboardPage: React.FC = () => {
                           <LocationIcon sx={{ opacity: 0.8 }} />
                           <Typography variant="body1">{user?.country}</Typography>
                         </Box>
-                        {user?.churchName && (
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                            <ChurchIcon sx={{ opacity: 0.8 }} />
-                            <Typography variant="body1">{user.churchName}</Typography>
-                          </Box>
-                        )}
+                        {/* Removed ministry name display to align with organizational focus */}
                       </Box>
 
                       <Button
@@ -294,7 +289,7 @@ const DashboardPage: React.FC = () => {
                         Thank you for joining the International Ministers Forum Africa!
                       </Typography>
                       <Typography variant="body1" sx={{ opacity: 0.9, lineHeight: 1.6 }}>
-                        You are now part of a growing fellowship of ministers and church leaders 
+                        You are now part of a growing fellowship of ministers and ministry leaders 
                         across Africa. Explore our resources, connect with fellow ministers, 
                         and participate in our mission to transform the continent through the Gospel.
                       </Typography>

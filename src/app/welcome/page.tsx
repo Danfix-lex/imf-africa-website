@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState, Suspense } from 'react';
 import {
   Box,
   Container,
@@ -7,6 +7,8 @@ import {
   Button,
   Chip,
   useTheme,
+  alpha,
+  CircularProgress,
 } from '@mui/material';
 import {
   Star as StarIcon,
@@ -15,7 +17,30 @@ import {
 import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { CldImage } from 'next-cloudinary';
+
+// Lazy load images for better performance
+const LazyImage = ({ src, alt, sx, onError }: { src: string; alt: string; sx?: any; onError?: (e: any) => void }) => {
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
+
+  return (
+    <Box
+      component="img"
+      src={src}
+      alt={alt}
+      sx={{
+        ...sx,
+        opacity: loaded ? 1 : 0,
+        transition: 'opacity 0.3s ease',
+      }}
+      onLoad={() => setLoaded(true)}
+      onError={(e) => {
+        setError(true);
+        if (onError) onError(e);
+      }}
+    />
+  );
+};
 
 const WelcomePage: React.FC = () => {
   const theme = useTheme();
@@ -40,23 +65,27 @@ const WelcomePage: React.FC = () => {
           justifyContent: 'center',
           py: 4,
           bgcolor: 'background.default',
-          pt: { xs: 10, md: 15 }, // Add padding top to account for navbar
+          pt: { xs: 12, md: 15 }, // Add padding top to account for navbar
         }}
       >
         <Container maxWidth="sm" sx={{ textAlign: 'center' }}>
           <Box sx={{ mb: 6 }}>
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
-              <CldImage
-                src="v1760178679/logo_wv6j8l.png"
-                alt="IMF Africa Logo"
-                width={120}
-                height={120}
-                style={{
-                  width: '120px',
-                  height: 'auto',
-                  objectFit: 'contain',
-                }}
-              />
+              <Suspense fallback={<CircularProgress />}>
+                <LazyImage
+                  src="https://res.cloudinary.com/dprrsr08j/image/upload/v1760178679/logo_wv6j8l.png"
+                  alt="IMF Africa Logo"
+                  sx={{
+                    width: '140px',
+                    height: 'auto',
+                    objectFit: 'contain',
+                  }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://via.placeholder.com/140x140?text=Logo';
+                  }}
+                />
+              </Suspense>
             </Box>
             
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 3 }}>
@@ -68,8 +97,10 @@ const WelcomePage: React.FC = () => {
                   color: 'white',
                   fontWeight: 600,
                   fontSize: '1rem',
-                  px: 2,
-                  py: 1
+                  px: 2.5,
+                  py: 1.2,
+                  borderRadius: 2,
+                  boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.25)}`,
                 }} 
               />
             </Box>
@@ -123,11 +154,13 @@ const WelcomePage: React.FC = () => {
                   fontSize: '1.1rem',
                   fontWeight: 600,
                   borderRadius: 3,
-                  background: 'primary.main',
+                  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
                   textTransform: 'none',
+                  boxShadow: `0 6px 16px ${alpha(theme.palette.primary.main, 0.3)}`,
                   '&:hover': {
-                    background: 'primary.dark',
+                    background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
                     transform: 'translateY(-2px)',
+                    boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.4)}`,
                   },
                   transition: 'all 0.3s ease',
                 }}
@@ -148,10 +181,12 @@ const WelcomePage: React.FC = () => {
                   borderColor: 'primary.main',
                   color: 'primary.main',
                   textTransform: 'none',
+                  boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.1)}`,
                   '&:hover': {
-                    bgcolor: 'primary.main',
-                    color: 'white',
+                    bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    borderColor: 'primary.main',
                     transform: 'translateY(-2px)',
+                    boxShadow: `0 6px 16px ${alpha(theme.palette.primary.main, 0.2)}`,
                   },
                   transition: 'all 0.3s ease',
                 }}

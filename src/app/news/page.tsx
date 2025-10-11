@@ -32,7 +32,7 @@ const NewsPage: React.FC = () => {
     {
       id: 1,
       title: 'International Ministers Forum Launches Major Training Initiative in West Africa',
-      excerpt: 'New comprehensive ministry training program targets church leaders, theological education, and spiritual development across 15 West African countries.',
+      excerpt: 'New comprehensive ministry training program targets ministry leaders, theological education, and spiritual development across 15 West African countries.',
       author: 'Rev. Dr. Sarah Johnson',
       authorRole: 'Director of Training Programs',
       publishDate: '2024-01-15',
@@ -60,7 +60,7 @@ const NewsPage: React.FC = () => {
     {
       id: 3,
       title: 'Record Number of Ministers Graduate from IMF Africa Leadership Program',
-      excerpt: 'Over 2,000 church leaders complete advanced theological and pastoral training across East and Southern Africa.',
+      excerpt: 'Over 2,000 ministry leaders complete advanced theological and pastoral training across East and Southern Africa.',
       author: 'Dr. Elizabeth Okafor',
       authorRole: 'Academic Dean',
       publishDate: '2024-01-05',
@@ -88,9 +88,9 @@ const NewsPage: React.FC = () => {
       <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: 15 }}>
         <Container maxWidth="lg">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.4 }}
           >
             <Box sx={{ textAlign: 'center', mb: 6 }}>
               <Typography
@@ -139,9 +139,9 @@ const NewsPage: React.FC = () => {
             {categories.map((category, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
               >
                 <Chip
                   icon={category.icon}
@@ -168,9 +168,9 @@ const NewsPage: React.FC = () => {
             {newsArticles.map((article, index) => (
               <Box component="div" key={article.id}>
                 <motion.div
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
                 >
                   <Card
                     sx={{

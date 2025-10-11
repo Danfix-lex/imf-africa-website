@@ -25,7 +25,7 @@ const initiatives = [
   {
     icon: <SchoolIcon />,
     title: 'IMF Africa Champlain',
-    description: 'A specialized initiative focused on equipping and empowering local church leaders through advanced theological education and practical ministry training programs across Africa.',
+    description: 'A specialized initiative focused on equipping and empowering local ministry leaders through advanced theological education and practical ministry training programs across Africa.',
     category: 'Leadership Development',
     color: '#1976d2',
     features: [
@@ -33,7 +33,7 @@ const initiatives = [
       'Practical ministry training workshops',
       'Leadership development seminars',
       'Mentorship and coaching programs',
-      'Resource centers for local churches'
+      'Resource centers for local ministries'
     ],
     target: 'Church leaders, pastors, and ministry coordinators',
     link: '/champlain'
