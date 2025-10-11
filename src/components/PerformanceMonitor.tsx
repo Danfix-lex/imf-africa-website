@@ -9,6 +9,7 @@ const PerformanceMonitor: React.FC = () => {
     lcp: 0,
     cls: 0,
     fid: 0,
+    pageLoad: 0,
   });
 
   useEffect(() => {
@@ -20,6 +21,16 @@ const PerformanceMonitor: React.FC = () => {
         const fcpEntry = performance.getEntriesByName('first-contentful-paint')[0];
         if (fcpEntry) {
           setMetrics(prev => ({ ...prev, fcp: fcpEntry.startTime }));
+        }
+
+        // Page load time using modern API
+        const navigationEntries = performance.getEntriesByType('navigation');
+        if (navigationEntries.length > 0) {
+          const navigationEntry = navigationEntries[0] as PerformanceNavigationTiming;
+          setMetrics(prev => ({ 
+            ...prev, 
+            pageLoad: navigationEntry.loadEventEnd - navigationEntry.startTime 
+          }));
         }
 
         // Other metrics would typically be measured with web-vitals library
@@ -67,7 +78,7 @@ const PerformanceMonitor: React.FC = () => {
         FCP: {metrics.fcp > 0 ? `${metrics.fcp.toFixed(0)}ms` : 'Measuring...'}
       </Typography>
       <Typography variant="body2" sx={{ mt: 0.5 }}>
-        Page Load: {performance.timing.loadEventEnd - performance.timing.navigationStart}ms
+        Page Load: {metrics.pageLoad > 0 ? `${metrics.pageLoad.toFixed(0)}ms` : 'Measuring...'}
       </Typography>
     </Box>
   );

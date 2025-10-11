@@ -19,6 +19,7 @@ export async function GET(request: Request) {
     console.log('Fetching fresh data from Cloudinary');
     const galleryItems = await getGalleryImages();
     console.log('Fetched', galleryItems.length, 'items from Cloudinary');
+    console.log('Gallery items:', JSON.stringify(galleryItems, null, 2));
     
     // Update cache
     cache.data = galleryItems;

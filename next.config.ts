@@ -23,6 +23,12 @@ const nextConfig: NextConfig = {
   },
   // Webpack optimizations
   webpack: (config, { dev, isServer }) => {
+    // Add SVG support
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    });
+    
     // Reduce bundle size by excluding unnecessary modules
     if (!dev && !isServer) {
       config.optimization.splitChunks.cacheGroups = {

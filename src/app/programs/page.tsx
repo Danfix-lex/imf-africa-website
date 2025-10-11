@@ -23,7 +23,6 @@ import {
 import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { CldImage } from 'next-cloudinary';
 
 const ProgramsPage: React.FC = () => {
   const theme = useTheme();
@@ -106,16 +105,18 @@ const ProgramsPage: React.FC = () => {
             }}
           >
             {/* Flyer Image */}
-            <CldImage
-              src="v1760178814/upcoming-program_l4dpud.jpg"
+            <Box
+              component="img"
+              src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_800,h_600/upcoming-program_l4dpud.jpg`}
               alt="End of the Year Banquet & Award"
-              width={800}
-              height={600}
-              crop="fill"
-              style={{
+              sx={{
                 width: '100%',
                 height: 'auto',
                 objectFit: 'contain',
+              }}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = 'https://via.placeholder.com/800x600?text=Image+Not+Available';
               }}
             />
             <CardContent sx={{ p: 4 }}>

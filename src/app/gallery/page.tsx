@@ -19,6 +19,7 @@ import {
   Chip,
   CircularProgress,
   CardActions,
+  Alert,
 } from '@mui/material';
 import {
   Image as ImageIcon,
@@ -33,9 +34,6 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 // Import CldImage and check if we need to configure it
-import { CldImage } from 'next-cloudinary';
-
-console.log('Cloudinary cloud name from env:', process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
 
 // Update the gallery item type
 interface GalleryItem {
@@ -62,6 +60,7 @@ const GalleryPage: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [visibleItems, setVisibleItems] = useState(12); // Initial visible items
 
   // Fetch gallery items from Cloudinary
@@ -73,15 +72,17 @@ const GalleryPage: React.FC = () => {
         console.log('Gallery API response status:', response.status);
         
         if (!response.ok) {
-          throw new Error(`Failed to fetch gallery items: ${response.status}`);
+          const errorText = await response.text();
+          throw new Error(`Failed to fetch gallery items: ${response.status} - ${errorText}`);
         }
         
         const data = await response.json();
-        console.log('Received gallery items:', data.length);
+        console.log('Received gallery items:', data);
         setGalleryItems(data);
         setLoading(false);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching gallery items:', error);
+        setError(`Error fetching gallery items: ${error.message}`);
         setLoading(false);
       }
     };
@@ -137,6 +138,31 @@ const GalleryPage: React.FC = () => {
     );
   }
 
+  // Show error message if there's an error
+  if (error) {
+    return (
+      <>
+        <Header />
+        <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: 15, pb: 8 }}>
+          <Container maxWidth="xl">
+            <Alert severity="error" sx={{ mb: 4 }}>
+              <Typography variant="h6">Gallery Error</Typography>
+              <Typography>{error}</Typography>
+              <Button 
+                variant="contained" 
+                onClick={() => window.location.reload()}
+                sx={{ mt: 2 }}
+              >
+                Retry
+              </Button>
+            </Alert>
+          </Container>
+        </Box>
+        <Footer />
+      </>
+    );
+  }
+
   // Show error message if no items
   if (galleryItems.length === 0) {
     return (
@@ -150,6 +176,9 @@ const GalleryPage: React.FC = () => {
               </Typography>
               <Typography variant="body1" color="text.secondary">
                 There are currently no images or videos in your gallery.
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                Please make sure you have uploaded images to your Cloudinary "gallery" folder.
               </Typography>
               <Button 
                 variant="contained" 
@@ -292,13 +321,20 @@ const GalleryPage: React.FC = () => {
                           />
                         </Box>
                       ) : (
-                        <img
-                          src={item.thumbnail}
+                        // Fallback to regular img tag if CldImage fails
+                        <Box
+                          component="img"
+                          src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_300,h_200/${item.thumbnail}`}
                           alt={item.title}
-                          style={{
+                          sx={{
                             width: '100%',
                             height: 200,
                             objectFit: 'cover',
+                          }}
+                          onError={(e) => {
+                            // Removed console.error for production
+                            const target = e.target as HTMLImageElement;
+                            target.src = 'https://via.placeholder.com/300x200?text=Image+Not+Found';
                           }}
                         />
                       )}
@@ -456,13 +492,19 @@ const GalleryPage: React.FC = () => {
                       />
                     </Box>
                   ) : (
-                    <img
-                      src={selectedItem.url}
+                    <Box
+                      component="img"
+                      src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_800,h_600/${selectedItem.url}`}
                       alt={selectedItem.title}
-                      style={{
+                      sx={{
                         width: '100%',
                         maxHeight: '70vh',
                         objectFit: 'contain',
+                      }}
+                      onError={(e) => {
+                        // Removed console.error for production
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'https://via.placeholder.com/800x600?text=Image+Not+Available';
                       }}
                     />
                   )}

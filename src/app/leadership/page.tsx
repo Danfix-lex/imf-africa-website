@@ -32,16 +32,62 @@ import { motion } from 'framer-motion';
 
 const MotionBox = motion(Box);
 
+// Component to handle image loading with fallback
+const LeaderImage = ({ src, name }: { src: string; name: string }) => {
+  const [imageError, setImageError] = useState(false);
+  
+  if (imageError) {
+    // Fallback to avatar with initials
+    const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2);
+    return (
+      <Box sx={{ 
+        width: '100%', 
+        height: '100%', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        bgcolor: 'primary.main',
+        color: 'white',
+        fontSize: '3rem',
+        fontWeight: 'bold'
+      }}>
+        {initials}
+      </Box>
+    );
+  }
+  
+  // Use regular img tag instead of CldImage
+  return (
+    <img
+      src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dprrsr08j'}/image/upload/${src}`}
+      alt={name}
+      width={300}
+      height={300}
+      style={{
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+      }}
+      onError={(e) => {
+        setImageError(true);
+      }}
+      onLoad={() => {
+        // Image loaded successfully
+      }}
+    />
+  );
+};
+
 export default function LeadershipPage() {
   const founders = [
     {
-      name: "Sis. Louise Copeland",
+      name: "Rev. Mary Louise Copeland",
       role: "Founder & First President, International Ministers Forum",
-      image: "v1760178644/africa-president_g9db07.png", // Updated to use full Cloudinary path
+      image: "v1760178637/mary-copeland_lwmulf.jpg", // TODO: Update with correct founder image when available
       bioSections: [
         {
           title: "Ministry Beginnings",
-          content: "Louise Copeland began her ministry in 1937 at age 18 in Detroit, Michigan. She was a trailblazer in the Pentecostal movement and ministered with many healing evangelists as part of the 'Voice of Healing' network."
+          content: "Mary Louise Copeland began her ministry in 1937 at age 18 in Detroit, Michigan. She was a trailblazer in the Pentecostal movement and ministered with many healing evangelists as part of the 'Voice of Healing' network."
         },
         {
           title: "Leadership & Legacy",
@@ -49,7 +95,7 @@ export default function LeadershipPage() {
         },
         {
           title: "Legacy & Transition",
-          content: "IMF was incorporated in 1987 in Missouri the year before Sis. Copeland died in 1988. She was a true pioneer in the Pentecostal, Healing Revival, Latter Rain, and Charismatic Movements, ministering with many healing evangelists as part of the 'Voice of Healing' network."
+          content: "IMF was incorporated in 1987 in Missouri the year before Rev. Copeland died in 1988. She was a true pioneer in the Pentecostal, Healing Revival, Latter Rain, and Charismatic Movements, ministering with many healing evangelists as part of the 'Voice of Healing' network."
         }
       ]
     },
@@ -146,7 +192,7 @@ export default function LeadershipPage() {
         },
         {
           title: "Service & Dedication",
-          content: "Serves as Secretary for IMF USA, providing administrative leadership and support for the organization's operations in the United States."
+          content: "Dedicated to supporting the mission of the International Ministers Forum through administrative leadership and coordination of the IMF Africa chapter."
         }
       ]
     }
@@ -196,24 +242,17 @@ export default function LeadershipPage() {
                       },
                     }}
                   >
-                    <Box sx={{ display: { xs: 'block', md: 'flex' } }}>
+                    <Box sx={{ display: { xs: 'block', md: 'flex' }}}
+                      onError={(e) => {
+                        console.error('Error in founder card:', founder.name, e);
+                      }}
+                    >
                       <Box sx={{ 
                         width: { xs: '100%', md: 300 }, 
-                        height: { xs: 300, md: 'auto' },
+                        height: { xs: 300, md: 300 },
                         position: 'relative'
                       }}>
-                        <CldImage
-                          src={founder.image}
-                          alt={founder.name}
-                          width={300}
-                          height={300}
-                          crop="fill"
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                          }}
-                        />
+                        <LeaderImage src={founder.image} name={founder.name} />
                       </Box>
                       <CardContent sx={{ flex: 1, p: 4 }}>
                         <Box sx={{ mb: 3 }}>
@@ -305,24 +344,17 @@ export default function LeadershipPage() {
                       },
                     }}
                   >
-                    <Box sx={{ display: { xs: 'block', md: 'flex' } }}>
+                    <Box sx={{ display: { xs: 'block', md: 'flex' } }}
+                      onError={(e) => {
+                        console.error('Error in leader card:', leader.name, e);
+                      }}
+                    >
                       <Box sx={{ 
                         width: { xs: '100%', md: 300 }, 
-                        height: { xs: 300, md: 'auto' },
+                        height: { xs: 300, md: 300 },
                         position: 'relative'
                       }}>
-                        <CldImage
-                          src={leader.image}
-                          alt={leader.name}
-                          width={300}
-                          height={300}
-                          crop="fill"
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                          }}
-                        />
+                        <LeaderImage src={leader.image} name={leader.name} />
                       </Box>
                       <CardContent sx={{ flex: 1, p: 4 }}>
                         <Box sx={{ mb: 3 }}>

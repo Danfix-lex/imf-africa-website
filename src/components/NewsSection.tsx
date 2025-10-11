@@ -24,7 +24,6 @@ import {
   Assessment as PolicyIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
-import { CldImage } from 'next-cloudinary';
 
 const newsArticles = [
   {
@@ -244,13 +243,15 @@ const NewsSection: React.FC = () => {
                         },
                       }}
                     >
-                      <CldImage
-                        src={article.imageUrl}
+                      <Box
+                        component="img"
+                        src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_600,h_250/${article.imageUrl}`}
                         alt={article.title}
-                        width={600}
-                        height={250}
-                        crop="fill"
-                        style={{ width: '100%', height: 250, objectFit: 'cover' }}
+                        sx={{ width: '100%', height: 250, objectFit: 'cover' }}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = 'https://via.placeholder.com/600x250?text=Image+Not+Available';
+                        }}
                       />
                       <CardContent sx={{ p: 4 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
@@ -362,13 +363,15 @@ const NewsSection: React.FC = () => {
                         },
                       }}
                     >
-                      <CldImage
-                        src={article.imageUrl}
+                      <Box
+                        component="img"
+                        src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_600,h_180/${article.imageUrl}`}
                         alt={article.title}
-                        width={600}
-                        height={180}
-                        crop="fill"
-                        style={{ width: '100%', height: 180, objectFit: 'cover' }}
+                        sx={{ width: '100%', height: 180, objectFit: 'cover' }}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = 'https://via.placeholder.com/600x180?text=Image+Not+Available';
+                        }}
                       />
 
                       <CardContent sx={{ p: 3 }}>

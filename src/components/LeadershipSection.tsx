@@ -13,7 +13,6 @@ import {
   LocationOn as LocationIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
-import { CldImage } from 'next-cloudinary';
 
 const leadershipTeam = [
   {
@@ -160,16 +159,18 @@ const LeadershipSection: React.FC = () => {
                         boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
                       }}
                     >
-                      <CldImage
-                        src={leader.avatar}
+                      <Box
+                        component="img"
+                        src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_120,h_120/${leader.avatar}`}
                         alt={leader.name}
-                        width={120}
-                        height={120}
-                        crop="fill"
-                        style={{
+                        sx={{
                           width: '100%',
                           height: '100%',
                           objectFit: 'cover',
+                        }}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = 'https://via.placeholder.com/120x120?text=No+Image';
                         }}
                       />
                     </Box>

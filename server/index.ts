@@ -10,9 +10,15 @@ import { User } from './models/index';
 
 dotenv.config();
 
+// Log all environment variables for debugging
+console.log('Environment variables:');
+console.log('- PORT:', process.env.PORT);
+console.log('- NODE_ENV:', process.env.NODE_ENV);
+console.log('- MONGODB_URI:', process.env.MONGODB_URI ? 'Set' : 'Not set');
+
 const app = express();
-// Use Render's PORT or default to 5000
-const PORT: number = parseInt(process.env.PORT || '5000', 10);
+// Use Render's PORT or default to 10000 (not 5000 to avoid conflicts)
+const PORT: number = parseInt(process.env.PORT || '10000', 10);
 
 // CORS configuration
 const corsOptions = {
@@ -58,7 +64,7 @@ const connectDB = async () => {
     // Use Render's MONGODB_URI or default to local
     const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/imf-africa';
     
-    console.log('Attempting to connect to MongoDB...');
+    console.log('Attempting to connect to MongoDB with URI:', MONGODB_URI.replace(/:[^:@]+@/, ':***@')); // Hide password in logs
     await mongoose.connect(MONGODB_URI);
     console.log('Connected to MongoDB successfully');
   } catch (error) {
