@@ -47,13 +47,14 @@ const WelcomePage: React.FC = () => {
           <Box sx={{ mb: 6 }}>
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
               <CldImage
-                src="logo/imf-africa-logo.png"
+                src="v1760178679/logo_wv6j8l.png"
                 alt="IMF Africa Logo"
                 width={120}
                 height={120}
                 style={{
-                  height: 120,
-                  width: 'auto',
+                  width: '120px',
+                  height: 'auto',
+                  objectFit: 'contain',
                 }}
               />
             </Box>

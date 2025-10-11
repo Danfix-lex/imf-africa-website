@@ -26,11 +26,16 @@ import {
   Close as CloseIcon,
   ZoomIn as ZoomInIcon,
   Download as DownloadIcon,
+  Videocam as VideoIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+
+// Import CldImage and check if we need to configure it
 import { CldImage } from 'next-cloudinary';
+
+console.log('Cloudinary cloud name from env:', process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
 
 // Update the gallery item type
 interface GalleryItem {
@@ -43,10 +48,12 @@ interface GalleryItem {
   downloadUrl: string;
   category: string;
   date: string;
+  duration?: number; // For videos
+  format?: string; // For videos
 }
 
 // Remove mock data - will fetch from Cloudinary instead
-const categories = ['All', 'Events', 'Training', 'Outreach', 'Youth', 'Worship'];
+const categories = ['All', 'Events', 'Training', 'Outreach', 'Youth', 'Worship', 'Videos'];
 
 const GalleryPage: React.FC = () => {
   const theme = useTheme();
@@ -61,8 +68,16 @@ const GalleryPage: React.FC = () => {
   useEffect(() => {
     const fetchGalleryItems = async () => {
       try {
+        console.log('Fetching gallery items from API...');
         const response = await fetch('/api/gallery');
+        console.log('Gallery API response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch gallery items: ${response.status}`);
+        }
+        
         const data = await response.json();
+        console.log('Received gallery items:', data.length);
         setGalleryItems(data);
         setLoading(false);
       } catch (error) {
@@ -76,6 +91,8 @@ const GalleryPage: React.FC = () => {
 
   const filteredItems = selectedCategory === 'All' 
     ? galleryItems 
+    : selectedCategory === 'Videos'
+    ? galleryItems.filter(item => item.type === 'video')
     : galleryItems.filter(item => item.category === selectedCategory);
 
   // Items to display based on visibility
@@ -113,6 +130,36 @@ const GalleryPage: React.FC = () => {
         <Header />
         <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: 15, pb: 8, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <CircularProgress />
+          <Typography sx={{ ml: 2 }}>Loading gallery...</Typography>
+        </Box>
+        <Footer />
+      </>
+    );
+  }
+
+  // Show error message if no items
+  if (galleryItems.length === 0) {
+    return (
+      <>
+        <Header />
+        <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: 15, pb: 8 }}>
+          <Container maxWidth="xl">
+            <Box sx={{ textAlign: 'center', py: 8 }}>
+              <Typography variant="h4" gutterBottom>
+                No Gallery Items Found
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                There are currently no images or videos in your gallery.
+              </Typography>
+              <Button 
+                variant="contained" 
+                onClick={() => window.location.reload()}
+                sx={{ mt: 2 }}
+              >
+                Retry
+              </Button>
+            </Box>
+          </Container>
         </Box>
         <Footer />
       </>
@@ -219,19 +266,42 @@ const GalleryPage: React.FC = () => {
                     }}
                   >
                     <Box sx={{ position: 'relative' }} onClick={() => handleOpenDialog(item)}>
-                      {/* Using CldImage for optimized Cloudinary delivery with lazy loading */}
-                      <CldImage
-                        src={item.thumbnail}
-                        alt={item.title}
-                        width={600}
-                        height={400}
-                        crop="fill"
-                        loading={index < 6 ? "eager" : "lazy"} // Eager load first 6 images
-                        style={{
-                          height: 200,
-                          objectFit: 'cover',
-                        }}
-                      />
+                      {/* Handle both images and videos properly */}
+                      {item.type === 'video' ? (
+                        <Box
+                          sx={{
+                            width: '100%',
+                            height: 200,
+                            bgcolor: 'black',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'relative',
+                          }}
+                        >
+                          <PlayIcon sx={{ color: 'white', fontSize: 48 }} />
+                          <Box
+                            sx={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
+                              height: '100%',
+                              bgcolor: 'rgba(0,0,0,0.3)',
+                            }}
+                          />
+                        </Box>
+                      ) : (
+                        <img
+                          src={item.thumbnail}
+                          alt={item.title}
+                          style={{
+                            width: '100%',
+                            height: 200,
+                            objectFit: 'cover',
+                          }}
+                        />
+                      )}
                       <Box
                         sx={{
                           position: 'absolute',
@@ -247,7 +317,7 @@ const GalleryPage: React.FC = () => {
                           justifyContent: 'center',
                         }}
                       >
-                        {item.type === 'image' ? <ImageIcon /> : <PlayIcon />}
+                        {item.type === 'image' ? <ImageIcon /> : <VideoIcon />}
                       </Box>
                       <Chip
                         label={item.category}
@@ -269,9 +339,16 @@ const GalleryPage: React.FC = () => {
                       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                         {item.description}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {new Date(item.date).toLocaleDateString()}
-                      </Typography>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography variant="caption" color="text.secondary">
+                          {new Date(item.date).toLocaleDateString()}
+                        </Typography>
+                        {item.type === 'video' && item.duration && (
+                          <Typography variant="caption" color="text.secondary">
+                            {Math.floor(item.duration / 60)}:{String(Math.floor(item.duration % 60)).padStart(2, '0')}
+                          </Typography>
+                        )}
+                      </Box>
                     </CardContent>
                     <CardActions sx={{ justifyContent: 'center', p: 2 }}>
                       <Button
@@ -356,19 +433,39 @@ const GalleryPage: React.FC = () => {
             {selectedItem && (
               <>
                 <Box sx={{ position: 'relative' }}>
-                  {/* Using CldImage for the full-size media in dialog */}
-                  <CldImage
-                    src={selectedItem.url}
-                    alt={selectedItem.title}
-                    width={1200}
-                    height={800}
-                    crop="scale"
-                    style={{
-                      width: '100%',
-                      maxHeight: '70vh',
-                      objectFit: 'contain',
-                    }}
-                  />
+                  {/* Handle both images and videos in the dialog */}
+                  {selectedItem.type === 'video' ? (
+                    <Box
+                      sx={{
+                        width: '100%',
+                        maxHeight: '70vh',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        bgcolor: 'black',
+                        p: 2,
+                      }}
+                    >
+                      <video
+                        src={selectedItem.url}
+                        controls
+                        style={{
+                          maxWidth: '100%',
+                          maxHeight: '70vh',
+                        }}
+                      />
+                    </Box>
+                  ) : (
+                    <img
+                      src={selectedItem.url}
+                      alt={selectedItem.title}
+                      style={{
+                        width: '100%',
+                        maxHeight: '70vh',
+                        objectFit: 'contain',
+                      }}
+                    />
+                  )}
                   <IconButton
                     sx={{
                       position: 'absolute',
@@ -392,7 +489,7 @@ const GalleryPage: React.FC = () => {
                   <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
                     {selectedItem.description}
                   </Typography>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                     <Chip
                       label={selectedItem.category}
                       size="small"
@@ -402,9 +499,16 @@ const GalleryPage: React.FC = () => {
                         fontWeight: 600,
                       }}
                     />
-                    <Typography variant="caption" color="text.secondary">
-                      {new Date(selectedItem.date).toLocaleDateString()}
-                    </Typography>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        {new Date(selectedItem.date).toLocaleDateString()}
+                      </Typography>
+                      {selectedItem.type === 'video' && selectedItem.duration && (
+                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                          Duration: {Math.floor(selectedItem.duration / 60)}:{String(Math.floor(selectedItem.duration % 60)).padStart(2, '0')}
+                        </Typography>
+                      )}
+                    </Box>
                   </Box>
                 </Box>
               </>

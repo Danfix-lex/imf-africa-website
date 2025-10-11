@@ -59,8 +59,8 @@ const navigation: NavigationItem[] = [
   { name: 'Purpose', href: '/purpose', icon: <AssignmentIcon /> },
   { name: 'Programs', href: '/programs', icon: <ChurchIcon /> },
   { name: 'Leaders', href: '/leadership', icon: <PersonIcon /> },
-  { name: 'Gallery', href: '/gallery', icon: <ChurchIcon /> },
-  { name: 'Statement', href: '/statement-of-faith', icon: <ChurchIcon /> },
+  { name: 'Gallery', href: '/gallery', icon: <PhotoLibraryIcon /> },
+  { name: 'Statement', href: '/statement-of-faith', icon: <ArticleIcon /> },
   { name: 'News', href: '/news', icon: <ArticleIcon /> },
   { name: 'Contact', href: '/contact', icon: <ContactIcon /> },
 ];
@@ -103,8 +103,9 @@ const Header: React.FC = () => {
         borderColor: 'divider'
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {/* Fixed logo path to use the correct Cloudinary path */}
           <CldImage
-            src="logo/imf-africa-logo.png"
+            src="v1760178679/logo_wv6j8l.png"
             alt="IMF Africa Logo"
             width={28}
             height={28}
@@ -221,8 +222,9 @@ const Header: React.FC = () => {
               transition={{ duration: 0.5 }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, md: 2 } }}>
+                {/* Fixed logo path to use the correct Cloudinary path */}
                 <CldImage
-                  src="logo/imf-africa-logo.png"
+                  src="v1760178679/logo_wv6j8l.png"
                   alt="IMF Africa Logo"
                   width={40}
                   height={40}

@@ -56,19 +56,19 @@ const Footer: React.FC = () => {
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           <Grid size={{ xs: 12, md: 4 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
               <CldImage
-                src="logo/imf-africa-logo.png"
+                src="v1760178679/logo_wv6j8l.png"
                 alt="IMF Africa Logo"
                 width={40}
                 height={40}
                 style={{
-                  width: 'auto',
-                  height: 40,
+                  width: '40px',
+                  height: 'auto',
                   objectFit: 'contain',
                 }}
               />
-              <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.main' }}>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: 'white' }}>
                 IMF AFRICA
               </Typography>
             </Box>

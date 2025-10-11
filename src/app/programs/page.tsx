@@ -107,7 +107,7 @@ const ProgramsPage: React.FC = () => {
           >
             {/* Flyer Image */}
             <CldImage
-              src="programs/upcoming-program.jpg"
+              src="v1760178814/upcoming-program_l4dpud.jpg"
               alt="End of the Year Banquet & Award"
               width={800}
               height={600}

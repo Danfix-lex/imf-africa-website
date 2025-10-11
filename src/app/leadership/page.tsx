@@ -35,17 +35,17 @@ const MotionBox = motion(Box);
 export default function LeadershipPage() {
   const founders = [
     {
-      name: "Rev. Mary Louise Copeland",
-      role: "First President, International Ministers Forum",
-      image: "leadership/mary-copeland.jpg",
+      name: "Sis. Louise Copeland",
+      role: "Founder & First President, International Ministers Forum",
+      image: "v1760178644/africa-president_g9db07.png", // Updated to use full Cloudinary path
       bioSections: [
         {
-          title: "Early Life & Ministry Beginnings",
-          content: "Born February 18, 1909, in Huffman, Mississippi County, Arkansas, USA. Died November 17, 1988, in Poplar Bluff, Butler County, Missouri at age 79. Originally started as a women's ministerial group with Sis. Louise Copeland as the first president, serving from 1960 until 1998."
+          title: "Ministry Beginnings",
+          content: "Louise Copeland began her ministry in 1937 at age 18 in Detroit, Michigan. She was a trailblazer in the Pentecostal movement and ministered with many healing evangelists as part of the 'Voice of Healing' network."
         },
         {
-          title: "Ministry & Leadership",
-          content: "She was the pastor of Faith Tabernacle in Poplar Bluff, Missouri. Men were allowed to join around 1975 when they asked the group because of their integrity. The name was then changed to International Ministers Forum. Sis. Copeland became known as 'Preacher'."
+          title: "Leadership & Legacy",
+          content: "She founded the International Ministers Forum (IMF) and served as its first president until her death in 1988. She was a true pioneer in the Pentecostal, Healing Revival, Latter Rain, and Charismatic Movements."
         },
         {
           title: "Legacy & Transition",
@@ -56,7 +56,7 @@ export default function LeadershipPage() {
     {
       name: "Pastor Doris Swartz",
       role: "Second President, International Ministers Forum",
-      image: "leadership/doris-swartz.jpg",
+      image: "v1760178636/doris-swartz_crj2t3.jpg", // Updated to use full Cloudinary path
       bioSections: [
         {
           title: "Personal & Ministry Background",
@@ -78,7 +78,7 @@ export default function LeadershipPage() {
     {
       name: "Bishop Darrell & Pastor Kathy Gooden",
       role: "President, International Ministers Forum (IMF) USA",
-      image: "leadership/president.png",
+      image: "v1760178637/president_drjwco.png", // Updated to use full Cloudinary path
       bioSections: [
         {
           title: "Leadership Role",
@@ -93,7 +93,7 @@ export default function LeadershipPage() {
     {
       name: "Pastor Paul Price",
       role: "Vice President, International Ministers Forum (IMF) USA",
-      image: "leadership/vice-president.jpg",
+      image: "v1760178637/vice-president_hp54ma.jpg", // Updated to use full Cloudinary path
       bioSections: [
         {
           title: "Leadership Role",
@@ -108,7 +108,7 @@ export default function LeadershipPage() {
     {
       name: "Sherry Swiger",
       role: "Secretary, IMF USA",
-      image: "leadership/secretary-usa.jpg",
+      image: "v1760178638/secretary-usa_lrrbba.jpg", // Updated to use full Cloudinary path
       bioSections: [
         {
           title: "Ministry Role",
@@ -123,7 +123,7 @@ export default function LeadershipPage() {
     {
       name: "Rev. Olusegun and Rev Dr Blessing Jibuike",
       role: "President, IMF Africa",
-      image: "leadership/africa-president.png",
+      image: "v1760178644/africa-president_g9db07.png", // Updated to use full Cloudinary path
       bioSections: [
         {
           title: "Regional Leadership",
@@ -138,7 +138,7 @@ export default function LeadershipPage() {
     {
       name: "Amb. Edward Grace",
       role: "Secretary General, IMF Africa",
-      image: "leadership/secretary-general.png",
+      image: "v1760178639/secretary-general_hkrf1z.jpg", // Updated to use full Cloudinary path
       bioSections: [
         {
           title: "Administrative Leadership",

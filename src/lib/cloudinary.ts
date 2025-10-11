@@ -7,6 +7,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+console.log('Cloudinary configured with cloud name:', process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
+
 // Simple in-memory cache for gallery images
 const galleryCache: { data: any; timestamp: number } = { data: null, timestamp: 0 };
 const GALLERY_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
@@ -16,10 +18,12 @@ export async function getGalleryImages() {
     // Check if we have valid cached data
     const now = Date.now();
     if (galleryCache.data && (now - galleryCache.timestamp) < GALLERY_CACHE_DURATION) {
+      console.log('Returning cached gallery images');
       return galleryCache.data;
     }
 
-    // Get all images from Cloudinary with specific tags or folder
+    console.log('Fetching images from Cloudinary gallery folder');
+    // Get all images and videos from Cloudinary with specific tags or folder
     const result = await cloudinary.search
       .expression('folder:gallery') // Change this to your folder name
       .sort_by('created_at', 'desc')
@@ -27,18 +31,51 @@ export async function getGalleryImages() {
       .with_field('context')
       .execute();
 
+    console.log('Cloudinary search returned', result.total_count, 'items');
+    
     // Transform the data to match our gallery item structure
-    const galleryItems = result.resources.map((resource: any) => ({
-      id: resource.asset_id,
-      type: resource.resource_type === 'video' ? 'video' : 'image',
-      title: resource.context?.custom?.title || resource.public_id.split('/').pop() || 'Untitled',
-      description: resource.context?.custom?.alt || 'No description available',
-      url: resource.secure_url,
-      thumbnail: resource.secure_url.replace('/upload/', '/upload/c_scale,w_300/'),
-      downloadUrl: resource.secure_url, // Direct download URL
-      category: resource.context?.custom?.category || 'General',
-      date: resource.created_at,
-    }));
+    const galleryItems = result.resources.map((resource: any) => {
+      // Generate proper thumbnail URL using Cloudinary's transformation
+      let thumbnailUrl = resource.secure_url;
+      
+      if (resource.resource_type === 'image') {
+        // For images, generate a thumbnail
+        thumbnailUrl = cloudinary.url(resource.public_id, {
+          width: 300,
+          height: 200,
+          crop: "fill",
+          format: resource.format
+        });
+      } else if (resource.resource_type === 'video') {
+        // For videos, generate a thumbnail from the middle of the video
+        thumbnailUrl = cloudinary.url(resource.public_id, {
+          width: 300,
+          height: 200,
+          crop: "fill",
+          format: 'jpg',
+          resource_type: 'video',
+          transformation: [
+            { start_offset: 'auto' }
+          ]
+        });
+      }
+      
+      return {
+        id: resource.asset_id,
+        type: resource.resource_type === 'video' ? 'video' : 'image',
+        title: resource.context?.custom?.title || resource.public_id.split('/').pop() || 'Untitled',
+        description: resource.context?.custom?.alt || 'No description available',
+        url: resource.secure_url,
+        thumbnail: thumbnailUrl,
+        downloadUrl: resource.secure_url, // Direct download URL
+        category: resource.context?.custom?.category || 'General',
+        date: resource.created_at,
+        duration: resource.duration, // Video duration in seconds
+        format: resource.format, // File format
+      };
+    });
+
+    console.log('Transformed', galleryItems.length, 'gallery items');
 
     // Update cache
     galleryCache.data = galleryItems;

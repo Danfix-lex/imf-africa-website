@@ -1,6 +1,0 @@
-{
-  "watch": ["server"],
-  "ext": "ts,json", 
-  "ignore": ["server/**/*.spec.ts"],
-  "exec": "ts-node --project server/tsconfig.json --transpile-only server/index.ts"
-}
