@@ -32,10 +32,10 @@ function downloadImage(url, destination) {
 // Function to create favicon from image
 async function createFavicon() {
   try {
-    // Use your actual Cloudinary logo URL
-    // Format: https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/logo/logo.png
+    // Use your actual Cloudinary logo URL from the logo folder
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dprrsr08j';
-    const logoUrl = `https://res.cloudinary.com/${cloudName}/image/upload/logo/logo.png`;
+    // Updated to use the correct logo path you provided
+    const logoUrl = `https://res.cloudinary.com/${cloudName}/image/upload/v1760178679/logo_wv6j8l.png`;
     
     console.log(`Downloading logo from: ${logoUrl}`);
     
@@ -79,6 +79,27 @@ async function createFavicon() {
       console.log('- favicon-32x32.png');
       console.log('- favicon-48x48.png');
       console.log('- logo-original.png');
+      
+      // Clean up unnecessary files to optimize website loading
+      const unnecessaryFiles = [
+        'favicon.svg',
+        'file.svg',
+        'globe.svg',
+        'logo-temp.png',
+        'next.svg',
+        'vercel.svg',
+        'window.svg',
+        'test-logo.png' // Remove test file
+      ];
+      
+      unnecessaryFiles.forEach(file => {
+        const filePath = path.join(publicDir, file);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+          console.log(`Removed unnecessary file: ${file}`);
+        }
+      });
+      
     } catch (imageError) {
       console.log('Could not process the downloaded image, creating a simple version...');
       createSimpleFavicon();
@@ -140,6 +161,26 @@ function createSimpleFavicon() {
     console.log('- favicon-16x16.png');
     console.log('- favicon-32x32.png');
     console.log('- favicon-48x48.png');
+    
+    // Clean up unnecessary files to optimize website loading
+    const unnecessaryFiles = [
+      'favicon.svg',
+      'file.svg',
+      'globe.svg',
+      'logo-temp.png',
+      'next.svg',
+      'vercel.svg',
+      'window.svg',
+      'test-logo.png' // Remove test file
+    ];
+    
+    unnecessaryFiles.forEach(file => {
+      const filePath = path.join(publicDir, file);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        console.log(`Removed unnecessary file: ${file}`);
+      }
+    });
   } catch (error) {
     console.error('Error creating simple favicon:', error);
   }
