@@ -124,9 +124,9 @@ const AnimationsDemoPage: React.FC = () => {
             </Box>
           </motion.div>
 
-          <Grid container spacing={4}>
+          <Grid container component="div" spacing={4}>
             {[1, 2, 3, 4, 5, 6].map((item, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+              <Grid component="div" size={{ xs: 12, sm: 6, md: 4 }} key={index}>
                 <JawBreakingAnimation
                   animationType={selectedAnimation as any}
                   delay={index * 0.1}
@@ -233,7 +233,7 @@ const AnimationsDemoPage: React.FC = () => {
               </Typography>
             </motion.div>
             
-            <Grid container spacing={4} sx={{ mt: 2 }}>
+            <Grid container component="div" spacing={4} sx={{ mt: 2 }}>
               {[
                 {
                   title: "Performance Optimized",
@@ -251,7 +251,7 @@ const AnimationsDemoPage: React.FC = () => {
                   icon: "🎨"
                 }
               ].map((feature, index) => (
-                <Grid item xs={12} md={4} key={index}>
+                <Grid component="div" size={{ xs: 12, md: 4 }} key={index}>
                   <JawBreakingAnimation
                     animationType="scaleIn"
                     delay={index * 0.2 + 1}
