@@ -6,53 +6,58 @@ let isCloudinaryConfiguredFlag = false;
 
 function configureCloudinary() {
   if (!isCloudinaryConfiguredFlag) {
-    // Get environment variables using our utility
-    const { cloudName, apiKey, apiSecret } = getCloudinaryEnvVars();
-    
-    // Log the environment variables for debugging (without exposing secrets)
-    console.log('Configuring Cloudinary with:');
-    console.log('- Cloud name:', cloudName ? 'SET' : 'NOT SET');
-    console.log('- API key:', apiKey ? 'SET' : 'NOT SET');
-    console.log('- API secret:', apiSecret ? 'SET' : 'NOT SET');
-    
-    // Additional debugging for environment variables
-    if (cloudName) {
-      console.log('- Cloud name value length:', cloudName.length);
-    }
-    if (apiKey) {
-      console.log('- API key value length:', apiKey.length);
-    }
-    
-    // Check if we're in a server environment
-    const isServer = typeof window === 'undefined';
-    console.log('Running in server environment:', isServer);
-    
-    // Validate configuration
-    if (isServer) {
-      // In server environment, we need all three variables
-      if (!cloudName || !apiKey || !apiSecret) {
-        console.error('Missing required Cloudinary environment variables in server environment');
-        console.error('- Cloud name:', cloudName || 'MISSING');
-        console.error('- API key:', apiKey ? 'SET' : 'MISSING');
-        console.error('- API secret:', apiSecret ? 'SET' : 'MISSING');
-        throw new Error('Cloudinary environment variables are not properly configured for server environment');
+    try {
+      // Get environment variables using our utility
+      const { cloudName, apiKey, apiSecret } = getCloudinaryEnvVars();
+      
+      // Log the environment variables for debugging (without exposing secrets)
+      console.log('Configuring Cloudinary with:');
+      console.log('- Cloud name:', cloudName ? 'SET' : 'NOT SET');
+      console.log('- API key:', apiKey ? 'SET' : 'NOT SET');
+      console.log('- API secret:', apiSecret ? 'SET' : 'NOT SET');
+      
+      // Additional debugging for environment variables
+      if (cloudName) {
+        console.log('- Cloud name value length:', cloudName.length);
       }
-    } else {
-      // In browser environment, we only need the cloud name
-      if (!cloudName) {
-        console.error('Missing NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME in browser environment');
-        throw new Error('Cloudinary cloud name is not properly configured for browser environment');
+      if (apiKey) {
+        console.log('- API key value length:', apiKey.length);
       }
+      
+      // Check if we're in a server environment
+      const isServer = typeof window === 'undefined';
+      console.log('Running in server environment:', isServer);
+      
+      // Validate configuration
+      if (isServer) {
+        // In server environment, we need all three variables
+        if (!cloudName || !apiKey || !apiSecret) {
+          console.error('Missing required Cloudinary environment variables in server environment');
+          console.error('- Cloud name:', cloudName || 'MISSING');
+          console.error('- API key:', apiKey ? 'SET' : 'MISSING');
+          console.error('- API secret:', apiSecret ? 'SET' : 'MISSING');
+          throw new Error('Cloudinary environment variables are not properly configured for server environment');
+        }
+      } else {
+        // In browser environment, we only need the cloud name
+        if (!cloudName) {
+          console.error('Missing NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME in browser environment');
+          throw new Error('Cloudinary cloud name is not properly configured for browser environment');
+        }
+      }
+      
+      cloudinary.config({
+        cloud_name: cloudName,
+        api_key: apiKey,
+        api_secret: apiSecret,
+      });
+      
+      console.log('Cloudinary configured with cloud name:', cloudName);
+      isCloudinaryConfiguredFlag = true;
+    } catch (error: any) {
+      console.error('Error configuring Cloudinary:', error);
+      throw new Error(`Failed to configure Cloudinary: ${error.message || 'Unknown error'}`);
     }
-    
-    cloudinary.config({
-      cloud_name: cloudName,
-      api_key: apiKey,
-      api_secret: apiSecret,
-    });
-    
-    console.log('Cloudinary configured with cloud name:', cloudName);
-    isCloudinaryConfiguredFlag = true;
   }
 }
 
@@ -113,6 +118,7 @@ export async function getGalleryImages() {
     }
 
     // Configure Cloudinary when needed
+    console.log('Configuring Cloudinary...');
     configureCloudinary();
 
     // Double-check configuration
@@ -248,6 +254,9 @@ export async function getGalleryImages() {
 // Function to upload media to Cloudinary
 export async function uploadMedia(file: Buffer, options: any) {
   try {
+    // Ensure Cloudinary is configured
+    configureCloudinary();
+    
     const result = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         options,
@@ -274,8 +283,16 @@ export async function uploadMedia(file: Buffer, options: any) {
 
 // Function to generate a download URL for a resource
 export function getDownloadUrl(publicId: string, resourceType: string = 'image') {
-  const { cloudName } = getCloudinaryEnvVars();
-  return `https://res.cloudinary.com/${cloudName}/${resourceType}/upload/fl_attachment/${publicId}`;
+  try {
+    // Ensure Cloudinary is configured
+    configureCloudinary();
+    
+    const { cloudName } = getCloudinaryEnvVars();
+    return `https://res.cloudinary.com/${cloudName}/${resourceType}/upload/fl_attachment/${publicId}`;
+  } catch (error) {
+    console.error('Error in getDownloadUrl function:', error);
+    return '';
+  }
 }
 
 export default cloudinary;
