@@ -129,12 +129,29 @@ export async function getGalleryImages() {
 
     console.log('Fetching images from Cloudinary gallery folder');
     // Get all images and videos from Cloudinary with specific tags or folder
-    const result = await cloudinary.search
-      .expression('folder:gallery') // Change this to your folder name
-      .sort_by('created_at', 'desc')
-      .max_results(500)
-      .with_field('context')
-      .execute();
+    let result;
+    try {
+      result = await cloudinary.search
+        .expression('folder:gallery') // Change this to your folder name
+        .sort_by('created_at', 'desc')
+        .max_results(500)
+        .with_field('context')
+        .execute();
+    } catch (searchError: any) {
+      console.error('Error searching Cloudinary folder:', searchError);
+      // If the folder doesn't exist, try a more general search
+      if (searchError.message && searchError.message.includes('folder')) {
+        console.log('Trying general search instead of folder-specific search');
+        result = await cloudinary.search
+          .expression('resource_type:image OR resource_type:video')
+          .sort_by('created_at', 'desc')
+          .max_results(100)
+          .with_field('context')
+          .execute();
+      } else {
+        throw searchError;
+      }
+    }
 
     console.log('Cloudinary search returned', result.total_count, 'items');
     
@@ -219,7 +236,12 @@ export async function getGalleryImages() {
     return galleryItems;
   } catch (error: any) {
     console.error('Error fetching images from Cloudinary:', error);
-    throw new Error(`Failed to fetch gallery items from Cloudinary: ${error.message || 'Unknown error occurred'}. Please check Cloudinary configuration and folder permissions.`);
+    // Provide more specific error information
+    let errorMessage = error.message || 'Unknown error occurred';
+    if (errorMessage.includes('folder') && errorMessage.includes('not found')) {
+      errorMessage += '. Please make sure you have created a "gallery" folder in your Cloudinary account and uploaded some media to it.';
+    }
+    throw new Error(`Failed to fetch gallery items from Cloudinary: ${errorMessage}. Please check Cloudinary configuration and folder permissions.`);
   }
 }
 

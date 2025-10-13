@@ -131,9 +131,23 @@ export async function GET(request: Request) {
     });
   } catch (error: any) {
     console.error('Error in gallery API route:', error);
+    
+    // Determine the appropriate HTTP status code
+    let statusCode = 500;
+    let errorMessage = error.message || 'Unknown error occurred';
+    
+    // Handle specific error cases
+    if (errorMessage.includes('Cloudinary environment variables are not properly configured')) {
+      statusCode = 500;
+      errorMessage = 'Cloudinary environment variables are not properly configured. Please check your Render dashboard settings.';
+    } else if (errorMessage.includes('Failed to fetch gallery items from Cloudinary')) {
+      statusCode = 502; // Bad Gateway - issue with upstream service (Cloudinary)
+      errorMessage = 'Failed to connect to Cloudinary service. Please check Cloudinary configuration and folder permissions.';
+    }
+    
     return new NextResponse(JSON.stringify({ 
       error: 'Failed to fetch gallery items', 
-      details: error.message,
+      details: errorMessage,
       // Add more specific error information for debugging
       timestamp: new Date().toISOString(),
       cloudinaryConfigured: isCloudinaryConfigured(),
@@ -143,7 +157,7 @@ export async function GET(request: Request) {
         CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET ? 'SET' : 'NOT SET',
       }
     }), { 
-      status: 500,
+      status: statusCode,
       headers: {
         'Content-Type': 'application/json',
       },
