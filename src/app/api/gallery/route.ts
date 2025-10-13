@@ -46,9 +46,10 @@ const apiCache = new APICache(50, 5 * 60 * 1000); // 50 items, 5 minutes TTL
 
 export async function GET(request: Request) {
   try {
-    console.log('Gallery API called');
+    console.log('=== GALLERY API CALLED ===');
     
     // Log environment variables status for debugging using our utility
+    console.log('Checking Cloudinary environment variables...');
     const { cloudName, apiKey, apiSecret } = getCloudinaryEnvVars();
     console.log('Environment variables status in API route (using utility):');
     console.log('- NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:', cloudName ? 'SET' : 'NOT SET');
@@ -117,7 +118,9 @@ export async function GET(request: Request) {
       },
     });
   } catch (error: any) {
+    console.error('=== GALLERY API ERROR ===');
     console.error('Error in gallery API route:', error);
+    console.error('Error stack:', error.stack);
     
     // Determine the appropriate HTTP status code
     let statusCode = 500;
@@ -132,9 +135,11 @@ export async function GET(request: Request) {
       errorMessage = 'Failed to connect to Cloudinary service. Please check Cloudinary configuration and folder permissions.';
     }
     
+    // Return a more detailed error response
     return new NextResponse(JSON.stringify({ 
       error: 'Failed to fetch gallery items', 
       details: errorMessage,
+      stack: error.stack, // Include stack trace for debugging
       // Add more specific error information for debugging
       timestamp: new Date().toISOString(),
       cloudinaryConfigured: isCloudinaryConfigured(),

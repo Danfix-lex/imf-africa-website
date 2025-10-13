@@ -7,6 +7,8 @@ let isCloudinaryConfiguredFlag = false;
 function configureCloudinary() {
   if (!isCloudinaryConfiguredFlag) {
     try {
+      console.log('=== CONFIGURING CLOUDINARY ===');
+      
       // Get environment variables using our utility
       const { cloudName, apiKey, apiSecret } = getCloudinaryEnvVars();
       
@@ -56,6 +58,7 @@ function configureCloudinary() {
       isCloudinaryConfiguredFlag = true;
     } catch (error: any) {
       console.error('Error configuring Cloudinary:', error);
+      console.error('Error stack:', error.stack);
       throw new Error(`Failed to configure Cloudinary: ${error.message || 'Unknown error'}`);
     }
   }
@@ -109,6 +112,8 @@ const thumbnailCache = new LRUCache<string>(200, 10 * 60 * 1000); // 200 items, 
 
 export async function getGalleryImages() {
   try {
+    console.log('=== GETTING GALLERY IMAGES ===');
+    
     // Check if we have valid cached data
     const cacheKey = 'gallery_images';
     const cachedData = galleryCache.get(cacheKey);
@@ -145,6 +150,7 @@ export async function getGalleryImages() {
         .execute();
     } catch (searchError: any) {
       console.error('Error searching Cloudinary folder:', searchError);
+      console.error('Search error stack:', searchError.stack);
       // If the folder doesn't exist, try a more general search
       if (searchError.message && searchError.message.includes('folder')) {
         console.log('Trying general search instead of folder-specific search');
@@ -241,7 +247,9 @@ export async function getGalleryImages() {
 
     return galleryItems;
   } catch (error: any) {
+    console.error('=== ERROR IN GET GALLERY IMAGES ===');
     console.error('Error fetching images from Cloudinary:', error);
+    console.error('Error stack:', error.stack);
     // Provide more specific error information
     let errorMessage = error.message || 'Unknown error occurred';
     if (errorMessage.includes('folder') && errorMessage.includes('not found')) {
@@ -275,7 +283,7 @@ export async function uploadMedia(file: Buffer, options: any) {
     });
     
     return result as any;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in uploadMedia function:', error);
     return null;
   }
@@ -289,7 +297,7 @@ export function getDownloadUrl(publicId: string, resourceType: string = 'image')
     
     const { cloudName } = getCloudinaryEnvVars();
     return `https://res.cloudinary.com/${cloudName}/${resourceType}/upload/fl_attachment/${publicId}`;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in getDownloadUrl function:', error);
     return '';
   }
