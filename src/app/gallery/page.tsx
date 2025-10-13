@@ -1,18 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Container,
-  Typography,
-  CircularProgress,
-  Alert,
-  Button,
-} from '@mui/material';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 
-const GalleryPage: React.FC = () => {
+export default function GalleryPage() {
   const [galleryItems, setGalleryItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,67 +40,39 @@ const GalleryPage: React.FC = () => {
 
   if (loading) {
     return (
-      <>
-        <Header />
-        <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: { xs: 12, md: 15 }, pb: 8, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <CircularProgress />
-          <Typography sx={{ ml: 2 }}>Loading gallery...</Typography>
-        </Box>
-        <Footer />
-      </>
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <div>Loading gallery...</div>
+      </div>
     );
   }
 
   // Show error message if there's an error
   if (error) {
     return (
-      <>
-        <Header />
-        <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: { xs: 12, md: 15 }, pb: 8 }}>
-          <Container maxWidth="xl">
-            <Alert severity="error" sx={{ mb: 4 }}>
-              <Typography variant="h6">Gallery Error</Typography>
-              <Typography>{error}</Typography>
-              <Button 
-                variant="contained" 
-                onClick={() => window.location.reload()}
-                sx={{ mt: 2 }}
-              >
-                Retry
-              </Button>
-            </Alert>
-          </Container>
-        </Box>
-        <Footer />
-      </>
+      <div style={{ padding: '20px' }}>
+        <div style={{ color: 'red' }}>
+          <h2>Gallery Error</h2>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
+      </div>
     );
   }
 
+  // Success - show data
   return (
-    <>
-      <Header />
-      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: { xs: 12, md: 15 }, pb: 8 }}>
-        <Container maxWidth="xl">
-          <Box sx={{ textAlign: 'center', mb: 6 }}>
-            <Typography variant="h2" sx={{ fontWeight: 800, mb: 2 }}>
-              Media Gallery
-            </Typography>
-            <Typography variant="h5" sx={{ fontWeight: 400, color: 'text.secondary' }}>
-              Explore photos and videos from our ministry events
-            </Typography>
-          </Box>
-          
-          <Box>
-            <Typography>Gallery items count: {galleryItems.length}</Typography>
-            <pre style={{ backgroundColor: '#f5f5f5', padding: '16px', borderRadius: '4px', overflowX: 'auto' }}>
-              {JSON.stringify(galleryItems.slice(0, 5), null, 2)}
-            </pre>
-          </Box>
-        </Container>
-      </Box>
-      <Footer />
-    </>
+    <div style={{ padding: '20px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <h1>Media Gallery</h1>
+        <p>Explore photos and videos from our ministry events</p>
+      </div>
+      
+      <div>
+        <p>Gallery items count: {galleryItems.length}</p>
+        <div style={{ backgroundColor: '#f5f5f5', padding: '16px', borderRadius: '4px', overflowX: 'auto' }}>
+          <pre>{JSON.stringify(galleryItems.slice(0, 5), null, 2)}</pre>
+        </div>
+      </div>
+    </div>
   );
-};
-
-export default GalleryPage;
+}
