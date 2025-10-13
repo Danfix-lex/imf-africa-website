@@ -104,11 +104,28 @@ const GalleryPage: React.FC = () => {
         
         const data = await response.json();
         
+        // Log the data for debugging
+        console.log('Gallery data received:', data);
+        
         // Check if we received valid data
         if (!data || (Array.isArray(data) && data.length === 0)) {
           setError('No gallery items found. Please check if media has been uploaded to Cloudinary.');
         } else {
-          setGalleryItems(data);
+          // Validate the data structure
+          const isValid = data.every((item: any) => 
+            item.id && 
+            item.type && 
+            ['image', 'video', 'document'].includes(item.type) &&
+            item.title &&
+            item.url
+          );
+          
+          if (!isValid) {
+            console.error('Invalid gallery data structure:', data);
+            setError('Invalid gallery data received from server. Please check the data format.');
+          } else {
+            setGalleryItems(data);
+          }
         }
         
         setLoading(false);
@@ -405,7 +422,7 @@ const GalleryPage: React.FC = () => {
                           // Use optimized image loading
                           <Box sx={{ width: '100%', height: 220, position: 'relative' }}>
                             <LazyImage
-                              src={item.thumbnail || `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/w_400,h_220,c_fill,f_webp,q_auto/${item.url.split('/').pop()}`}
+                              src={item.thumbnail || item.url}
                               alt={item.title}
                               sx={{
                                 width: '100%',
