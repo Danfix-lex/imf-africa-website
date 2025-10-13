@@ -45,72 +45,37 @@ const apiCache = new APICache(50, 5 * 60 * 1000); // 50 items, 5 minutes TTL
 
 export async function GET(request: Request) {
   try {
-    console.log('Gallery API called');
+    console.log('=== GALLERY API TEST ===');
     
-    // Generate ETag based on request
-    const url = new URL(request.url);
-    const cacheKey = `gallery_${url.search}`;
+    // Test importing the Cloudinary library
+    console.log('Attempting to import cloudinary library...');
+    const cloudinaryModule = await import('@/lib/cloudinary');
+    console.log('Cloudinary module imported successfully');
+    console.log('Available functions:', Object.keys(cloudinaryModule));
     
-    // Check if client has cached version
-    const ifNoneMatch = request.headers.get('If-None-Match');
+    // Test the getGalleryImages function specifically
+    console.log('Testing getGalleryImages function...');
+    const galleryItems = await cloudinaryModule.getGalleryImages();
+    console.log('getGalleryImages executed successfully, items count:', galleryItems.length);
     
-    // Check our cache
-    const cached = apiCache.get(cacheKey);
-    if (cached && ifNoneMatch === cached.etag) {
-      console.log('Returning 304 Not Modified');
-      return new NextResponse(null, { 
-        status: 304,
-        headers: {
-          'ETag': cached.etag,
-          'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
-        }
-      });
-    }
-
-    console.log('Fetching fresh data from Cloudinary');
-    const galleryItems = await getGalleryImages();
-    console.log('Fetched', galleryItems.length, 'items from Cloudinary');
-    
-    // Generate ETag based on data
-    const dataString = JSON.stringify(galleryItems);
-    const etag = `"${Buffer.from(dataString).toString('base64')}"`;
-    
-    // If client has this version, return 304
-    if (ifNoneMatch === etag) {
-      console.log('Returning 304 Not Modified (after fetch)');
-      return new NextResponse(null, { 
-        status: 304,
-        headers: {
-          'ETag': etag,
-          'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
-        }
-      });
-    }
-    
-    // Update cache
-    apiCache.set(cacheKey, galleryItems, etag);
-    
-    // Return data with caching headers
-    return new NextResponse(JSON.stringify(galleryItems), {
-      headers: {
-        'Content-Type': 'application/json',
-        'ETag': etag,
-        'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
-        'Last-Modified': new Date().toUTCString(),
-      },
+    return NextResponse.json({ 
+      success: true, 
+      message: 'API working',
+      count: galleryItems.length,
+      sample: galleryItems.slice(0, 3)
     });
   } catch (error: any) {
+    console.error('=== GALLERY API ERROR ===');
     console.error('Error in gallery API route:', error);
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
     
-    return new NextResponse(JSON.stringify({ 
-      error: 'Failed to fetch gallery items', 
-      details: error.message || 'Unknown error occurred'
-    }), { 
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return NextResponse.json({ 
+      success: false,
+      error: error.message || 'Unknown error occurred',
+      stack: error.stack
+    }, { status: 500 });
   }
 }
 
