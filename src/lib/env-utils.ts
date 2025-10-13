@@ -3,6 +3,16 @@ export function getCloudinaryEnvVars() {
   // Log current environment for debugging
   console.log('getCloudinaryEnvVars called in environment:', typeof window === 'undefined' ? 'server' : 'browser');
   
+  // ADD THIS DEBUGGING CODE
+  console.log('=== DETAILED ENVIRONMENT DEBUG ===');
+  console.log('process.env keys containing CLOUDINARY:');
+  Object.keys(process.env)
+    .filter(key => key.includes('CLOUDINARY'))
+    .forEach(key => {
+      console.log(`  ${key}: ${process.env[key] ? 'SET' : 'NOT SET'}`);
+    });
+  console.log('==================================');
+  
   // Try to get environment variables
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   const apiKey = process.env.CLOUDINARY_API_KEY;

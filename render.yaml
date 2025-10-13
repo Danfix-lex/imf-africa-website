@@ -12,6 +12,10 @@ services:
         value: https://imf-africa-website-backend.onrender.com
       - key: NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
         sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
 
   # Backend Express API
   - type: web
@@ -29,8 +33,4 @@ services:
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
-        sync: false
-      - key: CLOUDINARY_API_KEY
-        sync: false
-      - key: CLOUDINARY_API_SECRET
         sync: false

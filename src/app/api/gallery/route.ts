@@ -48,6 +48,19 @@ export async function GET(request: Request) {
   try {
     console.log('Gallery API called');
     
+    // ADD THIS DEBUGGING CODE
+    console.log('=== ENVIRONMENT VARIABLES DEBUG ===');
+    console.log('All env vars starting with CLOUDINARY:');
+    Object.keys(process.env)
+      .filter(key => key.includes('CLOUDINARY'))
+      .forEach(key => {
+        console.log(`${key}: ${process.env[key] ? 'SET' : 'NOT SET'}`);
+        if (key.includes('CLOUDINARY') && process.env[key]) {
+          console.log(`  Value length: ${process.env[key]?.length}`);
+        }
+      });
+    console.log('====================================');
+    
     // Log environment variables status for debugging using our utility
     const { cloudName, apiKey, apiSecret } = getCloudinaryEnvVars();
     console.log('Environment variables status in API route (using utility):');
