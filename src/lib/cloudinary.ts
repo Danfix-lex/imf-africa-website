@@ -106,9 +106,9 @@ class LRUCache<T> {
   }
 }
 
-// Create cache instances
-const galleryCache = new LRUCache<any[]>(50, 5 * 60 * 1000); // 50 items, 5 minutes TTL
-const thumbnailCache = new LRUCache<string>(200, 10 * 60 * 1000); // 200 items, 10 minutes TTL
+// Create cache instances with optimized settings for production
+const galleryCache = new LRUCache<any[]>(100, 10 * 60 * 1000); // 100 items, 10 minutes TTL
+const thumbnailCache = new LRUCache<string>(500, 15 * 60 * 1000); // 500 items, 15 minutes TTL
 
 export async function getGalleryImages() {
   try {

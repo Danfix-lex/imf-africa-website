@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Box,
   Container,
@@ -36,10 +36,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-// Lazy load images for better performance
-const LazyImage = ({ src, alt, sx, onError }: { src: string; alt: string; sx?: any; onError?: (e: any) => void }) => {
+// Optimized Lazy load images for better performance
+const LazyImage = React.memo(({ src, alt, sx, onError }: { src: string; alt: string; sx?: any; onError?: (e: any) => void }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
+
+  // Reset state when src changes
+  React.useEffect(() => {
+    setLoaded(false);
+    setError(false);
+  }, [src]);
 
   return (
     <Box
@@ -56,9 +62,12 @@ const LazyImage = ({ src, alt, sx, onError }: { src: string; alt: string; sx?: a
         setError(true);
         if (onError) onError(e);
       }}
+      loading="lazy"
     />
   );
-};
+});
+
+LazyImage.displayName = 'LazyImage';
 
 // Update the gallery item type
 interface GalleryItem {
@@ -86,7 +95,7 @@ const GalleryPage: React.FC = () => {
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [visibleItems, setVisibleItems] = useState(12); // Initial visible items
+  const [visibleItems, setVisibleItems] = useState(8); // Reduced initial visible items for better performance
 
   // Fetch gallery items from Cloudinary
   useEffect(() => {
@@ -139,29 +148,34 @@ const GalleryPage: React.FC = () => {
     fetchGalleryItems();
   }, []);
 
-  const filteredItems = selectedCategory === 'All' 
-    ? galleryItems 
-    : selectedCategory === 'Videos'
-    ? galleryItems.filter(item => item.type === 'video')
-    : selectedCategory === 'Documents'
-    ? galleryItems.filter(item => item.type === 'document')
-    : galleryItems.filter(item => item.category === selectedCategory);
+  // Memoize filtered items to prevent unnecessary recalculations
+  const filteredItems = useMemo(() => {
+    return selectedCategory === 'All' 
+      ? galleryItems 
+      : selectedCategory === 'Videos'
+      ? galleryItems.filter(item => item.type === 'video')
+      : selectedCategory === 'Documents'
+      ? galleryItems.filter(item => item.type === 'document')
+      : galleryItems.filter(item => item.category === selectedCategory);
+  }, [galleryItems, selectedCategory]);
 
   // Items to display based on visibility
-  const itemsToDisplay = filteredItems.slice(0, visibleItems);
+  const itemsToDisplay = useMemo(() => {
+    return filteredItems.slice(0, visibleItems);
+  }, [filteredItems, visibleItems]);
 
-  const handleOpenDialog = (item: GalleryItem) => {
+  const handleOpenDialog = useCallback((item: GalleryItem) => {
     setSelectedItem(item);
     setOpenDialog(true);
-  };
+  }, []);
 
-  const handleCloseDialog = () => {
+  const handleCloseDialog = useCallback(() => {
     setOpenDialog(false);
     setSelectedItem(null);
-  };
+  }, []);
 
-  // Function to handle download
-  const handleDownload = (url: string, title: string) => {
+  // Function to handle download - memoized
+  const handleDownload = useCallback((url: string, title: string) => {
     const link = document.createElement('a');
     link.href = url;
     link.download = title;
@@ -169,12 +183,21 @@ const GalleryPage: React.FC = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
+  }, []);
 
-  // Load more items
-  const loadMore = () => {
-    setVisibleItems(prev => Math.min(prev + 12, filteredItems.length));
-  };
+  // Update the category change handler to reset visible items
+  const handleCategoryChange = useCallback((event: React.SyntheticEvent, value: string) => {
+    setSelectedCategory(value);
+    setVisibleItems(8); // Reset to initial visible items when category changes
+  }, []);
+
+  // Load more items - optimized for performance
+  const loadMore = useCallback(() => {
+    setVisibleItems(prev => {
+      const newCount = Math.min(prev + 8, filteredItems.length); // Load 8 items at a time
+      return newCount;
+    });
+  }, [filteredItems.length]);
 
   if (loading) {
     return (
@@ -297,10 +320,7 @@ const GalleryPage: React.FC = () => {
             <Box sx={{ mb: 6, display: 'flex', justifyContent: 'center' }}>
               <Tabs
                 value={selectedCategory}
-                onChange={(e, value) => {
-                  setSelectedCategory(value);
-                  setVisibleItems(12); // Reset visible items when category changes
-                }}
+                onChange={handleCategoryChange}
                 variant="scrollable"
                 scrollButtons="auto"
                 sx={{
@@ -348,172 +368,14 @@ const GalleryPage: React.FC = () => {
           <Grid container spacing={{ xs: 3, md: 4 }}>
             <AnimatePresence>
               {itemsToDisplay.map((item, index) => (
-                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={item.id}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                    whileHover={{ y: -4 }}
-                  >
-                    <Card
-                      sx={{
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        borderRadius: 3,
-                        overflow: 'hidden',
-                        boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
-                        border: '1px solid rgba(0,0,0,0.05)',
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          boxShadow: '0 16px 48px rgba(0,0,0,0.15)',
-                          transform: 'translateY(-4px)',
-                        },
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <Box sx={{ position: 'relative' }} onClick={() => handleOpenDialog(item)}>
-                        {/* Handle both images and videos properly */}
-                        {item.type === 'video' ? (
-                          <Box
-                            sx={{
-                              width: '100%',
-                              height: 220,
-                              bgcolor: 'black',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              position: 'relative',
-                            }}
-                          >
-                            <PlayIcon sx={{ color: 'white', fontSize: 48 }} />
-                            <Box
-                              sx={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: '100%',
-                                bgcolor: 'rgba(0,0,0,0.3)',
-                              }}
-                            />
-                          </Box>
-                        ) : item.type === 'document' ? (
-                          // Document preview with icon
-                          <Box
-                            sx={{
-                              width: '100%',
-                              height: 220,
-                              bgcolor: alpha(theme.palette.primary.main, 0.1),
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              position: 'relative',
-                            }}
-                          >
-                            {(item.format && item.format.toLowerCase() === 'pdf') ? (
-                              <PdfIcon sx={{ color: 'primary.main', fontSize: 64 }} />
-                            ) : (
-                              <DocumentIcon sx={{ color: 'primary.main', fontSize: 64 }} />
-                            )}
-                          </Box>
-                        ) : (
-                          // Use optimized image loading
-                          <Box sx={{ width: '100%', height: 220, position: 'relative' }}>
-                            <LazyImage
-                              src={item.thumbnail || item.url}
-                              alt={item.title}
-                              sx={{
-                                width: '100%',
-                                height: 220,
-                                objectFit: 'cover',
-                              }}
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement;
-                                target.src = `https://via.placeholder.com/400x220?text=${encodeURIComponent(item.title)}`;
-                              }}
-                            />
-                          </Box>
-                        )}
-                        <Box
-                          sx={{
-                            position: 'absolute',
-                            top: 16,
-                            right: 16,
-                            bgcolor: 'primary.main',
-                            color: 'white',
-                            width: 44,
-                            height: 44,
-                            borderRadius: '50%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                          }}
-                        >
-                          {item.type === 'image' ? <ImageIcon /> : item.type === 'video' ? <VideoIcon /> : <DocumentIcon />}
-                        </Box>
-                        <Chip
-                          label={item.category}
-                          size="small"
-                          sx={{
-                            position: 'absolute',
-                            bottom: 16,
-                            left: 16,
-                            bgcolor: 'rgba(255, 255, 255, 0.9)',
-                            color: 'text.primary',
-                            fontWeight: 600,
-                            boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-                          }}
-                        />
-                      </Box>
-                      <CardContent sx={{ flexGrow: 1, p: 3 }} onClick={() => handleOpenDialog(item)}>
-                        <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, fontSize: '1.1rem' }}>
-                          {item.title}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.6 }}>
-                          {item.description}
-                        </Typography>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <Typography variant="caption" color="text.secondary">
-                            {new Date(item.date).toLocaleDateString()}
-                          </Typography>
-                          {item.type === 'video' && item.duration && (
-                            <Typography variant="caption" color="text.secondary">
-                              {Math.floor(item.duration / 60)}:{String(Math.floor(item.duration % 60)).padStart(2, '0')}
-                            </Typography>
-                          )}
-                        </Box>
-                      </CardContent>
-                      <CardActions sx={{ justifyContent: 'center', p: 2 }}>
-                        <Button
-                          variant="outlined"
-                          startIcon={<DownloadIcon />}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDownload(item.downloadUrl, item.title);
-                          }}
-                          sx={{
-                            borderRadius: 2,
-                            textTransform: 'none',
-                            fontWeight: 600,
-                            px: 2,
-                            py: 0.8,
-                            borderColor: alpha(theme.palette.primary.main, 0.3),
-                            color: 'primary.main',
-                            '&:hover': {
-                              bgcolor: alpha(theme.palette.primary.main, 0.1),
-                              borderColor: 'primary.main',
-                            }
-                          }}
-                        >
-                          Download
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </motion.div>
-                </Grid>
+                <GalleryItem 
+                  key={item.id} 
+                  item={item} 
+                  index={index} 
+                  handleOpenDialog={handleOpenDialog} 
+                  handleDownload={handleDownload}
+                  theme={theme}
+                />
               ))}
             </AnimatePresence>
           </Grid>
@@ -741,3 +603,189 @@ const GalleryPage: React.FC = () => {
 };
 
 export default GalleryPage;
+
+// Gallery Item Component - Memoized for performance
+const GalleryItem = React.memo(({ 
+  item, 
+  index, 
+  handleOpenDialog, 
+  handleDownload,
+  theme
+}: { 
+  item: GalleryItem; 
+  index: number; 
+  handleOpenDialog: (item: GalleryItem) => void; 
+  handleDownload: (url: string, title: string) => void;
+  theme: any;
+}) => {
+  return (
+    <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={item.id}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.3, delay: index * 0.05 }}
+        whileHover={{ y: -4 }}
+      >
+        <Card
+          sx={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            borderRadius: 3,
+            overflow: 'hidden',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+            border: '1px solid rgba(0,0,0,0.05)',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              boxShadow: '0 16px 48px rgba(0,0,0,0.15)',
+              transform: 'translateY(-4px)',
+            },
+            cursor: 'pointer',
+          }}
+        >
+          <Box sx={{ position: 'relative' }} onClick={() => handleOpenDialog(item)}>
+            {/* Handle both images and videos properly */}
+            {item.type === 'video' ? (
+              <Box
+                sx={{
+                  width: '100%',
+                  height: 220,
+                  bgcolor: 'black',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative',
+                }}
+              >
+                <PlayIcon sx={{ color: 'white', fontSize: 48 }} />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    bgcolor: 'rgba(0,0,0,0.3)',
+                  }}
+                />
+              </Box>
+            ) : item.type === 'document' ? (
+              // Document preview with icon
+              <Box
+                sx={{
+                  width: '100%',
+                  height: 220,
+                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative',
+                }}
+              >
+                {(item.format && item.format.toLowerCase() === 'pdf') ? (
+                  <PdfIcon sx={{ color: 'primary.main', fontSize: 64 }} />
+                ) : (
+                  <DocumentIcon sx={{ color: 'primary.main', fontSize: 64 }} />
+                )}
+              </Box>
+            ) : (
+              // Use optimized image loading
+              <Box sx={{ width: '100%', height: 220, position: 'relative' }}>
+                <LazyImage
+                  src={item.thumbnail || item.url}
+                  alt={item.title}
+                  sx={{
+                    width: '100%',
+                    height: 220,
+                    objectFit: 'cover',
+                  }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = `https://via.placeholder.com/400x220?text=${encodeURIComponent(item.title)}`;
+                  }}
+                />
+              </Box>
+            )}
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 16,
+                right: 16,
+                bgcolor: 'primary.main',
+                color: 'white',
+                width: 44,
+                height: 44,
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+              }}
+            >
+              {item.type === 'image' ? <ImageIcon /> : item.type === 'video' ? <VideoIcon /> : <DocumentIcon />}
+            </Box>
+            <Chip
+              label={item.category}
+              size="small"
+              sx={{
+                position: 'absolute',
+                bottom: 16,
+                left: 16,
+                bgcolor: 'rgba(255, 255, 255, 0.9)',
+                color: 'text.primary',
+                fontWeight: 600,
+                boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+              }}
+            />
+          </Box>
+          <CardContent sx={{ flexGrow: 1, p: 3 }} onClick={() => handleOpenDialog(item)}>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, fontSize: '1.1rem' }}>
+              {item.title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.6 }}>
+              {item.description}
+            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="caption" color="text.secondary">
+                {new Date(item.date).toLocaleDateString()}
+              </Typography>
+              {item.type === 'video' && item.duration && (
+                <Typography variant="caption" color="text.secondary">
+                  {Math.floor(item.duration / 60)}:{String(Math.floor(item.duration % 60)).padStart(2, '0')}
+                </Typography>
+              )}
+            </Box>
+          </CardContent>
+          <CardActions sx={{ justifyContent: 'center', p: 2 }}>
+            <Button
+              variant="outlined"
+              startIcon={<DownloadIcon />}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDownload(item.downloadUrl, item.title);
+              }}
+              sx={{
+                borderRadius: 2,
+                textTransform: 'none',
+                fontWeight: 600,
+                px: 2,
+                py: 0.8,
+                borderColor: alpha(theme.palette.primary.main, 0.3),
+                color: 'primary.main',
+                '&:hover': {
+                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                  borderColor: 'primary.main',
+                }
+              }}
+            >
+              Download
+            </Button>
+          </CardActions>
+        </Card>
+      </motion.div>
+    </Grid>
+  );
+});
+
+GalleryItem.displayName = 'GalleryItem';

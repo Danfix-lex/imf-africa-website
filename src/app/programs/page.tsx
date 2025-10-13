@@ -191,8 +191,8 @@ const ProgramsPage: React.FC = () => {
                     <Typography variant="body1" sx={{ fontWeight: 600, color: 'text.primary', fontSize: '1.1rem' }}>
                       Tuesday, 18th November 2025
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      9:00 AM - 12:00 PM
+                    <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, fontSize: '1rem' }}>
+                      9:00 AM
                     </Typography>
                   </Box>
                 </Box>

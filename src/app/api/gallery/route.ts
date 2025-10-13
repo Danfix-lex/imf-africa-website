@@ -9,7 +9,14 @@ export async function GET(request: Request) {
     const galleryItems = await getGalleryImages();
     console.log('Successfully fetched', galleryItems.length, 'items');
     
-    return NextResponse.json(galleryItems);
+    // Create response with caching headers for production
+    const response = NextResponse.json(galleryItems);
+    
+    // Set cache headers for production (10 minutes)
+    response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=300');
+    response.headers.set('Expires', new Date(Date.now() + 600000).toUTCString());
+    
+    return response;
   } catch (error: any) {
     console.error('=== GALLERY API ERROR ===');
     console.error('Error in gallery API route:', error);
@@ -30,6 +37,7 @@ export async function OPTIONS() {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, If-None-Match',
+      'Cache-Control': 'public, max-age=300', // Cache OPTIONS requests for 5 minutes
     },
   });
 }
