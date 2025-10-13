@@ -1,13 +1,60 @@
 import { v2 as cloudinary } from 'cloudinary';
+import { getCloudinaryEnvVars, isCloudinaryConfigured } from './env-utils';
 
-// Configure Cloudinary server-side
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+// We'll configure Cloudinary when needed instead of at module import time
+let isCloudinaryConfiguredFlag = false;
 
-console.log('Cloudinary configured with cloud name:', process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
+function configureCloudinary() {
+  if (!isCloudinaryConfiguredFlag) {
+    // Get environment variables using our utility
+    const { cloudName, apiKey, apiSecret } = getCloudinaryEnvVars();
+    
+    // Log the environment variables for debugging (without exposing secrets)
+    console.log('Configuring Cloudinary with:');
+    console.log('- Cloud name:', cloudName ? 'SET' : 'NOT SET');
+    console.log('- API key:', apiKey ? 'SET' : 'NOT SET');
+    console.log('- API secret:', apiSecret ? 'SET' : 'NOT SET');
+    
+    // Additional debugging for environment variables
+    if (cloudName) {
+      console.log('- Cloud name value length:', cloudName.length);
+    }
+    if (apiKey) {
+      console.log('- API key value length:', apiKey.length);
+    }
+    
+    // Check if we're in a server environment
+    const isServer = typeof window === 'undefined';
+    console.log('Running in server environment:', isServer);
+    
+    // Validate configuration
+    if (isServer) {
+      // In server environment, we need all three variables
+      if (!cloudName || !apiKey || !apiSecret) {
+        console.error('Missing required Cloudinary environment variables in server environment');
+        console.error('- Cloud name:', cloudName || 'MISSING');
+        console.error('- API key:', apiKey ? 'SET' : 'MISSING');
+        console.error('- API secret:', apiSecret ? 'SET' : 'MISSING');
+        throw new Error('Cloudinary environment variables are not properly configured for server environment');
+      }
+    } else {
+      // In browser environment, we only need the cloud name
+      if (!cloudName) {
+        console.error('Missing NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME in browser environment');
+        throw new Error('Cloudinary cloud name is not properly configured for browser environment');
+      }
+    }
+    
+    cloudinary.config({
+      cloud_name: cloudName,
+      api_key: apiKey,
+      api_secret: apiSecret,
+    });
+    
+    console.log('Cloudinary configured with cloud name:', cloudName);
+    isCloudinaryConfiguredFlag = true;
+  }
+}
 
 // Enhanced in-memory cache for gallery images with LRU eviction
 class LRUCache<T> {
@@ -65,10 +112,19 @@ export async function getGalleryImages() {
       return cachedData;
     }
 
-    // Check if Cloudinary is properly configured
-    if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-      console.error('Cloudinary environment variables are not properly configured');
-      throw new Error('Cloudinary service is not properly configured. Please check environment variables.');
+    // Configure Cloudinary when needed
+    configureCloudinary();
+
+    // Double-check configuration
+    if (!isCloudinaryConfigured()) {
+      const { cloudName, apiKey, apiSecret } = getCloudinaryEnvVars();
+      const missingVars = [];
+      if (!cloudName) missingVars.push('NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME');
+      if (!apiKey) missingVars.push('CLOUDINARY_API_KEY');
+      if (!apiSecret) missingVars.push('CLOUDINARY_API_SECRET');
+      
+      console.error('Cloudinary environment variables are not properly configured. Missing:', missingVars.join(', '));
+      throw new Error(`Cloudinary service is not properly configured. Missing environment variables: ${missingVars.join(', ')}. Please check environment variables.`);
     }
 
     console.log('Fetching images from Cloudinary gallery folder');
@@ -196,7 +252,7 @@ export async function uploadMedia(file: Buffer, options: any) {
 
 // Function to generate a download URL for a resource
 export function getDownloadUrl(publicId: string, resourceType: string = 'image') {
-  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const { cloudName } = getCloudinaryEnvVars();
   return `https://res.cloudinary.com/${cloudName}/${resourceType}/upload/fl_attachment/${publicId}`;
 }
 

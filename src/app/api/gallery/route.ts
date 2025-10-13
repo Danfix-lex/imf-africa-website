@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getGalleryImages } from '@/lib/cloudinary';
+import { getCloudinaryEnvVars, isCloudinaryConfigured } from '@/lib/env-utils';
 
 // Enhanced cache with size limit and TTL
 class APICache {
@@ -46,6 +47,22 @@ const apiCache = new APICache(50, 5 * 60 * 1000); // 50 items, 5 minutes TTL
 export async function GET(request: Request) {
   try {
     console.log('Gallery API called');
+    
+    // Log environment variables status for debugging using our utility
+    const { cloudName, apiKey, apiSecret } = getCloudinaryEnvVars();
+    console.log('Environment variables status in API route (using utility):');
+    console.log('- NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:', cloudName ? 'SET' : 'NOT SET');
+    console.log('- CLOUDINARY_API_KEY:', apiKey ? 'SET' : 'NOT SET');
+    console.log('- CLOUDINARY_API_SECRET:', apiSecret ? 'SET' : 'NOT SET');
+    
+    // Additional debugging
+    if (cloudName) {
+      console.log('- Cloud name value length:', cloudName.length);
+    }
+    
+    // Check configuration using our utility
+    const configured = isCloudinaryConfigured();
+    console.log('Cloudinary configured (using utility):', configured);
     
     // Generate ETag based on request
     const url = new URL(request.url);
@@ -106,7 +123,12 @@ export async function GET(request: Request) {
       details: error.message,
       // Add more specific error information for debugging
       timestamp: new Date().toISOString(),
-      cloudinaryConfigured: !!(process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET)
+      cloudinaryConfigured: isCloudinaryConfigured(),
+      envVars: {
+        NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ? 'SET' : 'NOT SET',
+        CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY ? 'SET' : 'NOT SET',
+        CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET ? 'SET' : 'NOT SET',
+      }
     }), { 
       status: 500,
       headers: {

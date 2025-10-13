@@ -92,11 +92,14 @@ const GalleryPage: React.FC = () => {
   useEffect(() => {
     const fetchGalleryItems = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const response = await fetch('/api/gallery');
         
         if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Failed to fetch gallery items: ${response.status} - ${errorText}`);
+          const errorData = await response.json().catch(() => ({}));
+          const errorMessage = errorData.details || errorData.error || `Failed to fetch gallery items: ${response.status} - ${response.statusText}`;
+          throw new Error(errorMessage);
         }
         
         const data = await response.json();
@@ -179,6 +182,14 @@ const GalleryPage: React.FC = () => {
             <Alert severity="error" sx={{ mb: 4 }}>
               <Typography variant="h6">Gallery Error</Typography>
               <Typography>{error}</Typography>
+              <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
+                Please ensure that:
+                <ul>
+                  <li>Cloudinary environment variables are properly set in your Render dashboard</li>
+                  <li>You have uploaded media to your Cloudinary "gallery" folder</li>
+                  <li>Your Cloudinary account is properly configured</li>
+                </ul>
+              </Typography>
               <Button 
                 variant="contained" 
                 onClick={() => window.location.reload()}
